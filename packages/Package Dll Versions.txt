@@ -1,0 +1,3 @@
+Newtonsoft.json.dll / .xml (.NET 2.0)
+fastjSON.dll (.NET 3.5)
+UploadHelper (default)

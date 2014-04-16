@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>12.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{7AEE96CF-9080-4963-8706-9E2F0753F9C4}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>GBaaS.io</RootNamespace>
+    <AssemblyName>GBaaS.io</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="AfterBuild" command="../deploydll.sh" />
+      </CustomCommands>
+    </CustomCommands>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Krystalware.UploadHelper">
+      <HintPath>..\packages\Krystalware.UploadHelper.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="fastJSON">
+      <HintPath>..\packages\fastJSON.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\HttpHelper.cs" />
+    <Compile Include="GBaaSApi.cs" />
+    <Compile Include="Utils\Singleton.cs" />
+    <Compile Include="Services\GBService.cs" />
+    <Compile Include="Services\GBRequestService.cs" />
+    <Compile Include="Services\GBScoreService.cs" />
+    <Compile Include="Services\GBUserService.cs" />
+    <Compile Include="Services\GBAchievementService.cs" />
+    <Compile Include="Objects\GBUserAchievementObject.cs" />
+    <Compile Include="Objects\GBAchievementLocaleObject.cs" />
+    <Compile Include="Objects\GBGroupObject.cs" />
+    <Compile Include="Objects\GBScoreObject.cs" />
+    <Compile Include="Objects\GBUserObject.cs" />
+    <Compile Include="Objects\GBObject.cs" />
+    <Compile Include="Objects\GBAchievementInfoObject.cs" />
+    <Compile Include="Objects\GBAchievementObject.cs" />
+    <Compile Include="GBaaSApiHandler.cs" />
+    <Compile Include="Services\GBPushService.cs" />
+    <Compile Include="Objects\GBPushMessageObject.cs" />
+    <Compile Include="Objects\GBDeviceRegisterObject.cs" />
+    <Compile Include="Objects\GBLocationObject.cs" />
+    <Compile Include="Services\GBCollectionService.cs" />
+    <Compile Include="Services\GBNetService.cs" />
+    <Compile Include="Objects\GBRoom.cs" />
+    <Compile Include="Objects\GBLobbyObject.cs" />
+    <Compile Include="Objects\GBGameDataObject.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="Services\" />
+    <Folder Include="Utils\" />
+    <Folder Include="Objects\" />
+  </ItemGroup>
+</Project>
