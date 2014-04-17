@@ -1,3 +1,7 @@
+GBaaS.io.Tests/bin/
+GBaaS.io.Tests/obj/
+GBaaS.io/bin/
+GBaaS.io/obj/
 build-state.dat
 build-state~.dat
 jsoncpp~.dep
