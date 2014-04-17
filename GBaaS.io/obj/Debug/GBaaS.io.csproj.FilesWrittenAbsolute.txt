@@ -1,7 +1,0 @@
-/Users/winDy/Documents/windystudio_svn/PROJECT/Apexplatform/gbaas_sdk_unity/GBaaS.io/bin/Debug/GBaaS.io.dll.mdb
-/Users/winDy/Documents/windystudio_svn/PROJECT/Apexplatform/gbaas_sdk_unity/GBaaS.io/bin/Debug/GBaaS.io.dll
-/Users/winDy/Documents/windystudio_svn/PROJECT/Apexplatform/gbaas_sdk_unity/GBaaS.io/obj/Debug/GBaaS.io.dll
-/Users/winDy/Documents/windystudio_svn/PROJECT/Apexplatform/gbaas_sdk_unity/GBaaS.io/obj/Debug/GBaaS.io.dll.mdb
-/Users/winDy/Documents/windystudio_svn/PROJECT/Apexplatform/gbaas_sdk_unity/GBaaS.io/bin/Debug/Krystalware.UploadHelper.dll
-/Users/winDy/Documents/windystudio_svn/PROJECT/Apexplatform/gbaas_sdk_unity/GBaaS.io/bin/Debug/Newtonsoft.Json.dll
-/Users/winDy/Documents/windystudio_svn/PROJECT/Apexplatform/gbaas_sdk_unity/GBaaS.io/bin/Debug/fastJSON.dll

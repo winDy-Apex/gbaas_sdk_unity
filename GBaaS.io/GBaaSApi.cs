@@ -1,6 +1,10 @@
 /**
  * GBaaS API Interface For Unity SDK 가 제공하는 모든 기능의 최상위 인터페이스<br>
  * @note SetHandler 로 handler 를 지정하면 비동기(Async)로 동작합니다.
+ * GBaaS 소스 파일은 외부 프로젝트에서 Unity Assets 로 
+ * 자동으로 복사되어 생성되는 파일입니다.
+ * GBaaSObject.cs 파일만 수정하시길 권하면 부득히 GBaaS 의 다른 소스를
+ * 수정하여 사용하시는 경우 버전 관리에 각별히 유의 부탁드립니다.
  */
 using System;
 using System.Collections.Generic;
