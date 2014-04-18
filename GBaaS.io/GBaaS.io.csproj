@@ -79,6 +79,7 @@
     <Compile Include="Objects\GBRoom.cs" />
     <Compile Include="Objects\GBLobbyObject.cs" />
     <Compile Include="Objects\GBGameDataObject.cs" />
+    <Compile Include="Objects\GBReceiptObject.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

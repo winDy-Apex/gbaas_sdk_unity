@@ -207,5 +207,25 @@ namespace GBaaS.io.Tests
 			bool result = aClient.GameDataSave("keyBigSize", text);
 			Assert.IsTrue(result);
 		}
+
+		[Test]
+		public void ReceiptSave()
+		{
+			GBaaS.io.GBaaSApi aClient = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL2);
+			aClient.Login("test", "abc123");
+
+			Objects.GBReceiptObject receipt = new Objects.GBReceiptObject {
+				receiptCode = "12312313131213231123131231312313132132",
+				receiptType = "1",
+				userDID = "asjldjflajfdldsjlfjdlsajlfdsaFASFASF23234234243",
+				dayToUse = "2014-04-16 15:28:32.0"
+			};
+
+			bool result = receipt.Save();
+			Assert.IsTrue(result);
+
+			result = aClient.ReceiptSave(receipt);
+			Assert.IsTrue(result);
+		}
 	}
 }
