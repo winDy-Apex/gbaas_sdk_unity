@@ -11,43 +11,51 @@ namespace GBaaS.io.Services
 
 		public GBUserService() {}
 
-		public GBaaSApiHandler _handler = null;
+		public List<GBaaSApiHandler> _handler = new List<GBaaSApiHandler>();
 
 		public void SetHandler(GBaaSApiHandler handler) {
-			_handler = handler;
+			if (handler == null) {
+				_handler.Clear();
+			} else {
+				_handler.Add(handler);
+			}
 		}
 
 		private bool IsAsync() {
-			return (_handler != null);
+			return (_handler.Count > 0);
 		}
 
 		public string GetLoginName() {
 			return _userNmae;
 		}
 
-		public bool Login(string userName, string password) {
-			if (IsAsync()) {
+		public bool Login(string userName, string password, bool forceSync = false) {
+			if (IsAsync() && forceSync == false) {
 				Thread workerThread = new Thread(() => this.LoginThread(userName, password));
 				workerThread.Start();
 				return false;
 			} else {
-				return this.LoginThread(userName, password);
+				return this.LoginThread(userName, password, forceSync);
 			}
 		}
 
-		private bool LoginThread(string userName, string password) {
+		private bool LoginThread(string userName, string password, bool forceSync = false) {
 			var result = GBRequestService.Instance.GetToken(userName, password);
 			if (result.Length > 0) {
 				HttpHelper.Instance._accessToken = result;
 				_userNmae = userName;
-				if (IsAsync()) {
-					_handler.OnLogin(true);
+				if (IsAsync() && forceSync == false) {
+					foreach (GBaaSApiHandler handler in _handler) {
+						handler.OnLogin(true);
+					}
 				} else {
 					return true;
 				}
 			} else {
-				if (IsAsync()) {
-					_handler.OnLogin(false);
+				if (IsAsync() && forceSync == false) {
+					foreach (GBaaSApiHandler handler in _handler) {
+						handler.OnLogin(false);
+					}
 				} else {
 					return false;
 				}
@@ -74,13 +82,17 @@ namespace GBaaS.io.Services
 				HttpHelper.Instance._accessToken = result;
 
 				if (IsAsync()) {
-					_handler.OnLoginWithFaceBook(true);
+					foreach (GBaaSApiHandler handler in _handler) {
+						handler.OnLoginWithFaceBook(true);
+					}
 				} else {
 					return true;
 				}
 			} else {
 				if (IsAsync()) {
-					_handler.OnLoginWithFaceBook(false);
+					foreach (GBaaSApiHandler handler in _handler) {
+						handler.OnLoginWithFaceBook(false);
+					}
 				} else {
 					return false;
 				}
@@ -108,7 +120,7 @@ namespace GBaaS.io.Services
 		}
 
 		private bool LoginWithoutIDThread(string uniqueUserKey) {
-			bool isLogin = Login(uniqueUserKey, uniqueUserKey);
+			bool isLogin = Login(uniqueUserKey, uniqueUserKey, true);
 			string result = "";
 
 			if (isLogin == false) {
@@ -116,7 +128,7 @@ namespace GBaaS.io.Services
 					username = uniqueUserKey,
 					password = uniqueUserKey,
 					Email = ""
-				});
+				}, true);
 
 				if (result.Length > 0) {
 					isLogin = Login(uniqueUserKey, uniqueUserKey);
@@ -124,7 +136,9 @@ namespace GBaaS.io.Services
 			}
 
 			if (IsAsync()) {
-				_handler.OnLoginWithoutID(isLogin);
+				foreach (GBaaSApiHandler handler in _handler) {
+					handler.OnLoginWithoutID(isLogin);
+				}
 			} else {
 				return isLogin;
 			}
@@ -152,7 +166,9 @@ namespace GBaaS.io.Services
 			});
 
 			if (IsAsync()) {
-				_handler.OnUpdateUserName(HttpHelper.Instance.CheckSuccess(result));
+				foreach (GBaaSApiHandler handler in _handler) {
+					handler.OnUpdateUserName(HttpHelper.Instance.CheckSuccess(result));
+				}
 			} else {
 				return HttpHelper.Instance.CheckSuccess(result);
 			}
@@ -168,28 +184,32 @@ namespace GBaaS.io.Services
 			return (HttpHelper.Instance._accessToken.Length > 0);
 		}
 
-		public string CreateUser(Objects.GBUserObject userModel) {
-			if (IsAsync()) {
+		public string CreateUser(Objects.GBUserObject userModel, bool forceSync = false) {
+			if (IsAsync() && forceSync == false) {
 				Thread workerThread = new Thread(() => this.CreateUserThread(userModel));
 				workerThread.Start();
 				return default(string);
 			} else {
-				return this.CreateUserThread(userModel);
+				return this.CreateUserThread(userModel, forceSync);
 			}
 		}
 
-		private string CreateUserThread(Objects.GBUserObject userModel) {
+		private string CreateUserThread(Objects.GBUserObject userModel, bool forceSync = false) {
 			var rawResults = GBRequestService.Instance.PerformRequest<string>("/users", HttpHelper.RequestTypes.Post, userModel);
 			var entitiesResult = GBRequestService.Instance.GetEntitiesFromJson(rawResults);
 			if (entitiesResult != null) {
-				if (IsAsync()) {
-					_handler.OnCreateUser(entitiesResult[0]["uuid"].ToString());
+				if (IsAsync() && forceSync == false) {
+					foreach (GBaaSApiHandler handler in _handler) {
+						handler.OnCreateUser(entitiesResult[0]["uuid"].ToString());
+					}
 				} else {
 					return entitiesResult[0]["uuid"].ToString();
 				}
 			} else {
-				if (IsAsync()) {
-					_handler.OnCreateUser(UpdateUser(userModel));
+				if (IsAsync() && forceSync == false) {
+					foreach (GBaaSApiHandler handler in _handler) {
+						handler.OnCreateUser(UpdateUser(userModel));
+					}
 				} else {
 					return UpdateUser(userModel);
 				}
@@ -202,7 +222,7 @@ namespace GBaaS.io.Services
 			if (IsAsync()) {
 				Thread workerThread = new Thread(() => this.UpdateUserThread(userModel));
 				workerThread.Start();
-				return default(string);
+				return ""; //default(string);
 			} else {
 				return this.UpdateUserThread(userModel);
 			}
@@ -213,7 +233,9 @@ namespace GBaaS.io.Services
 				"/users/" + userModel.username, HttpHelper.RequestTypes.Put, userModel);
 
 			if (IsAsync()) {
-				_handler.OnUpdateUser(rawResults.ToString());
+				foreach (GBaaSApiHandler handler in _handler) {
+					handler.OnUpdateUser(rawResults.ToString());
+				}
 			} else {
 				return rawResults.ToString();
 			}
@@ -240,7 +262,9 @@ namespace GBaaS.io.Services
 			var user = GBRequestService.Instance.GetEntitiesFromJson(rawResults);
 
 			if (IsAsync()) {
-				_handler.OnGetUserInfo(MakeUserInfo(user));
+				foreach (GBaaSApiHandler handler in _handler) {
+					handler.OnGetUserInfo(MakeUserInfo(user));
+				}
 			} else {
 				return MakeUserInfo(user);
 			}
@@ -263,7 +287,9 @@ namespace GBaaS.io.Services
 			var users = GBRequestService.Instance.GetEntitiesFromJson(rawResults);
 
 			if (IsAsync()) {
-				_handler.OnGetUserList(MakeUserList(users));
+				foreach (GBaaSApiHandler handler in _handler) {
+					handler.OnGetUserList(MakeUserList(users));
+				}
 			} else {
 				return MakeUserList(users);
 			}
@@ -289,7 +315,9 @@ namespace GBaaS.io.Services
 			var users = GBRequestService.Instance.GetEntitiesFromJson(rawResults);
 		
 			if (IsAsync()) {
-				_handler.OnGetUserList(MakeUserList(users));
+				foreach (GBaaSApiHandler handler in _handler) {
+					handler.OnGetUserList(MakeUserList(users));
+				}
 			} else {
 				return MakeUserList(users);
 			}
@@ -315,7 +343,9 @@ namespace GBaaS.io.Services
 			var users = GBRequestService.Instance.GetEntitiesFromJson(rawResults);
 
 			if (IsAsync()) {
-				_handler.OnGetUserList(MakeUserList(users));
+				foreach (GBaaSApiHandler handler in _handler) {
+					handler.OnGetUserList(MakeUserList(users));
+				}
 			} else {
 				return MakeUserList(users);
 			}
@@ -341,7 +371,9 @@ namespace GBaaS.io.Services
 				"/users/me/following/users/" + userModel.username, HttpHelper.RequestTypes.Post, "");
 
 			if (IsAsync()) {
-				_handler.OnFollowUser(HttpHelper.Instance.CheckSuccess(rawResults));
+				foreach (GBaaSApiHandler handler in _handler) {
+					handler.OnFollowUser(HttpHelper.Instance.CheckSuccess(rawResults));
+				}
 			} else {
 				return HttpHelper.Instance.CheckSuccess (rawResults);
 			}
@@ -363,7 +395,9 @@ namespace GBaaS.io.Services
 			var rawResults = GBRequestService.Instance.PerformRequest<string>("/group", HttpHelper.RequestTypes.Post, groupModel);
 
 			if (IsAsync()) {
-				_handler.OnCreateGroup(HttpHelper.Instance.CheckSuccess(rawResults));
+				foreach (GBaaSApiHandler handler in _handler) {
+					handler.OnCreateGroup(HttpHelper.Instance.CheckSuccess(rawResults));
+				}
 			} else {
 				return HttpHelper.Instance.CheckSuccess(rawResults);
 			}
@@ -387,7 +421,9 @@ namespace GBaaS.io.Services
 			var rawResults = GBRequestService.Instance.PerformRequest<string> (requestUrl, HttpHelper.RequestTypes.Post, "");
 
 			if (IsAsync()) {
-				_handler.OnAddUserToGroup(HttpHelper.Instance.CheckSuccess (rawResults));
+				foreach (GBaaSApiHandler handler in _handler) {
+					handler.OnAddUserToGroup(HttpHelper.Instance.CheckSuccess (rawResults));
+				}
 			} else {
 				return HttpHelper.Instance.CheckSuccess (rawResults);
 			}
@@ -411,7 +447,9 @@ namespace GBaaS.io.Services
 			var rawResults = GBRequestService.Instance.PerformRequest<string> (requestUrl, HttpHelper.RequestTypes.Delete, "");
 
 			if (IsAsync()) {
-				_handler.OnRemoveUserFromGroup(HttpHelper.Instance.CheckSuccess (rawResults));
+				foreach (GBaaSApiHandler handler in _handler) {
+					handler.OnRemoveUserFromGroup(HttpHelper.Instance.CheckSuccess (rawResults));
+				}
 			} else {
 				return HttpHelper.Instance.CheckSuccess (rawResults);
 			}
@@ -436,7 +474,9 @@ namespace GBaaS.io.Services
 			var users = GBRequestService.Instance.GetEntitiesFromJson(rawResults);
 
 			if (IsAsync()) {
-				_handler.OnGetUsersForGroup(MakeUserList (users));
+				foreach (GBaaSApiHandler handler in _handler) {
+					handler.OnGetUsersForGroup(MakeUserList (users));
+				}
 			} else {
 				return MakeUserList (users);
 			}

@@ -14,14 +14,18 @@ namespace GBaaS.io
 	{
 		public GBCollectionService () {}
 
-		public GBaaSApiHandler _handler = null;
+		public List<GBaaSApiHandler> _handler = new List<GBaaSApiHandler>();
 
 		public void SetHandler(GBaaSApiHandler handler) {
-			_handler = handler;
+			if (handler == null) {
+				_handler.Clear();
+			} else {
+				_handler.Add(handler);
+			}
 		}
 
 		private bool IsAsync() {
-			return (_handler != null);
+			return (_handler.Count > 0);
 		}
 
 		public bool GameDataSave(string key, string value) {
@@ -50,14 +54,18 @@ namespace GBaaS.io
 				};
 
 				if (IsAsync()) {
-					_handler.OnGameDataSave(gameData.Save());
+					foreach (GBaaSApiHandler handler in _handler) {
+						handler.OnGameDataSave(gameData.Save());
+					}
 				} else {
 					return gameData.Save();
 				}
 			} else {
 				gameData.value = value;
 				if (IsAsync()) {
-					_handler.OnGameDataSave(gameData.Update());
+					foreach (GBaaSApiHandler handler in _handler) {
+						handler.OnGameDataSave(gameData.Update());
+					}
 				} else {
 					return gameData.Update();
 				}
@@ -122,7 +130,9 @@ namespace GBaaS.io
 			}
 
 			if (IsAsync()) {
-				_handler.OnGameDataLoad(result);
+				foreach (GBaaSApiHandler handler in _handler) {
+					handler.OnGameDataLoad(result);
+				}
 			} else {
 				return result;
 			}
@@ -202,7 +212,9 @@ namespace GBaaS.io
 			}
 
 			if (IsAsync()) {
-				_handler.OnCreateList(result);
+				foreach (GBaaSApiHandler handler in _handler) {
+					handler.OnCreateList(result);
+				}
 			} else {
 				return result;
 			}
@@ -225,7 +237,9 @@ namespace GBaaS.io
 			var collection = GBRequestService.Instance.GetEntitiesFromJson(rawResults);
 
 			if (IsAsync()) {
-				_handler.OnGetList(MakeList(collection));
+				foreach (GBaaSApiHandler handler in _handler) {
+					handler.OnGetList(MakeList(collection));
+				}
 			} else {
 				return MakeList(collection);
 			}
@@ -249,7 +263,9 @@ namespace GBaaS.io
 			var collection = GBRequestService.Instance.GetEntitiesFromJson(rawResults);
 
 			if (IsAsync()) {
-				_handler.OnGetList(MakeList(collection));
+				foreach (GBaaSApiHandler handler in _handler) {
+					handler.OnGetList(MakeList(collection));
+				}
 			} else {
 				return MakeList(collection);
 			}
@@ -287,7 +303,9 @@ namespace GBaaS.io
 			var rawResults = GBRequestService.Instance.PerformRequest<string>("/" + objectName + "?ql=" + query, HttpHelper.RequestTypes.Get, "");
 			if (rawResults.IndexOf ("error") != -1) {
 				if (IsAsync()) {
-					_handler.OnGetObject(default(List<Objects.GBObject>));
+					foreach (GBaaSApiHandler handler in _handler) {
+						handler.OnGetObject(default(List<Objects.GBObject>));
+					}
 				} else {
 					return default(List<Objects.GBObject>);
 				}
@@ -296,7 +314,9 @@ namespace GBaaS.io
 			var collection = GBRequestService.Instance.GetEntitiesFromJson(rawResults);
 
 			if (IsAsync()) {
-				_handler.OnGetObject(MakeList(collection));
+				foreach (GBaaSApiHandler handler in _handler) {
+					handler.OnGetObject(MakeList(collection));
+				}
 			} else {
 				return MakeList(collection);
 			}

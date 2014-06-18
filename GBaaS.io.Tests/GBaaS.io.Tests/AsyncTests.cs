@@ -37,6 +37,12 @@ namespace GBaaS.io.Tests
 			Assert.IsTrue(result);
 		}
 
+		public override void OnCreateUser(string result) {
+			Console.Out.WriteLine("Async On CreateUser : " + result);
+			AsyncCallChecker.Instance.SetAsyncCalling(false);
+			Assert.IsTrue(result.Length > 0);
+		}
+
 		public override void OnGetScoreByUuidOrName(List<Objects.GBScoreObject> result) {
 			Console.Out.WriteLine("Async On GetScoreByUuidOrName : " + result.ToString());
 			AsyncCallChecker.Instance.SetAsyncCalling(false);
@@ -101,11 +107,11 @@ namespace GBaaS.io.Tests
 
 			GBaaSApiHandler handler = new UserHandler();
 
-			aClient2.SetHandler(handler);
+			aClient2.AddHandler(handler);
 
 			Assert.IsTrue(aClient2.IsAsync());
 
-			aClient2.SetHandler(null);
+			aClient2.AddHandler(null);
 
 			Assert.IsFalse(aClient2.IsAsync());
 		}
@@ -119,7 +125,7 @@ namespace GBaaS.io.Tests
 			String locale = "ko-KR";
 
 			GBaaSApiHandler handler = new UserHandler();
-			aClient.SetHandler(handler);
+			aClient.AddHandler(handler);
 
 			AsyncCallChecker.Instance.SetAsyncCalling(true);
 
@@ -133,7 +139,40 @@ namespace GBaaS.io.Tests
 				System.Threading.Thread.Sleep(100);
 			}
 
-			aClient.SetHandler(null);
+			aClient.AddHandler(null);
+		}
+
+
+		[Test]
+		public void CallAsyncCreateUser()
+		{
+			GBaaS.io.GBaaSApi aClient = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL2);
+			//aClient.Login("test", "abc123");
+
+			GBaaSApiHandler handler = new UserHandler();
+			aClient.AddHandler(handler);
+
+			AsyncCallChecker.Instance.SetAsyncCalling(true);
+
+			string un = "gbaas_" + Guid.NewGuid();
+			//string un = "test1";
+
+			var result = aClient.CreateUser(new GBUserObject {
+				username = un,
+				password = Defines.TEST_PASSWORD,
+				Email = un + "@test.com"
+			});
+
+			//바로 리턴되는 결과는 없어야 정상
+			Assert.IsTrue(result == null);
+
+			//Async 호출이 끝날때까지 대기
+			while (AsyncCallChecker.Instance.GetAsyncCalling()) {
+				Console.Out.WriteLine ("...AsyncCalling...");
+				System.Threading.Thread.Sleep(100);
+			}
+
+			aClient.AddHandler(null);
 		}
 
 		[Test]
@@ -145,7 +184,7 @@ namespace GBaaS.io.Tests
 			String locale = "ko-KR";
 
 			GBaaSApiHandler handler = new UserHandler();
-			aClient2.SetHandler(handler);
+			aClient2.AddHandler(handler);
 
 			AsyncCallChecker.Instance.SetAsyncCalling(true);
 
@@ -159,7 +198,7 @@ namespace GBaaS.io.Tests
 				System.Threading.Thread.Sleep(100);
 			}
 
-			aClient2.SetHandler(null);
+			aClient2.AddHandler(null);
 		}
 
 		[Test]
@@ -169,7 +208,7 @@ namespace GBaaS.io.Tests
 			aClient2.Login("test", "abc123");
 
 			GBaaSApiHandler handler = new UserHandler();
-			aClient2.SetHandler(handler);
+			aClient2.AddHandler(handler);
 
 			AsyncCallChecker.Instance.SetAsyncCalling(true);
 
@@ -183,7 +222,7 @@ namespace GBaaS.io.Tests
 				System.Threading.Thread.Sleep(100);
 			}
 
-			aClient2.SetHandler(null);
+			aClient2.AddHandler(null);
 		}
 
 		[Test]
@@ -194,7 +233,7 @@ namespace GBaaS.io.Tests
 			Assert.IsNotNull(login);
 
 			GBaaSApiHandler handler = new UserHandler();
-			aClient2.SetHandler(handler);
+			aClient2.AddHandler(handler);
 
 			AsyncCallChecker.Instance.SetAsyncCalling(true);
 
@@ -213,7 +252,7 @@ namespace GBaaS.io.Tests
 				System.Threading.Thread.Sleep(100);
 			}
 
-			aClient2.SetHandler(null);
+			aClient2.AddHandler(null);
 		}
 
 		[Test]
@@ -228,7 +267,7 @@ namespace GBaaS.io.Tests
 			Assert.IsNotNull(result);
 
 			GBaaSApiHandler handler = new UserHandler();
-			aClient2.SetHandler(handler);
+			aClient2.AddHandler(handler);
 
 			AsyncCallChecker.Instance.SetAsyncCalling(true);
 
@@ -244,7 +283,7 @@ namespace GBaaS.io.Tests
 				System.Threading.Thread.Sleep(100);
 			}
 
-			aClient2.SetHandler(null);
+			aClient2.AddHandler(null);
 		}
 
 		[Test]
@@ -254,7 +293,7 @@ namespace GBaaS.io.Tests
 			Assert.IsNotNull(login);
 
 			GBaaSApiHandler handler = new UserHandler();
-			aClient2.SetHandler(handler);
+			aClient2.AddHandler(handler);
 
 			AsyncCallChecker.Instance.SetAsyncCalling(true);
 
@@ -269,7 +308,7 @@ namespace GBaaS.io.Tests
 				System.Threading.Thread.Sleep(100);
 			}
 
-			aClient2.SetHandler(null);
+			aClient2.AddHandler(null);
 		}
 
 		[Test]
@@ -279,7 +318,7 @@ namespace GBaaS.io.Tests
 			Assert.IsNotNull(login);
 
 			GBaaSApiHandler handler = new UserHandler();
-			aClient2.SetHandler(handler);
+			aClient2.AddHandler(handler);
 
 			AsyncCallChecker.Instance.SetAsyncCalling(true);
 
@@ -294,7 +333,7 @@ namespace GBaaS.io.Tests
 				System.Threading.Thread.Sleep(100);
 			}
 
-			aClient2.SetHandler(null);
+			aClient2.AddHandler(null);
 		}
 	}
 }

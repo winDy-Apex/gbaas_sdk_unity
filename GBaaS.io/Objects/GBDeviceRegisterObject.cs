@@ -5,7 +5,7 @@ namespace GBaaS.io.Objects
 	public class GBDeviceRegisterObject : GBObject
 	{
 		public GBDeviceRegisterObject() {
-			this.SetEntityType("devices");
+			this.SetEntityType("device");
 		}
 
 		public string deviceModel { get; set; }

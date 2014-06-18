@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json.Linq;
 using GBaaS.io.Utils;
+using System.IO;
 
 namespace GBaaS.io.Services
 {
@@ -64,7 +65,12 @@ namespace GBaaS.io.Services
 
 		public JToken GetEntitiesFromJson(string rawJson) {
 			if (string.IsNullOrEmpty(rawJson) != true) {
-				var objResult = JObject.Parse(rawJson);
+				JObject objResult = null;
+				try {
+					objResult = JObject.Parse(rawJson);
+				} catch(Newtonsoft.Json.JsonReaderException e) {
+					return null;
+				}
 				return objResult.SelectToken("entities");
 			}
 			return null;

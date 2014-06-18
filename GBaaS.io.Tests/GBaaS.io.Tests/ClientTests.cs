@@ -130,7 +130,7 @@ namespace GBaaS.io.Tests.ClientTests
 
 		[Test]
 		public void GetScoreLogMoreTest() {
-			var login = aClient.Login("test4", Defines.TEST_PASSWORD);
+			var login = aClient.Login("test", Defines.TEST_PASSWORD);
 			Assert.IsNotNull(login);
 
 			List<Objects.GBScoreObject> result = aClient.GetScoreLogMore("", "", 2, false);

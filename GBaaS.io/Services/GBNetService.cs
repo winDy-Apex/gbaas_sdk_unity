@@ -14,18 +14,22 @@ namespace GBaaS.io
 	{
 		public GBNetService () {}
 
-		public GBaaSApiHandler _handler = null;
+		public List<GBaaSApiHandler> _handler = new List<GBaaSApiHandler>();
 
 		private Socket _socket;
 		private byte[] _getbyte = new byte[1024];
 		private byte[] _setbyte = new byte[1024];
 
 		public void SetHandler(GBaaSApiHandler handler) {
-			_handler = handler;
+			if (handler == null) {
+				_handler.Clear();
+			} else {
+				_handler.Add(handler);
+			}
 		}
 
 		private bool IsAsync() {
-			return (_handler != null);
+			return (_handler.Count > 0);
 		}
 
 		public bool ReceiveDataThread() {
@@ -35,7 +39,9 @@ namespace GBaaS.io
 				int getValueLength = _socket.Receive(_getbyte,0,_getbyte.Length,SocketFlags.None);
 				string getstring = Encoding.ASCII.GetString(_getbyte,0,getValueLength+1);
 				//Console.WriteLine(">>수신된 데이터 :{0} | 길이{1}" , getstring , getstring.Length);
-				_handler.OnReceiveData(getstring);
+				foreach (GBaaSApiHandler handler in _handler) {
+					handler.OnReceiveData(getstring);
+				}
 				_getbyte = new byte[1024];
 
 				System.Threading.Thread.Sleep(90);

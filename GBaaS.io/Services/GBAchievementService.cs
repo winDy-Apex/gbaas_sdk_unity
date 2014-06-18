@@ -13,14 +13,18 @@ namespace GBaaS.io
 
 		public GBAchievementService () {}
 
-		public GBaaSApiHandler _handler = null;
+		public List<GBaaSApiHandler> _handler = new List<GBaaSApiHandler>();
 
 		public void SetHandler(GBaaSApiHandler handler) {
-			_handler = handler;
+			if (handler == null) {
+				_handler.Clear();
+			} else {
+				_handler.Add(handler);
+			}
 		}
 
 		private bool IsAsync() {
-			return (_handler != null);
+			return (_handler.Count > 0);
 		}
 
 		public bool AddUserAchievement(GBObject achievement) {
@@ -61,7 +65,9 @@ namespace GBaaS.io
 			var rawResults = GBRequestService.Instance.PerformRequest<string>("/achievements" + "?" + query, HttpHelper.RequestTypes.Get, "");
 			if (rawResults != null && rawResults.IndexOf ("error") != -1) {
 				if (IsAsync()) {
-					_handler.OnGetAchievement(default(List<Objects.GBAchievementObject>));
+					foreach (GBaaSApiHandler handler in _handler) {
+						handler.OnGetAchievement(default(List<Objects.GBAchievementObject>));
+					}
 				} else { 
 					return default(List<Objects.GBAchievementObject>);
 				}
@@ -70,7 +76,9 @@ namespace GBaaS.io
 			var achievements = GBRequestService.Instance.GetEntitiesFromJson(rawResults);
 		
 			if (IsAsync()) {
-				_handler.OnGetAchievement(MakeAchievementList(achievements));
+				foreach (GBaaSApiHandler handler in _handler) {
+					handler.OnGetAchievement(MakeAchievementList(achievements));
+				}
 			} else {
 				return MakeAchievementList(achievements);
 			}
@@ -98,7 +106,9 @@ namespace GBaaS.io
 			var rawResults = GBRequestService.Instance.PerformRequest<string>("/achievement/" + uuidOrName + "?" + query, HttpHelper.RequestTypes.Get, "");
 			if (rawResults.IndexOf ("error") != -1) {
 				if (IsAsync()) {
-					_handler.OnGetAchievementByUUIDorName(default(Objects.GBAchievementObject));
+					foreach (GBaaSApiHandler handler in _handler) {
+						handler.OnGetAchievementByUUIDorName(default(Objects.GBAchievementObject));
+					}
 				} else {
 					return default(Objects.GBAchievementObject);
 				}
@@ -107,7 +117,9 @@ namespace GBaaS.io
 			var achievements = GBRequestService.Instance.GetEntitiesFromJson(rawResults);
 
 			if (IsAsync()) {
-				_handler.OnGetAchievementByUUIDorName(MakeAchievementList(achievements)[0]);
+				foreach (GBaaSApiHandler handler in _handler) {
+					handler.OnGetAchievementByUUIDorName(MakeAchievementList(achievements)[0]);
+				}
 			} else {
 				return MakeAchievementList(achievements)[0];
 			}
@@ -140,7 +152,9 @@ namespace GBaaS.io
 			var rawResults = GBRequestService.Instance.PerformRequest<string>("/achievement/" + uuid + "?locale=" + locale, HttpHelper.RequestTypes.Put, userAchievementObject);
 			if (rawResults.IndexOf ("error") != -1) {
 				if (IsAsync()) {
-					_handler.OnUpdateAchievement(default(Objects.GBAchievementObject));
+					foreach (GBaaSApiHandler handler in _handler) {
+						handler.OnUpdateAchievement(default(Objects.GBAchievementObject));
+					}
 				} else {
 					return default(Objects.GBAchievementObject);
 				}
@@ -149,7 +163,9 @@ namespace GBaaS.io
 			var achievements = GBRequestService.Instance.GetEntitiesFromJson(rawResults);
 
 			if (IsAsync()) {
-				_handler.OnUpdateAchievement(MakeAchievementList(achievements)[0]);
+				foreach (GBaaSApiHandler handler in _handler) {
+					handler.OnUpdateAchievement(MakeAchievementList(achievements)[0]);
+				}
 			} else {
 				return MakeAchievementList(achievements)[0];
 			}

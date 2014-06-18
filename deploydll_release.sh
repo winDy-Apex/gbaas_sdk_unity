@@ -1,5 +1,5 @@
 #!/bin/sh
-deploy_source="/Users/winDy/Documents/windystudio_svn/PROJECT/Apexplatform/gbaas_sdk_unity/GBaaS.io/bin/Debug/*"
+deploy_source="/Users/winDy/Documents/windystudio_svn/PROJECT/Apexplatform/gbaas_sdk_unity/GBaaS.io/bin/Release/*"
 deploy_gcmjar="/Users/winDy/Documents/windystudio_svn/PROJECT/Apexplatform/unity-gcm/source/UnityGcmPlugin/bin/unitygcmplugin.jar"
 
 deploy_target1="/Users/winDy/Documents/windystudio_svn/PROJECT/Apexplatform/Test Unity Project/Assets/Plugins/"

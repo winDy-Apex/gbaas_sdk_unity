@@ -196,6 +196,7 @@ namespace GBaaS.io.Tests
 			Assert.IsTrue(result);
 		}
 
+		[Ignore]
 		[Test]
 		public void GameDataSaveBigSizeValue()
 		{

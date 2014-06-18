@@ -23,7 +23,7 @@ namespace GBaaS.io {
  	* @note 전체기능 목록에 해당 하는 인터페이스를 제공 하며 실제 기능은 해당 서비스를 호출하여 처리한다. <br>
  	*/
 	public class GBaaSApi {
-		GBaaSApiHandler _handler = null;
+		List<GBaaSApiHandler> _handler = new List<GBaaSApiHandler>();
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="GBaaS.io.GBaaSApi"/> class.
@@ -32,6 +32,9 @@ namespace GBaaS.io {
 		/// <param name="gbaasUrl">GBaaS API를 사용하기 위한 기본 URL</param>
 		public GBaaSApi(string gbaasUrl) {
 			GBRequestService.Instance.SetGBaaSUrl(gbaasUrl);
+			if (HttpHelper.Instance._accessToken == null) {
+				HttpHelper.Instance._accessToken = "";
+			}
 		}
 
 		/// <summary>
@@ -39,8 +42,13 @@ namespace GBaaS.io {
 		//  핸들러를 지정하면 Api 를 Async 로 호출한다.
 		/// </summary>
 		/// <param name="handler">비동기 이벤트를 받을 핸들러</param>
-		public void SetHandler(GBaaSApiHandler handler) {
-			_handler = handler;
+		public void AddHandler(GBaaSApiHandler handler) {
+			if (handler == null) {
+				_handler.Clear();
+			} else {
+				_handler.Add(handler);
+			}
+
 			GBAchievementService.Instance.SetHandler(handler);
 			GBScoreService.Instance.SetHandler(handler);
 			GBUserService.Instance.SetHandler(handler);
@@ -53,7 +61,7 @@ namespace GBaaS.io {
 		/// </summary>
 		/// <returns><c>true</c> Api 호출 상태가 비동기(Async)인 경우; 아니면, <c>false</c>.</returns>
 		public bool IsAsync() {
-			return (_handler != null);
+			return (_handler.Count > 0);
 		}
 
 //********** For UserService ********** //
@@ -64,7 +72,12 @@ namespace GBaaS.io {
 		/// <param name="userName">사용자 아이디</param>
 		/// <param name="password">사용자 암호</param>
 		public bool Login(string userName, string password) {
-			return GBUserService.Instance.Login (userName, password);
+			try {
+				return GBUserService.Instance.Login (userName, password);
+			} catch (Exception e) {
+				e.ToString();
+				return false;
+			}
 		}
 
 		/// <summary>
@@ -73,7 +86,12 @@ namespace GBaaS.io {
 		/// <returns><c>true</c>, if with face book was logined, <c>false</c> otherwise.</returns>
 		/// <param name="facebookToken">Facebook token.</param>
 		public bool LoginWithFaceBook(string facebookToken) {
-			return GBUserService.Instance.LoginWithFaceBook(facebookToken);
+			try {
+				return GBUserService.Instance.LoginWithFaceBook(facebookToken);
+			} catch (Exception e) {
+				e.ToString();
+				return false;
+			}
 		}
 
 		/// <summary>
@@ -88,7 +106,12 @@ namespace GBaaS.io {
 		/// <returns><c>true</c>, if without I was logined, <c>false</c> otherwise.</returns>
 		/// <param name="uniqueUserKey">Unique user key.</param>
 		public bool LoginWithoutID(string uniqueUserKey) {
-			return GBUserService.Instance.LoginWithoutID(uniqueUserKey);
+			try {
+				return GBUserService.Instance.LoginWithoutID(uniqueUserKey);
+			} catch (Exception e) {
+				e.ToString();
+				return false;
+			}
 		}
 
 		/// <summary>
@@ -98,14 +121,23 @@ namespace GBaaS.io {
 		/// <returns><c>true</c>, if user name was updated, <c>false</c> otherwise.</returns>
 		/// <param name="userName">User name.</param>
 		public bool UpdateUserName(string userName) {
-			return GBUserService.Instance.UpdateUserName(userName);
+			try {
+				return GBUserService.Instance.UpdateUserName(userName);
+			} catch (Exception e) {
+				e.ToString();
+				return false;
+			}
 		}
 
 		/// <summary>
 		/// Api 사용을 위한 로그인 세션을 종료한다.
 		/// </summary>
 		public void Logout() {
-			GBUserService.Instance.Logout ();
+			try {
+				GBUserService.Instance.Logout ();
+			} catch (Exception e) {
+				e.ToString();
+			}
 		}
 
 		/// <summary>
@@ -113,7 +145,12 @@ namespace GBaaS.io {
 		/// </summary>
 		/// <returns><c>true</c> if this instance is login; otherwise, <c>false</c>.</returns>
 		public bool IsLogin() {
-			return GBUserService.Instance.IsLogin ();
+			try {
+				return GBUserService.Instance.IsLogin ();
+			} catch (Exception e) {
+				e.ToString();
+				return false;
+			}
 		}
 
 		/// <summary>
@@ -122,7 +159,12 @@ namespace GBaaS.io {
 		/// <returns>생성된 사용자 정보에 대한 UUID</returns>
 		/// <param name="userModel">User model.</param>
 		public string CreateUser(Objects.GBUserObject userModel) {
-			return GBUserService.Instance.CreateUser (userModel);
+			try {
+				return GBUserService.Instance.CreateUser (userModel);
+			} catch (Exception e) {
+				e.ToString();
+				return "";
+			}
 		}
 
 		/// <summary>
@@ -131,7 +173,12 @@ namespace GBaaS.io {
 		/// <returns>수정된 사용자 정보에 대한 Json String, 수정 확인용도로만 사용한다.</returns>
 		/// <param name="userModel">User model.</param>
 		public string UpdateUser(Objects.GBUserObject userModel) {
-			return GBUserService.Instance.UpdateUser (userModel);
+			try {
+				return GBUserService.Instance.UpdateUser (userModel);
+			} catch (Exception e) {
+				e.ToString();
+				return "";
+			}
 		}
 
 		/// <summary>
@@ -139,7 +186,12 @@ namespace GBaaS.io {
 		/// </summary>
 		/// <returns>The user info.</returns>
 		public Objects.GBUserObject GetUserInfo() {
-			return GBUserService.Instance.GetUserInfo();
+			try {
+				return GBUserService.Instance.GetUserInfo();
+			} catch (Exception e) {
+				e.ToString();
+				return default(Objects.GBUserObject);
+			}
 		}
 			
 		/// <summary>
@@ -147,7 +199,12 @@ namespace GBaaS.io {
 		/// </summary>
 		/// <returns>The user list.</returns>
 		public List<Objects.GBUserObject> GetUserList() {
-			return GBUserService.Instance.GetUserList ();
+			try {
+				return GBUserService.Instance.GetUserList ();
+			} catch (Exception e) {
+				e.ToString();
+				return default(List<Objects.GBUserObject>);
+			}
 		}
 
 		/// <summary>
@@ -155,7 +212,12 @@ namespace GBaaS.io {
 		/// </summary>
 		/// <returns>The followers.</returns>
 		public List<Objects.GBUserObject> GetFollowers() {
-			return GBUserService.Instance.GetFollowers ();
+			try {
+				return GBUserService.Instance.GetFollowers ();
+			} catch (Exception e) {
+				e.ToString();
+				return default(List<Objects.GBUserObject>);
+			}
 		}
 		
 		/// <summary>
@@ -163,7 +225,12 @@ namespace GBaaS.io {
 		/// </summary>
 		/// <returns>The following.</returns>
 		public List<Objects.GBUserObject> GetFollowing() {
-			return GBUserService.Instance.GetFollowing ();
+			try {
+				return GBUserService.Instance.GetFollowing ();
+			} catch (Exception e) {
+				e.ToString();
+				return default(List<Objects.GBUserObject>);
+			}
 		}
 
 		/// <summary>
@@ -172,7 +239,12 @@ namespace GBaaS.io {
 		/// <returns><c>true</c>, if user was followed, <c>false</c> otherwise.</returns>
 		/// <param name="userModel">User model.</param>
 		public bool FollowUser(Objects.GBUserObject userModel) {
-			return GBUserService.Instance.FollowUser (userModel);
+			try {
+				return GBUserService.Instance.FollowUser (userModel);
+			} catch (Exception e) {
+				e.ToString();
+				return false;
+			}
 		}
 
 		/// <summary>
@@ -181,7 +253,12 @@ namespace GBaaS.io {
 		/// <returns><c>true</c>, if group was created, <c>false</c> otherwise.</returns>
 		/// <param name="groupModel">Group model.</param>
 		public bool CreateGroup(Objects.GBGroupObject groupModel) {
-			return GBUserService.Instance.CreateGroup (groupModel);
+			try {
+				return GBUserService.Instance.CreateGroup (groupModel);
+			} catch (Exception e) {
+				e.ToString();
+				return false;
+			}
 		}
 
 		/// <summary>
@@ -191,7 +268,12 @@ namespace GBaaS.io {
 		/// <param name="userName">User name.</param>
 		/// <param name="groupID">Group I.</param>
 		public bool AddUserToGroup(string userName, string groupID)  {
-			return GBUserService.Instance.AddUserToGroup (userName, groupID);
+			try {
+				return GBUserService.Instance.AddUserToGroup (userName, groupID);
+			} catch (Exception e) {
+				e.ToString();
+				return false;
+			}
 		}
 
 		/// <summary>
@@ -201,7 +283,12 @@ namespace GBaaS.io {
 		/// <param name="userName">User name.</param>
 		/// <param name="groupID">Group I.</param>
 		public bool RemoveUserFromGroup(string userName, string groupID) {
-			return GBUserService.Instance.RemoveUserFromGroup (userName, groupID);
+			try {
+				return GBUserService.Instance.RemoveUserFromGroup (userName, groupID);
+			} catch (Exception e) {
+				e.ToString();
+				return false;
+			}
 		}
 
 		/// <summary>
@@ -210,7 +297,12 @@ namespace GBaaS.io {
 		/// <returns>The users for group.</returns>
 		/// <param name="groupID">Group I.</param>
 		public List<Objects.GBUserObject> GetUsersForGroup(string groupID) {
-			return GBUserService.Instance.GetUsersForGroup (groupID);
+			try {
+				return GBUserService.Instance.GetUsersForGroup (groupID);
+			} catch (Exception e) {
+				e.ToString();
+				return default(List<Objects.GBUserObject>);
+			}
 		}
 
 //********** For ScoreService ********** //
@@ -222,7 +314,12 @@ namespace GBaaS.io {
 		/// <returns><c>true</c>, if score was added, <c>false</c> otherwise.</returns>
 		/// <param name="score">Score.</param>
 		public bool AddScore(Objects.GBScoreObject score) {
-			return GBScoreService.Instance.AddScore(score);
+			try {
+				return GBScoreService.Instance.AddScore(score);
+			} catch (Exception e) {
+				e.ToString();
+				return false;
+			}
 		}
 
 		/// <summary>
@@ -231,7 +328,12 @@ namespace GBaaS.io {
 		/// <returns>The score by UUID or name.</returns>
 		/// <param name="uuidOrName">UUID or name.</param>
 		public List<Objects.GBScoreObject> GetScoreByUuidOrName(string uuidOrName = "") {
-			return GBScoreService.Instance.GetScoreByUuidOrName(uuidOrName);
+			try {
+				return GBScoreService.Instance.GetScoreByUuidOrName(uuidOrName);
+			} catch (Exception e) {
+				e.ToString();
+				return default(List<Objects.GBScoreObject>);
+			}
 		}
 
 		/// <summary>
@@ -246,7 +348,12 @@ namespace GBaaS.io {
 		/// <param name="period">점수를 구하는 기간을 지정한다. 주간, 일간 지원</param>
 		/// <param name="weekstart">주간 단위로 점수를 구할 경우 시작하는 주의 첫 요일 지정</param>
 		public List<Objects.GBScoreObject> GetScoreMore(string stage = "", string unit = "", int limit = 0, bool isMore = false, Period period = Period.Alltime, DayOfWeek weekstart = DayOfWeek.Sunday) {
-			return GBScoreService.Instance.GetScoreMore(stage, unit, limit, isMore, period, weekstart);
+			try {
+				return GBScoreService.Instance.GetScoreMore(stage, unit, limit, isMore, period, weekstart);
+			} catch (Exception e) {
+				e.ToString();
+				return default(List<Objects.GBScoreObject>);
+			}
 		}
 
 		/// <summary>
@@ -261,7 +368,12 @@ namespace GBaaS.io {
 		/// <param name="period">점수를 구하는 기간을 지정한다. 주간, 일간 지원</param>
 		/// <param name="weekstart">주간 단위로 점수를 구할 경우 시작하는 주의 첫 요일 지정</param>
 		public List<Objects.GBScoreObject> GetScore(string stage = "", string unit = "", int limit = 0, string cursor = "", Period period = Period.Alltime, DayOfWeek weekstart = DayOfWeek.Sunday) {
-			return GBScoreService.Instance.GetScore(stage, unit, limit, cursor, period, weekstart);
+			try {
+				return GBScoreService.Instance.GetScore(stage, unit, limit, cursor, period, weekstart);
+			} catch (Exception e) {
+				e.ToString();
+				return default(List<Objects.GBScoreObject>);
+			}
 		}
 
 		/// <summary>
@@ -276,7 +388,12 @@ namespace GBaaS.io {
 		/// <param name="range">Range.</param>
 		public List<Objects.GBScoreObject> GetRank(string stage = "", string unit = "", 
 			ScoreOrder scoreOrder = ScoreOrder.DESC, Period period = Period.Daily, int rank = 0, int range = 1) {
-			return GBScoreService.Instance.GetRank(stage, unit, scoreOrder, period, rank, range);
+			try {
+				return GBScoreService.Instance.GetRank(stage, unit, scoreOrder, period, rank, range);
+			} catch (Exception e) {
+				e.ToString();
+				return default(List<Objects.GBScoreObject>);
+			}
 		}
 
 		/// <summary>
@@ -290,7 +407,12 @@ namespace GBaaS.io {
 		/// <param name="period">점수를 구하는 기간을 지정한다. 주간, 일간 지원</param>
 		/// <param name="weekstart">주간 단위로 점수를 구할 경우 시작하는 주의 첫 요일 지정</param>
 		public List<Objects.GBScoreObject> GetScoreLogMore(string stage = "", string unit = "", int limit = 0, bool isMore = false, Period period = Period.Alltime, DayOfWeek weekstart = DayOfWeek.Sunday) {
-			return GBScoreService.Instance.GetScoreLogMore(stage, unit, limit, isMore, period, weekstart);
+			try {
+				return GBScoreService.Instance.GetScoreLogMore(stage, unit, limit, isMore, period, weekstart);
+			} catch (Exception e) {
+				e.ToString();
+				return default(List<Objects.GBScoreObject>);
+			}
 		}
 
 		/// <summary>
@@ -305,7 +427,12 @@ namespace GBaaS.io {
 		/// <param name="period">점수를 구하는 기간을 지정한다. 주간, 일간 지원</param>
 		/// <param name="weekstart">주간 단위로 점수를 구할 경우 시작하는 주의 첫 요일 지정</param>
 		public List<Objects.GBScoreObject> GetScoreLog(string stage = "", string unit = "", int limit = 0, string cursor = "", Period period = Period.Alltime, DayOfWeek weekstart = DayOfWeek.Sunday) {
-			return GBScoreService.Instance.GetScoreLog(stage, unit, limit, cursor, period, weekstart);
+			try {
+				return GBScoreService.Instance.GetScoreLog(stage, unit, limit, cursor, period, weekstart);
+			} catch (Exception e) {
+				e.ToString();
+				return default(List<Objects.GBScoreObject>);
+			}
 		}
 
 		/// <summary>
@@ -315,7 +442,12 @@ namespace GBaaS.io {
 		/// <param name="period">Period.</param>
 		/// <param name="weekstart">Weekstart.</param>
 		public string GetTimeStamp(Period period = Period.Alltime, DayOfWeek weekstart = DayOfWeek.Sunday) {
-			return GBScoreService.Instance.GetTimeStamp (period, weekstart);
+			try {
+				return GBScoreService.Instance.GetTimeStamp (period, weekstart);
+			} catch (Exception e) {
+				e.ToString();
+				return default(string);
+			}
 		}
 
 //********** For AchievementService ********** //
@@ -325,7 +457,12 @@ namespace GBaaS.io {
 		/// <returns><c>true</c>, if user achievement was added, <c>false</c> otherwise.</returns>
 		/// <param name="achievement">Achievement.</param>
 		public bool AddUserAchievement(GBObject achievement) {
-			return GBAchievementService.Instance.AddUserAchievement(achievement);
+			try {
+				return GBAchievementService.Instance.AddUserAchievement(achievement);
+			} catch (Exception e) {
+				e.ToString();
+				return false;
+			}
 		}
 
 		/// <summary>
@@ -336,7 +473,12 @@ namespace GBaaS.io {
 		/// <param name="limit">Limit.</param>
 		/// <param name="cursor">Cursor.</param>
 		public List<Objects.GBAchievementObject> GetAchievement(string locale = "", int limit = 0, string cursor = "") {
-			return GBAchievementService.Instance.GetAchievement(locale, limit, cursor);
+			try {
+				return GBAchievementService.Instance.GetAchievement(locale, limit, cursor);
+			} catch (Exception e) {
+				e.ToString();
+				return default(List<Objects.GBAchievementObject>);
+			}
 		}
 
 		/// <summary>
@@ -346,7 +488,12 @@ namespace GBaaS.io {
 		/// <param name="uuidOrName">UUID or name.</param>
 		/// <param name="locale">Locale.</param>
 		public Objects.GBAchievementObject GetAchievementByUUIDorName(string uuidOrName, string locale = "") {
-			return GBAchievementService.Instance.GetAchievementByUUIDorName(uuidOrName, locale);
+			try {
+				return GBAchievementService.Instance.GetAchievementByUUIDorName(uuidOrName, locale);
+			} catch (Exception e) {
+				e.ToString();
+				return default(Objects.GBAchievementObject);
+			}
 		}
 
 		/// <summary>
@@ -358,7 +505,12 @@ namespace GBaaS.io {
 		/// <param name="isUnlocked">If set to <c>true</c> is unlocked.</param>
 		/// <param name="locale">Locale.</param>
 		public Objects.GBAchievementObject UpdateAchievement(string uuid, int currentStepCount, bool isUnlocked, string locale = "") {
-			return GBAchievementService.Instance.UpdateAchievement(uuid, currentStepCount, isUnlocked, locale);
+			try {
+				return GBAchievementService.Instance.UpdateAchievement(uuid, currentStepCount, isUnlocked, locale);
+			} catch (Exception e) {
+				e.ToString();
+				return default(Objects.GBAchievementObject);
+			}
 		}
 
 //********** For PushService ********** //
@@ -376,7 +528,12 @@ namespace GBaaS.io {
 		public bool SendMessage(
 			string message, string scheduleDate, string deviceIds, string groupPaths, string userNames, 
 			PushSendType sendType, PushScheduleType scheduleType) {
-			return GBPushService.Instance.SendMessage(message, scheduleDate, deviceIds, groupPaths, userNames, sendType, scheduleType);
+			try {
+				return GBPushService.Instance.SendMessage(message, scheduleDate, deviceIds, groupPaths, userNames, sendType, scheduleType);
+			} catch (Exception e) {
+				e.ToString();
+				return false;
+			}
 		}
 
 		/// <summary>
@@ -386,10 +543,15 @@ namespace GBaaS.io {
 		/// <param name="deviceModel">Device model.</param>
 		/// <param name="deviceOSVersion">Device OS version.</param>
 		/// <param name="devicePlatform">Device platform.</param>
-		/// <param name="registeration_id">Registeration_id.</param>
+		/// <param name="registration_id">Registration_id.</param>
 		public bool RegisterDevice(
-			string deviceModel, string deviceOSVersion, string devicePlatform, string registeration_id) {
-			return GBPushService.Instance.RegisterDevice(deviceModel, deviceOSVersion, devicePlatform, registeration_id);
+			string deviceModel, string deviceOSVersion, string devicePlatform, string registration_id) {
+			try {
+				return GBPushService.Instance.RegisterDevice(deviceModel, deviceOSVersion, devicePlatform, registration_id);
+			} catch (Exception e) {
+				e.ToString();
+				return false;
+			}
 		}
 
 //********** For GameDataService ********** //
@@ -399,15 +561,30 @@ namespace GBaaS.io {
 		// Value 는 저장 전에 암호화 되어 전송되며
 		// Load 될 때 자동으로 복호화 된다.
 		public bool GameDataSave(string key, string value) {
-			return GBCollectionService.Instance.GameDataSave(key, value);
+			try {
+				return GBCollectionService.Instance.GameDataSave(key, value);
+			} catch (Exception e) {
+				e.ToString();
+				return false;
+			}
 		}
 
 		public string GameDataLoad(string key) {
-			return GBCollectionService.Instance.GameDataLoad(key);
+			try {
+				return GBCollectionService.Instance.GameDataLoad(key);
+			} catch (Exception e) {
+				e.ToString();
+				return default(string);
+			}
 		}
 
 		public bool ReceiptSave(GBReceiptObject receipt) {
-			return receipt.Save();
+			try {
+				return receipt.Save();
+			} catch (Exception e) {
+				e.ToString();
+				return false;
+			}
 		}
 
 //********** For CollectionService ********** //
@@ -417,7 +594,12 @@ namespace GBaaS.io {
 		/// <returns>The list.</returns>
 		/// <param name="collectionName">Collection name.</param>
 		public List<Objects.GBObject> GetList(string collectionName) {
-			return GBCollectionService.Instance.GetList(collectionName);
+			try {
+				return GBCollectionService.Instance.GetList(collectionName);
+			} catch (Exception e) {
+				e.ToString();
+				return default(List<Objects.GBObject>);
+			}
 		}
 
 		/// <summary>
@@ -429,7 +611,12 @@ namespace GBaaS.io {
 		/// <param name="latitude">Latitude.</param>
 		/// <param name="longitude">Longitude.</param>
 		public List<Objects.GBObject> GetListInRange(string collectionName, float meters, float latitude, float longitude) {
-			return GBCollectionService.Instance.GetListInRange(collectionName, meters, latitude, longitude);
+			try {
+				return GBCollectionService.Instance.GetListInRange(collectionName, meters, latitude, longitude);
+			} catch (Exception e) {
+				e.ToString();
+				return default(List<Objects.GBObject>);
+			}
 		}
 
 		/// <summary>
@@ -441,7 +628,12 @@ namespace GBaaS.io {
 		/// <param name="value">Value.</param>
 		/// <param name="limit">Limit.</param>
 		public List<Objects.GBObject> GetObject(string objectName, string key, string value, int limit = 1) {
-			return GBCollectionService.Instance.GetObject(objectName, key, value, limit);
+			try {
+				return GBCollectionService.Instance.GetObject(objectName, key, value, limit);
+			} catch (Exception e) {
+				e.ToString();
+				return default(List<Objects.GBObject>);
+			}
 		}
 
 		/// <summary>
@@ -451,7 +643,12 @@ namespace GBaaS.io {
 		/// <param name="collectionName">Collection name.</param>
 		/// <param name="list">List.</param>
 		public bool CreateList(string collectionName, List<Objects.GBObject> list) {
-			return GBCollectionService.Instance.CreateList(collectionName, list);
+			try {
+				return GBCollectionService.Instance.CreateList(collectionName, list);
+			} catch (Exception e) {
+				e.ToString();
+				return false;
+			}
 		}
 
 //********** For RequestService ********** //
@@ -462,7 +659,12 @@ namespace GBaaS.io {
 		/// <param name="username">Username.</param>
 		/// <param name="password">Password.</param>
 		public string GetToken(string username, string password) {
-			return GBRequestService.Instance.GetToken (username, password);
+			try {
+				return GBRequestService.Instance.GetToken (username, password);
+			} catch (Exception e) {
+				e.ToString();
+				return default(string);
+			}
 		}
 
 		/// <summary>
@@ -471,7 +673,12 @@ namespace GBaaS.io {
 		/// <returns>The up token.</returns>
 		/// <param name="token">Token.</param>
 		public string LookUpToken(string token) {
-			return GBRequestService.Instance.LookUpToken (token);
+			try {
+				return GBRequestService.Instance.LookUpToken (token);
+			} catch (Exception e) {
+				e.ToString();
+				return default(string);
+			}
 		}
 
 //********** For NetService ********** //

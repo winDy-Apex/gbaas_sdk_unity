@@ -10,6 +10,8 @@ namespace GBaaS.io.Utils
 {
 	class HttpHelper : Singleton<HttpHelper>
 	{
+		public const int TIMEOUT = 3000;
+
 		public enum RequestTypes { Get, Post, Put, Delete }
 		
 		public string _accessToken { get; set; }
@@ -19,12 +21,16 @@ namespace GBaaS.io.Utils
 		{
 			try {
 				WebRequest req = WebRequest.Create(url);
-				WebResponse resp = req.GetResponse();
-				StreamReader sr = new StreamReader(resp.GetResponseStream());
-				return sr.ReadToEnd().Trim();
-			} catch { // HTTP Call Fail or No Result Set
-				return "";
+				req.Timeout=TIMEOUT;
+				using(WebResponse resp = req.GetResponse()) {
+					StreamReader sr = new StreamReader(resp.GetResponseStream());
+					return sr.ReadToEnd().Trim();
+				}
+			} catch (WebException e) { // HTTP Call Fail or No Result Set
+				e.ToString();
 			}
+
+			return "";
 		}
 		#endregion
 
@@ -43,6 +49,7 @@ namespace GBaaS.io.Utils
 		public ReturnT PerformPost<PostT, ReturnT>(string url, PostT postData, NameValueCollection files)
 		{
 			HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
+			req.Timeout=TIMEOUT;
 
 			NameValueCollection nvpPost;
 			if (typeof(PostT) == typeof(NameValueCollection))
@@ -60,19 +67,27 @@ namespace GBaaS.io.Utils
 				FileStream fs = File.OpenRead(files[fKey]);
 				postFiles.Add(new UploadFile(fs, fKey, files[fKey], "application/octet-stream"));
 			}
-
-			var response = HttpUploadHelper.Upload(req, postFiles.ToArray(), nvpPost);
-
-			using (Stream s = response.GetResponseStream())
-				using (StreamReader sr = new StreamReader(s))
+				
+			try
 			{
-				var responseJson = sr.ReadToEnd();
-				if (typeof(ReturnT) == typeof(string))
-				{
-					return (ReturnT)Convert.ChangeType(responseJson, typeof(ReturnT));
-				}
+				var response = HttpUploadHelper.Upload(req, postFiles.ToArray(), nvpPost);
 
-				return fastJSON.JSON.Instance.ToObject<ReturnT>(responseJson);
+				using (Stream s = response.GetResponseStream())
+					using (StreamReader sr = new StreamReader(s))
+				{
+					var responseJson = sr.ReadToEnd();
+					if (typeof(ReturnT) == typeof(string))
+					{
+						return (ReturnT)Convert.ChangeType(responseJson, typeof(ReturnT));
+					}
+
+					return fastJSON.JSON.Instance.ToObject<ReturnT>(responseJson);
+				}
+			}
+			catch (WebException ex)
+			{
+				ex.ToString();
+				return default(ReturnT);
 			}
 		}
 
@@ -104,6 +119,7 @@ namespace GBaaS.io.Utils
 		{
 			//Initilize the http request
 			HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
+			req.Timeout=TIMEOUT;
 			req.ContentType = "application/json";
 			req.Method = Enum.GetName(typeof(RequestTypes), method).ToUpper();
 			if (_accessToken != null && _accessToken.Length > 0) {

@@ -9,18 +9,22 @@ namespace GBaaS.io.Services
 	{
 		public GBScoreService() {}
 
-		public GBaaSApiHandler _handler = null;
+		public List<GBaaSApiHandler> _handler = new List<GBaaSApiHandler>();
 
 		// Cursor For Continuos Query
 		private string _cursor_score 	= "";
 		private string _cursor_scoreLog	= "";
 
 		public void SetHandler(GBaaSApiHandler handler) {
-			_handler = handler;
+			if (handler == null) {
+				_handler.Clear();
+			} else {
+				_handler.Add(handler);
+			}
 		}
 
 		private bool IsAsync() {
-			return (_handler != null);
+			return (_handler.Count > 0);
 		}
 
 		public bool AddScore(Objects.GBScoreObject score) {
@@ -36,13 +40,17 @@ namespace GBaaS.io.Services
 		private bool AddScoreThread(Objects.GBScoreObject score) {
 			if (score.GetUUID() != null) {
 				if (IsAsync()) {
-					_handler.OnAddScore(score.Update());
+					foreach (GBaaSApiHandler handler in _handler) {
+						handler.OnAddScore(score.Update());
+					}
 				} else {
 					return score.Update();
 				}
 			} else {
 				if (IsAsync()) {
-					_handler.OnAddScore(score.Save());
+					foreach (GBaaSApiHandler handler in _handler) {
+						handler.OnAddScore(score.Save());
+					}
 				} else {
 					return score.Save();
 				}
@@ -67,7 +75,9 @@ namespace GBaaS.io.Services
 			var rawResults = GBRequestService.Instance.PerformRequest<string>("/" + entity_type + "/" + uuidOrName, HttpHelper.RequestTypes.Get, "");
 			if (rawResults.IndexOf ("error") != -1) {
 				if (IsAsync()) {
-					_handler.OnGetScoreByUuidOrName(default(List<Objects.GBScoreObject>));
+					foreach (GBaaSApiHandler handler in _handler) {
+						handler.OnGetScoreByUuidOrName(default(List<Objects.GBScoreObject>));
+					}
 				} else {
 					return default(List<Objects.GBScoreObject>);
 				}
@@ -76,7 +86,9 @@ namespace GBaaS.io.Services
 			var scores = GBRequestService.Instance.GetEntitiesFromJson(rawResults);
 
 			if (IsAsync()) {
-				_handler.OnGetScoreByUuidOrName(MakeScoreList(scores));
+				foreach (GBaaSApiHandler handler in _handler) {
+					handler.OnGetScoreByUuidOrName(MakeScoreList(scores));
+				}
 			} else {
 				return MakeScoreList(scores);
 			}
@@ -162,7 +174,9 @@ namespace GBaaS.io.Services
 			var rawResults = GBRequestService.Instance.PerformRequest<string>("/" + entity_type + "?" + query, HttpHelper.RequestTypes.Get, "");
 			if (rawResults.IndexOf ("error") != -1) {
 				if (IsAsync()) {
-					_handler.OnGetScore(default(List<Objects.GBScoreObject>));
+					foreach (GBaaSApiHandler handler in _handler) {
+						handler.OnGetScore(default(List<Objects.GBScoreObject>));
+					}
 				} else {
 					return default(List<Objects.GBScoreObject>);
 				}
@@ -172,7 +186,9 @@ namespace GBaaS.io.Services
 			_cursor_score	= GBRequestService.Instance.GetValueFromJson("cursor", rawResults);
 
 			if (IsAsync()) {
-				_handler.OnGetScore(MakeScoreList(scores));
+				foreach (GBaaSApiHandler handler in _handler) {
+					handler.OnGetScore(MakeScoreList(scores));
+				}
 			} else {
 				return MakeScoreList(scores);
 			}
@@ -243,7 +259,9 @@ namespace GBaaS.io.Services
 			var rawResults = GBRequestService.Instance.PerformRequest<string>(requestUrl, HttpHelper.RequestTypes.Get, "");
 			if (rawResults.IndexOf ("error") != -1) {
 				if (IsAsync()) {
-					_handler.OnGetRank(default(List<Objects.GBScoreObject>));
+					foreach (GBaaSApiHandler handler in _handler) {
+						handler.OnGetRank(default(List<Objects.GBScoreObject>));
+					}
 				} else {
 					return default(List<Objects.GBScoreObject>);
 				}
@@ -253,7 +271,9 @@ namespace GBaaS.io.Services
 			_cursor_score	= GBRequestService.Instance.GetValueFromJson("cursor", rawResults);
 
 			if (IsAsync()) {
-				_handler.OnGetScore(MakeScoreList(scores));
+				foreach (GBaaSApiHandler handler in _handler) {
+					handler.OnGetScore(MakeScoreList(scores));
+				}
 			} else {
 				return MakeScoreList(scores);
 			}
@@ -329,7 +349,9 @@ namespace GBaaS.io.Services
 			var rawResults = GBRequestService.Instance.PerformRequest<string>("/" + entity_type + "?" + query, HttpHelper.RequestTypes.Get, "");
 			if (rawResults.IndexOf ("error") != -1) {
 				if (IsAsync()) {
-					_handler.OnGetScoreLog(default(List<Objects.GBScoreObject>));
+					foreach (GBaaSApiHandler handler in _handler) {
+						handler.OnGetScoreLog(default(List<Objects.GBScoreObject>));
+					}
 				} else {
 					return default(List<Objects.GBScoreObject>);
 				}
@@ -339,7 +361,9 @@ namespace GBaaS.io.Services
 			_cursor_scoreLog 	= GBRequestService.Instance.GetValueFromJson("cursor", rawResults);
 
 			if (IsAsync()) {
-				_handler.OnGetScoreLog(MakeScoreList(scores));
+				foreach (GBaaSApiHandler handler in _handler) {
+					handler.OnGetScoreLog(MakeScoreList(scores));
+				}
 			} else {
 				return MakeScoreList(scores);
 			}

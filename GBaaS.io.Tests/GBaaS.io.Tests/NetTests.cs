@@ -51,6 +51,7 @@ namespace GBaaS.io.Tests.Net
 		}
 	}
 
+	[Ignore]
 	public class NetTests
 	{
 		[Test]
@@ -69,7 +70,7 @@ namespace GBaaS.io.Tests.Net
 			Assert.IsTrue(result);
 
 			GBaaSApiHandler handler = new UserHandler();
-			aClient2.SetHandler(handler);
+			aClient2.AddHandler(handler);
 
 			AsyncCallChecker.Instance.SetAsyncCalling(true);
 
@@ -90,7 +91,7 @@ namespace GBaaS.io.Tests.Net
 			GBaaS.io.GBaaSApi aClient2 = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL);
 
 			GBaaSApiHandler handler = new UserHandler();
-			aClient2.SetHandler(handler);
+			aClient2.AddHandler(handler);
 
 			AsyncCallChecker.Instance.SetAsyncCalling(true);
 
@@ -121,7 +122,7 @@ namespace GBaaS.io.Tests.Net
 			GBaaS.io.GBaaSApi aClient2 = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL);
 
 			GBaaSApiHandler handler = new UserHandler();
-			aClient2.SetHandler(handler);
+			aClient2.AddHandler(handler);
 
 			AsyncCallChecker.Instance.SetAsyncCalling(true);
 

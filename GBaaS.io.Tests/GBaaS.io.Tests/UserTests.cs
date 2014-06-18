@@ -13,7 +13,7 @@ namespace GBaaS.io.Tests
 	public class UserTests
 	{
 		GBaaS.io.GBaaSApi aClient = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL);
-		string _token = "";
+		//string _token = "";
 
 		[Test]
 		public void LoginTest()
@@ -63,6 +63,7 @@ namespace GBaaS.io.Tests
 		{
 			//string un = Defines.TEST_USERNAME;
 			string un = "gbaas_" + Guid.NewGuid();
+			//string un = "test1";
 
 			var result = aClient.CreateUser(new GBUserObject {
 				username = un,
