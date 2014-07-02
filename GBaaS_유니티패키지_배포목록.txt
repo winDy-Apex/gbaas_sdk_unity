@@ -1,10 +1,3 @@
-GBaaS
-	GBaaS/fastjSON.dll
-	GBaaS/GBaaS.io.dll
-	GBaaS/GBaaS.io.dll.mdb
-	GBaaS/Krystalware.UploadHelper.dll
-	GBaaS/Newtonsoft.json.dll
-	
 GCM-Sample
 	GCM-Sample/MainScene.cs
 	GCM-Sample/MainScene.unity
@@ -22,5 +15,9 @@ Plugins
 		Plugins/GCM/GCMReceiver.cs
 		Plugins/GCM/MinijSON.cs
 	
-	Standard Assets/GBaaSObjects.cs
-	
+Standard Assets/GBaaSObjects.cs
+	GBaaS/
+	GBaaS/fastjSON.dll
+	GBaaS/GBaaS.io.dll
+	GBaaS/Krystalware.UploadHelper.dll
+	GBaaS/Newtonsoft.json.dll
