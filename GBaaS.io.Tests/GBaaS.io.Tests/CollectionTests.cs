@@ -3,6 +3,7 @@ using NUnit.Framework;
 using GBaaS.io;
 using GBaaS.io.Objects;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace GBaaS.io.Tests
 {
@@ -68,10 +69,13 @@ namespace GBaaS.io.Tests
 			aClient2.Login("test", "abc123");
 
 			List<Objects.GBObject> collection = aClient2.GetObject("CustomOneObject", "mydataOne", "One Data", 1);
-
 			Console.Out.WriteLine ("In GetObject Count : " + collection.Count.ToString());
-
 			Assert.IsTrue(collection.Count > 0);
+
+			//var serializedParent = JsonConvert.SerializeObject(collection[0]); 
+			CustomOneObject customObject = JsonConvert.DeserializeObject<CustomOneObject>(collection[0].GetSerializedString());
+
+			Assert.IsTrue(customObject.mydataOne.CompareTo("One Data") == 0);
 		}
 
 		[Test]

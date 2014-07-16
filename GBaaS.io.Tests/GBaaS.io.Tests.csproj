@@ -11,8 +11,6 @@
     <AssemblyName>GBaaS.io.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <ProductVersion>12.0.0</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -60,6 +58,7 @@
     <Compile Include="GBaaS.io.Tests\PushTests.cs" />
     <Compile Include="GBaaS.io.Tests\CollectionTests.cs" />
     <Compile Include="GBaaS.io.Tests\NetTests.cs" />
+    <Compile Include="GBaaS.io.Tests\CustomApiTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

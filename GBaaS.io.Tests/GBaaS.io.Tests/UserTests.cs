@@ -40,6 +40,27 @@ namespace GBaaS.io.Tests
 		}
 
 		[Test]
+		public void LoginWithoutIDAndChangeIDAfter()
+		{
+			string un = Guid.NewGuid().ToString();
+			//string un = "TTOOMM";
+			var result = aClient.LoginWithoutID(un);
+			Assert.IsTrue(result);
+
+			var results = aClient.GetUserInfo();
+			Assert.IsNotNull(results);
+
+			var resultss = aClient.UpdateUser(new GBUserObject {
+				username = "ChangeID" + un,
+				password = Defines.TEST_PASSWORD,
+				Email = un + "@test.com",
+				age = 19,
+				gender = "Female"
+			});
+			Assert.IsNotNull (resultss);
+		}
+
+		[Test]
 		public void UpdateUserName()
 		{
 			string un = "gbaas_" + Guid.NewGuid();

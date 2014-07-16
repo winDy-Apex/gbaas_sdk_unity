@@ -28,6 +28,10 @@ namespace GBaaS.io.Objects
 			return _jsonToken;
 		}
 
+		public string GetSerializedString() {
+			return _jsonToken.ToString();
+		}
+
 		public bool Save() { 
 			var rawResults = GBRequestService.Instance.PerformRequest<string>("/" + GetEntityType(), HttpHelper.RequestTypes.Post, this);
 			return HttpHelper.Instance.CheckSuccess(rawResults);

@@ -1,18 +1,18 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Release" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="GBaaS.io/Services/GBService.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="GBaaS.io/Services/GBUserService.cs">
     <Files>
       <File FileName="GBaaS.io.Tests/GBaaS.io.Tests/ClientTests.cs" Line="1" Column="1" />
       <File FileName="GBaaS.io/Objects/GBObject.cs" Line="1" Column="1" />
       <File FileName="GBaaS.io/Services/GBAchievementService.cs" Line="1" Column="1" />
       <File FileName="GBaaS.io.Tests/GBaaS.io.Tests/AchievementTests.cs" Line="1" Column="1" />
-      <File FileName="GBaaS.io/Objects/GBUserObject.cs" Line="1" Column="1" />
-      <File FileName="GBaaS.io/Services/GBUserService.cs" Line="1" Column="1" />
+      <File FileName="GBaaS.io/Objects/GBUserObject.cs" Line="24" Column="1" />
+      <File FileName="GBaaS.io/Services/GBUserService.cs" Line="193" Column="26" />
       <File FileName="GBaaS.io/Services/GBService.cs" Line="11" Column="1" />
       <File FileName="GBaaS.io/Services/GBCollectionService.cs" Line="1" Column="1" />
       <File FileName="GBaaS.io.Tests/GBaaS.io.Tests/CollectionTests.cs" Line="1" Column="1" />
-      <File FileName="GBaaS.io/GBaaSApiHandler.cs" Line="1" Column="1" />
-      <File FileName="GBaaS.io.Tests/GBaaS.io.Tests/UserTests.cs" Line="1" Column="1" />
+      <File FileName="GBaaS.io/GBaaSApiHandler.cs" Line="21" Column="46" />
+      <File FileName="GBaaS.io.Tests/GBaaS.io.Tests/UserTests.cs" Line="72" Column="26" />
       <File FileName="GBaaS.io/Objects/GBGroupObject.cs" Line="1" Column="1" />
       <File FileName="GBaaS.io/Utils/HttpHelper.cs" Line="1" Column="1" />
       <File FileName="GBaaS.io/Services/GBPushService.cs" Line="1" Column="1" />
@@ -31,7 +31,7 @@
       <File FileName="GBaaS.io/Objects/GBAchievementLocaleObject.cs" Line="1" Column="1" />
       <File FileName="GBaaS.io/Objects/GBGameDataObject.cs" Line="1" Column="1" />
       <File FileName="GBaaS.io/Objects/GBUserAchievementObject.cs" Line="1" Column="1" />
-      <File FileName="GBaaS.io/GBaaSApi.cs" Line="1" Column="1" />
+      <File FileName="GBaaS.io/GBaaSApi.cs" Line="49" Column="27" />
       <File FileName="GBaaS.io/Services/GBNetService.cs" Line="1" Column="1" />
       <File FileName="../unity2d_testgame/Assets/Scripts/MVC/ViewInterface.cs" Line="1" Column="1" />
       <File FileName="../unity2d_testgame/Assets/Scripts/StartMenu/StartMenuController.cs" Line="1" Column="1" />
@@ -39,10 +39,35 @@
       <File FileName="../unity2d_testgame/Assets/Scripts/Score.cs" Line="1" Column="1" />
       <File FileName="../unity2d_testgame/Assets/Scripts/StartMenu/RegistrationService.cs" Line="1" Column="1" />
       <File FileName="../unity2d_testgame/Assets/Scripts/StartMenu/RegistrationView.cs" Line="1" Column="1" />
-      <File FileName="GBaaS.io.Tests/GBaaS.io.Tests/AsyncTests.cs" Line="1" Column="1" />
+      <File FileName="GBaaS.io.Tests/GBaaS.io.Tests/AsyncTests.cs" Line="174" Column="1" />
       <File FileName="GBaaS.io/Objects/GBScoreObject.cs" Line="1" Column="1" />
       <File FileName="GBaaS.io/Services/GBScoreService.cs" Line="1" Column="1" />
+      <File FileName="GBaaS.io.Tests/GBaaS.io.Tests/Defines.cs" Line="1" Column="1" />
     </Files>
+    <Pads>
+      <Pad Id="MonoDevelop.NUnit.TestPad">
+        <State expanded="True">
+          <Node name="GBaaS.io.Tests" expanded="True">
+            <Node name="GBaaS" expanded="True">
+              <Node name="io" expanded="True">
+                <Node name="Tests" expanded="True">
+                  <Node name="AchievementTests" expanded="True" />
+                  <Node name="AsyncTests" expanded="True" selected="True" />
+                  <Node name="ClientTests" expanded="True">
+                    <Node name="ClientTests" expanded="True" />
+                    <Node name="ScoreTests" expanded="True" />
+                  </Node>
+                  <Node name="CollectionTests" expanded="True" />
+                  <Node name="Net" expanded="True" />
+                  <Node name="PushTests" expanded="True" />
+                  <Node name="UserTests" expanded="True" />
+                </Node>
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
@@ -51,7 +76,7 @@
       <Breakpoint file="/Users/winDy/Documents/windystudio_svn/PROJECT/Apexplatform/gbaas_sdk_unity/GBaaS.io.Tests/GBaaS.io.Tests/AchievementTests.cs" line="241" column="82" />
       <Breakpoint file="/Users/winDy/Documents/windystudio_svn/PROJECT/Apexplatform/gbaas_sdk_unity/GBaaS.io/Services/GBUserService.cs" line="91" column="1" />
       <Breakpoint file="/Users/winDy/Documents/windystudio_svn/PROJECT/Apexplatform/gbaas_sdk_unity/GBaaS.io.Tests/GBaaS.io.Tests/ClientTests.cs" line="127" column="1" />
-      <Breakpoint file="/Users/winDy/Documents/windystudio_svn/PROJECT/Apexplatform/gbaas_sdk_unity/GBaaS.io.Tests/GBaaS.io.Tests/UserTests.cs" line="148" column="1" />
+      <Breakpoint file="/Users/winDy/Documents/windystudio_svn/PROJECT/Apexplatform/gbaas_sdk_unity/GBaaS.io.Tests/GBaaS.io.Tests/UserTests.cs" line="169" column="1" />
       <Breakpoint file="/Users/winDy/Documents/windystudio_svn/PROJECT/Apexplatform/gbaas_sdk_unity/GBaaS.io/Services/GBUserService.cs" line="417" column="1" />
       <Breakpoint file="/Users/winDy/Documents/windystudio_svn/PROJECT/Apexplatform/gbaas_sdk_unity/GBaaS.io.Tests/GBaaS.io.Tests/CollectionTests.cs" line="208" column="1" />
       <Breakpoint file="/Users/winDy/Documents/windystudio_svn/PROJECT/Apexplatform/gbaas_sdk_unity/GBaaS.io.Tests/GBaaS.io.Tests/CollectionTests.cs" line="33" column="1" />
@@ -59,16 +84,16 @@
       <Breakpoint file="/Users/winDy/Documents/windystudio_svn/PROJECT/Apexplatform/gbaas_sdk_unity/GBaaS.io/Services/GBScoreService.cs" line="243" column="1" />
       <Breakpoint file="/Users/winDy/Documents/windystudio_svn/PROJECT/Apexplatform/gbaas_sdk_unity/GBaaS.io/Services/GBCollectionService.cs" line="49" column="1" />
       <Breakpoint file="/Users/winDy/Documents/windystudio_svn/PROJECT/Apexplatform/gbaas_sdk_unity/GBaaS.io/Services/GBScoreService.cs" line="385" column="1" />
-      <Breakpoint file="/Users/winDy/Documents/windystudio_svn/PROJECT/Apexplatform/gbaas_sdk_unity/GBaaS.io.Tests/GBaaS.io.Tests/UserTests.cs" line="99" column="1" />
+      <Breakpoint file="/Users/winDy/Documents/windystudio_svn/PROJECT/Apexplatform/gbaas_sdk_unity/GBaaS.io.Tests/GBaaS.io.Tests/UserTests.cs" line="120" column="1" />
       <Breakpoint file="/Users/winDy/Documents/windystudio_svn/PROJECT/Apexplatform/gbaas_sdk_unity/GBaaS.io/Services/GBPushService.cs" line="43" column="1" />
-      <Breakpoint file="/Users/winDy/Documents/windystudio_svn/PROJECT/Apexplatform/gbaas_sdk_unity/GBaaS.io.Tests/GBaaS.io.Tests/UserTests.cs" line="75" column="54" />
+      <Breakpoint file="/Users/winDy/Documents/windystudio_svn/PROJECT/Apexplatform/gbaas_sdk_unity/GBaaS.io.Tests/GBaaS.io.Tests/UserTests.cs" line="96" column="54" />
       <Breakpoint file="/Users/winDy/Documents/windystudio_svn/PROJECT/Apexplatform/gbaas_sdk_unity/GBaaS.io.Tests/GBaaS.io.Tests/PushTests.cs" line="25" column="38" />
       <Breakpoint file="/Users/winDy/Documents/windystudio_svn/PROJECT/Apexplatform/gbaas_sdk_unity/GBaaS.io/Services/GBPushService.cs" line="87" column="1" />
       <Breakpoint file="/Users/winDy/Documents/windystudio_svn/PROJECT/Apexplatform/gbaas_sdk_unity/GBaaS.io/Services/GBPushService.cs" line="85" column="1" />
       <Breakpoint file="/Users/winDy/Documents/windystudio_svn/PROJECT/Apexplatform/gbaas_sdk_unity/GBaaS.io/Services/GBPushService.cs" line="101" column="1" />
       <Breakpoint file="/Users/winDy/Documents/windystudio_svn/PROJECT/Apexplatform/gbaas_sdk_unity/GBaaS.io/Services/GBPushService.cs" line="132" column="1" />
       <Breakpoint file="/Users/winDy/Documents/windystudio_svn/PROJECT/Apexplatform/gbaas_sdk_unity/GBaaS.io/Services/GBPushService.cs" line="149" column="1" />
-      <Breakpoint file="/Users/winDy/Documents/windystudio_svn/PROJECT/Apexplatform/gbaas_sdk_unity/GBaaS.io.Tests/GBaaS.io.Tests/UserTests.cs" line="74" column="1" />
+      <Breakpoint file="/Users/winDy/Documents/windystudio_svn/PROJECT/Apexplatform/gbaas_sdk_unity/GBaaS.io.Tests/GBaaS.io.Tests/UserTests.cs" line="95" column="1" />
       <Breakpoint file="/Users/winDy/Documents/windystudio_svn/PROJECT/Apexplatform/gbaas_sdk_unity/GBaaS.io.Tests/GBaaS.io.Tests/AsyncTests.cs" line="160" column="1" />
       <Breakpoint file="/Users/winDy/Documents/windystudio_svn/PROJECT/Apexplatform/gbaas_sdk_unity/GBaaS.io.Tests/GBaaS.io.Tests/AsyncTests.cs" line="175" column="1" />
       <Breakpoint file="/Users/winDy/Documents/windystudio_svn/PROJECT/Apexplatform/gbaas_sdk_unity/GBaaS.io/Utils/HttpHelper.cs" line="173" column="1" />

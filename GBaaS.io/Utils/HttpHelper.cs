@@ -8,7 +8,7 @@ using System.Text;
 
 namespace GBaaS.io.Utils
 {
-	class HttpHelper : Singleton<HttpHelper>
+	public class HttpHelper : Singleton<HttpHelper>
 	{
 		public const int TIMEOUT = 3000;
 

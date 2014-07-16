@@ -10,7 +10,7 @@ namespace GBaaS.io.Services
 	/// <summary>
 	/// 서버와 연결 정보를 가지고 있으며 서버 요청시 URL path 생성등을 담당한다.
 	/// </summary>
-	class GBRequestService : GBService<GBRequestService>
+	public class GBRequestService : GBService<GBRequestService>
 	{
 		private string _gbaasUrl { get; set; }
 
