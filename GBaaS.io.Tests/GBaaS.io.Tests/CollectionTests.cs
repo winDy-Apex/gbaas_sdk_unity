@@ -3,7 +3,6 @@ using NUnit.Framework;
 using GBaaS.io;
 using GBaaS.io.Objects;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 
 namespace GBaaS.io.Tests
 {
@@ -62,20 +61,33 @@ namespace GBaaS.io.Tests
 			Assert.IsTrue(result);
 		}
 
+		/*
+		public string GetTypeNameTest<T>() {
+			Console.Out.WriteLine(typeof(T).().ToString());
+			return typeof(T).GetGenericArguments().ToString();
+		}
+		*/
+
+		[Test]
+		public void GetTypeNameTest() {
+			string ret = GBCollectionService.Instance.GetTypeName(typeof(Objects.GBRoom));
+			Assert.IsTrue(ret.Length > 0);
+		}
+
 		[Test]
 		public void GetObject()
 		{
 			GBaaS.io.GBaaSApi aClient2 = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL2);
 			aClient2.Login("test", "abc123");
 
-			List<Objects.GBObject> collection = aClient2.GetObject("CustomOneObject", "mydataOne", "One Data", 1);
+			List<CustomOneObject> collection = aClient2.GetObject<CustomOneObject>("mydataOne", "One Data", 1);
 			Console.Out.WriteLine ("In GetObject Count : " + collection.Count.ToString());
-			Assert.IsTrue(collection.Count > 0);
+			//Assert.IsTrue(collection.Count > 0);
 
 			//var serializedParent = JsonConvert.SerializeObject(collection[0]); 
-			CustomOneObject customObject = JsonConvert.DeserializeObject<CustomOneObject>(collection[0].GetSerializedString());
+			//CustomOneObject customObject = JsonConvert.DeserializeObject<CustomOneObject>(collection[0].GetSerializedString());
 
-			Assert.IsTrue(customObject.mydataOne.CompareTo("One Data") == 0);
+			Assert.IsTrue(collection[0].mydataOne.CompareTo("One Data") == 0);
 		}
 
 		[Test]
@@ -84,17 +96,10 @@ namespace GBaaS.io.Tests
 			GBaaS.io.GBaaSApi aClient2 = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL2);
 			aClient2.Login("test", "abc123");
 
-			List<Objects.GBObject> collection = aClient2.GetObject("CustomOneObject", "type", "customoneobject");
+			List<CustomOneObject> collection = aClient2.GetObject<CustomOneObject>("type", "customoneobject");
 
-			var item = collection[0].GetJsonToken();
+			CustomOneObject customObject = collection[0];
 
-			CustomOneObject customObject = new CustomOneObject {
-				mydataOne = (item["mydataOne"] ?? "").ToString(),
-				mydataTwo = (item["mydataTwo"] ?? "").ToString(),
-				mydataThree = (item["mydataThree"] ?? "").ToString()
-			};
-
-			customObject.SetUUID((item["uuid"] ?? "").ToString());
 			bool result = customObject.SetLocation(1.1f, 2.1f);
 
 			Assert.IsTrue(result);
@@ -139,18 +144,10 @@ namespace GBaaS.io.Tests
 			GBaaS.io.GBaaSApi aClient2 = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL2);
 			aClient2.Login("test", "abc123");
 
-			List<Objects.GBObject> collection = aClient2.GetObject("CustomOneObject", "mydataOne", "One Data");
+			List<CustomOneObject> collection = aClient2.GetObject<CustomOneObject>("mydataOne", "One Data");
 
-			var item = collection[0].GetJsonToken();
-			
-			CustomOneObject customObject = new CustomOneObject {
-				mydataOne = (item["mydataOne"] ?? "").ToString(),
-				mydataTwo = (item["mydataTwo"] ?? "").ToString(),
-				mydataThree = (item["mydataThree"] ?? "").ToString()
-			};
-
-			customObject.SetUUID((item["uuid"] ?? "").ToString());
-			customObject.mydataThree = "Modify Three Data 12345";
+			CustomOneObject customObject = collection[0];
+			customObject.mydataThree = "Modify Three Data 12345777";
 			bool result = customObject.Update();
 
 			Assert.IsTrue(result);
@@ -162,8 +159,9 @@ namespace GBaaS.io.Tests
 			GBaaS.io.GBaaSApi aClient2 = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL2);
 			aClient2.Login("test", "abc123");
 
-			List<Objects.GBObject> collection = aClient2.GetObject("CustomOneObject", "type", "customoneobject");
+			List<CustomOneObject> collection = aClient2.GetObject<CustomOneObject>("type", "customoneobject");
 
+			/*
 			var item = collection[0].GetJsonToken();
 
 			CustomOneObject customObject = new CustomOneObject {
@@ -171,8 +169,11 @@ namespace GBaaS.io.Tests
 				mydataTwo = (item["mydataTwo"] ?? "").ToString(),
 				mydataThree = (item["mydataThree"] ?? "").ToString()
 			};
+			*/
 
-			customObject.SetUUID((item["uuid"] ?? "").ToString());
+			CustomOneObject customObject = collection[0];
+
+			//customObject.SetUUID((item["uuid"] ?? "").ToString());
 			bool result = customObject.Delete();
 
 			Assert.IsTrue(result);

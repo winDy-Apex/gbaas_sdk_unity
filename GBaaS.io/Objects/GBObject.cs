@@ -6,18 +6,19 @@ namespace GBaaS.io.Objects
 {
 	public class GBObject
 	{
+		public string uuid { get; set; }
+
 		private 	string _entityType 	= "";
-		protected 	string _UUID 		= "";
 		protected 	Newtonsoft.Json.Linq.JToken _jsonToken;
 
 		public GBObject () {}
 
 		public void SetUUID(string uuid) {
-			_UUID = uuid;
+			uuid = uuid;
 		}
 
 		public string GetUUID() {
-			return _UUID;
+			return uuid;
 		}
 
 		public void SetJsonToken(Newtonsoft.Json.Linq.JToken jsonToken) {
@@ -38,12 +39,12 @@ namespace GBaaS.io.Objects
 		}
 
 		public bool Update() { 
-			var rawResults = GBRequestService.Instance.PerformRequest<string>("/" + GetEntityType() + "/" + _UUID, HttpHelper.RequestTypes.Put, this);
+			var rawResults = GBRequestService.Instance.PerformRequest<string>("/" + GetEntityType() + "/" + uuid, HttpHelper.RequestTypes.Put, this);
 			return HttpHelper.Instance.CheckSuccess(rawResults);
 		}
 
 		public bool Delete() { 
-			var rawResults = GBRequestService.Instance.PerformRequest<string>("/" + GetEntityType() + "/" + _UUID, HttpHelper.RequestTypes.Delete, null);
+			var rawResults = GBRequestService.Instance.PerformRequest<string>("/" + GetEntityType() + "/" + uuid, HttpHelper.RequestTypes.Delete, null);
 			return HttpHelper.Instance.CheckSuccess(rawResults);
 		}
 

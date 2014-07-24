@@ -45,7 +45,7 @@ namespace GBaaS.io {
 		// For Collection Service
 		public virtual void OnGetList(List<GBObject> result) {}
 		public virtual void OnGetListInRange(List<GBObject> result) {}
-		public virtual void OnGetObject(List<GBObject> result) {}
+		public virtual void OnGetObject<T>(List<T> result) {}
 		public virtual void OnCreateList(bool result) {}
 
 		// For Net Service

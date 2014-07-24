@@ -54,6 +54,7 @@ namespace GBaaS.io {
 			GBUserService.Instance.SetHandler(handler);
 			GBPushService.Instance.SetHandler(handler);
 			GBNetService.Instance.SetHandler(handler);
+			GBCollectionService.Instance.SetHandler(handler);
 		}
 
 		/// <summary>
@@ -627,12 +628,12 @@ namespace GBaaS.io {
 		/// <param name="key">Key.</param>
 		/// <param name="value">Value.</param>
 		/// <param name="limit">Limit.</param>
-		public List<Objects.GBObject> GetObject(string objectName, string key, string value, int limit = 1) {
+		public List<T> GetObject<T>(string key, string value, int limit = 1) {
 			try {
-				return GBCollectionService.Instance.GetObject(objectName, key, value, limit);
+				return GBCollectionService.Instance.GetObject<T>(key, value, limit);
 			} catch (Exception e) {
 				e.ToString();
-				return default(List<Objects.GBObject>);
+				return default(List<T>);
 			}
 		}
 

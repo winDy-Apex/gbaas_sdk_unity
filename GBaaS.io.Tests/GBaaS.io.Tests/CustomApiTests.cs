@@ -27,10 +27,18 @@ namespace GBaaS.io.Tests
 			CustomApiCallParams param = new CustomApiCallParams();
 			param.app = "gbaas";
 
+			//이 호출은 502 Error 발생, 원인 파악 할 것
 			//var rawResults = GBRequestService.Instance.PerformRequest<string>("/customapis/function/hello");
+
+			//var rawResults = HttpHelper.Instance.PerformJsonRequest<string>(
+			//	"https://api.gbaas.io/de5d2505c8d34410c9d8966e1e8fac11/gbaasman2/customapi/function/GetFormatData"
+			//	, HttpHelper.RequestTypes.Post, param, "");
+
+			//아래 호출은 성공 API_ENDPOINT 문제가 아닌 다른 요소에 문제가 있어 상기 호출이 502를 리턴하는 듯
 			var rawResults = HttpHelper.Instance.PerformJsonRequest<string>(
-				"https://api.gbaas.io/de5d2505c8d34410c9d8966e1e8fac11/gbaasman2/customapi/function/GetFormatData"
+				"https://api.gbaas.io/46429fea-a5b2-11e3-a2b5-4526b3bfa68e/4ddcbe30-a5b6-11e3-bbef-779adace1db9/customapi/function/GetFormatData"
 				, HttpHelper.RequestTypes.Post, param, "");
+
 			var entitiesResult = GBRequestService.Instance.GetEntitiesFromJson(rawResults);
 			if (entitiesResult != null) {
 			} else {

@@ -6,6 +6,14 @@ using GBaaS.io.Objects;
 
 namespace GBaaS.io.Tests
 {
+	/*
+	public class CustomOneObject : GBObject {
+		public string mydataOne { get; set; }
+		public string mydataTwo { get; set; }
+		public string mydataThree { get; set; }
+	}
+	*/
+
 	public class UserHandler : GBaaSApiHandler {
 		/*public override void OnResult(object result) {
 			Console.Out.WriteLine("Async On Result : " + result.ToString());
@@ -63,6 +71,21 @@ namespace GBaaS.io.Tests
 
 			Assert.IsNotNull(result);
 		}
+
+		public override void OnGetObject<T>(List<T> result) {
+			Console.Out.WriteLine("Async On GetObject Count is " + result.Count.ToString());
+			Console.Out.WriteLine("Custom Object Type is " + GBCollectionService.Instance.GetTypeName(typeof(T)));
+
+			string customObjectType = GBCollectionService.Instance.GetTypeName(typeof(T));
+
+			if (customObjectType.CompareTo("CustomOneObject") == 0) {
+				List<CustomOneObject> collection = (List<CustomOneObject>)((object)result);
+
+				AsyncCallChecker.Instance.SetAsyncCalling(false);
+
+				Assert.IsTrue(collection[0].mydataOne.CompareTo("One Data") == 0);
+			}
+		}
 	}
 
 	abstract class Singleton<DerivedType>
@@ -114,6 +137,31 @@ namespace GBaaS.io.Tests
 			aClient2.AddHandler(null);
 
 			Assert.IsFalse(aClient2.IsAsync());
+		}
+
+
+		[Test]
+		public void CallAsyncGetObject()
+		{
+			GBaaS.io.GBaaSApi aClient = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL2);
+			aClient.Login("test", "abc123");
+
+			GBaaSApiHandler handler = new UserHandler();
+			aClient.AddHandler(handler);
+
+			AsyncCallChecker.Instance.SetAsyncCalling(true);
+			List<CustomOneObject> collection = aClient.GetObject<CustomOneObject>("mydataOne", "One Data", 1);
+
+			//바로 리턴되는 결과는 없어야 정상
+			Assert.IsTrue(collection == default(List<CustomOneObject>));
+			
+			//Async 호출이 끝날때까지 대기, For Only Test Code, 실제로는 불필요한 코드
+			while (AsyncCallChecker.Instance.GetAsyncCalling()) {
+					Console.Out.WriteLine ("...AsyncCalling...");
+					System.Threading.Thread.Sleep(100);
+			}
+
+			aClient.AddHandler(null);
 		}
 
 		[Test]

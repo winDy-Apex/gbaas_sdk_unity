@@ -7,10 +7,11 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace GBaaS.io
 {
-	class GBCollectionService : GBService<GBCollectionService>
+	public class GBCollectionService : GBService<GBCollectionService>
 	{
 		public GBCollectionService () {}
 
@@ -238,10 +239,10 @@ namespace GBaaS.io
 
 			if (IsAsync()) {
 				foreach (GBaaSApiHandler handler in _handler) {
-					handler.OnGetList(MakeList(collection));
+					handler.OnGetList(MakeList<Objects.GBObject>(collection));
 				}
 			} else {
-				return MakeList(collection);
+				return MakeList<Objects.GBObject>(collection);
 			}
 
 			return default(List<Objects.GBObject>);
@@ -264,26 +265,26 @@ namespace GBaaS.io
 
 			if (IsAsync()) {
 				foreach (GBaaSApiHandler handler in _handler) {
-					handler.OnGetList(MakeList(collection));
+					handler.OnGetList(MakeList<Objects.GBObject>(collection));
 				}
 			} else {
-				return MakeList(collection);
+				return MakeList<Objects.GBObject>(collection);
 			}
 
 			return default(List<Objects.GBObject>);
 		}
 
-		public List<Objects.GBObject> GetObject(string objectName, string key, string value, int limit = 1) {
+		public List<T> GetObject<T>(string key, string value, int limit = 1) {
 			if (IsAsync()) {
-				Thread workerThread = new Thread(() => this.GetObjectThread(objectName, key, value, limit));
+				Thread workerThread = new Thread(() => this.GetObjectThread<T>(key, value, limit));
 				workerThread.Start();
-				return default(List<Objects.GBObject>);
+				return default(List<T>);
 			} else {
-				return this.GetObjectThread(objectName, key, value, limit);
+				return this.GetObjectThread<T>(key, value, limit);
 			}
 		}
 
-		private List<Objects.GBObject> GetObjectThread(string objectName, string key, string value, int limit) {
+		private List<T> GetObjectThread<T>(string key, string value, int limit) {
 			string query = "select *";
 
 			if ((key.Length + value.Length) > 0) {
@@ -300,14 +301,14 @@ namespace GBaaS.io
 				query += " limit " + limit.ToString ();
 			}
 
-			var rawResults = GBRequestService.Instance.PerformRequest<string>("/" + objectName + "?ql=" + query, HttpHelper.RequestTypes.Get, "");
+			var rawResults = GBRequestService.Instance.PerformRequest<string>("/" + GetTypeName(typeof(T)) + "?ql=" + query, HttpHelper.RequestTypes.Get, "");
 			if (rawResults.IndexOf ("error") != -1) {
 				if (IsAsync()) {
 					foreach (GBaaSApiHandler handler in _handler) {
-						handler.OnGetObject(default(List<Objects.GBObject>));
+						handler.OnGetObject(default(List<T>));
 					}
 				} else {
-					return default(List<Objects.GBObject>);
+					return default(List<T>);
 				}
 			}
 
@@ -315,26 +316,35 @@ namespace GBaaS.io
 
 			if (IsAsync()) {
 				foreach (GBaaSApiHandler handler in _handler) {
-					handler.OnGetObject(MakeList(collection));
+					handler.OnGetObject<T>(MakeList<T>(collection));
 				}
 			} else {
-				return MakeList(collection);
+				return MakeList<T>(collection);
 			}
 
-			return default(List<Objects.GBObject>);
+			return default(List<T>);
 		}
 
-		private List<Objects.GBObject> MakeList(Newtonsoft.Json.Linq.JToken collection) {
-			List<Objects.GBObject> results = new List<Objects.GBObject>();
-			foreach (var item in collection)
-			{
-				Objects.GBObject obj = new Objects.GBObject();
-				obj.SetJsonToken(item);
-
-				results.Add(obj);
+		private List<T> MakeList<T>(Newtonsoft.Json.Linq.JToken collection) {
+			List<T> results = new List<T>();
+			foreach (var item in collection) {
+				results.Add(JsonConvert.DeserializeObject<T>(item.ToString()));
 			}
 
 			return results;
+		}
+
+		public string GetTypeName(Type t) {
+			if (!t.IsGenericType) return t.Name;
+			if (t.IsNested && t.DeclaringType.IsGenericType) throw new NotImplementedException();
+			string txt = t.Name.Substring(0, t.Name.IndexOf('`')) + "<";
+			int cnt = 0;
+			foreach (Type arg in t.GetGenericArguments()) {
+				if (cnt > 0) txt += ", ";
+				txt += GetTypeName(arg);
+				cnt++;
+			}
+			return txt + ">";
 		}
 	}
 }

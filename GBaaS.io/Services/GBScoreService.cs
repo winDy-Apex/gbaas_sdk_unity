@@ -2,6 +2,7 @@ using System;
 using GBaaS.io.Utils;
 using System.Collections.Generic;
 using System.Threading;
+using Newtonsoft.Json;
 
 namespace GBaaS.io.Services
 {
@@ -406,20 +407,12 @@ namespace GBaaS.io.Services
 			List<Objects.GBScoreObject> results = new List<Objects.GBScoreObject>();
 			foreach (var score in scores)
 			{
-				Objects.GBScoreObject scoreObject = new Objects.GBScoreObject {
-					username = (score["username"] ?? "").ToString(),
-					displayName = (score["displayName"] ?? "").ToString(),
-					stage = (score["stage"] ?? "").ToString(),
-					score = Convert.ToInt32((score["score"] ?? "").ToString()),
-					unit = (score["unit"] ?? "").ToString(),
-					rank = Convert.ToInt32((score["rank"] ?? "0").ToString())
-				};
+				Objects.GBScoreObject scoreObject = JsonConvert.DeserializeObject<Objects.GBScoreObject>(score.ToString());
 
-				if (scoreObject.displayName.Length <= 0) {
+				if (scoreObject.displayName == null || scoreObject.displayName.Length <= 0) {
 					scoreObject.displayName = scoreObject.username;
 				}
 
-				scoreObject.SetUUID((score["uuid"] ?? "").ToString());
 				results.Add(scoreObject);
 			}
 

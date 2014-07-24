@@ -157,6 +157,8 @@ namespace GBaaS.io.Tests.ClientTests
 
 		[Test]
 		public void GetScoreWeekly() {
+			var login = aClient.Login(Defines.TEST_USERNAME, Defines.TEST_PASSWORD);
+			Assert.IsNotNull(login);
 			List<Objects.GBScoreObject> result = aClient.GetScore ("", "", 10, "", GBaaS.io.Period.Weekly, DayOfWeek.Sunday);
 
 			Console.Out.WriteLine ("GetScoreWeekly Result Count : " + result.Count.ToString ());
