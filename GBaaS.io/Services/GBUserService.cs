@@ -131,7 +131,7 @@ namespace GBaaS.io.Services
 				}, true);
 
 				if (result.Length > 0) {
-					isLogin = Login(uniqueUserKey, uniqueUserKey);
+					isLogin = Login(uniqueUserKey, uniqueUserKey, true);
 				}
 			}
 

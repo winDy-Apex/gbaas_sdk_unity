@@ -35,6 +35,9 @@ namespace GBaaS.io.Tests
 			string un = Guid.NewGuid().ToString();
 			// Why next line code fail? I don't know...
 			//var result = aClient.LoginWithoutID("ec6af9bd-b05d-4ce5-9d23-cb1a1a51ed98");
+
+			//비동기 호출은 내부적으로 새 아이디 생성을 완료 후 리턴하므로 중간 과정의 False 리턴이 없다.
+			//See. AsyncTests.cs::CallAsyncLoginWithoutID
 			var result = aClient.LoginWithoutID(un);
 			Assert.IsTrue(result);
 		}

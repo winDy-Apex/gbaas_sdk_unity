@@ -273,7 +273,7 @@ namespace GBaaS.io.Services
 
 			if (IsAsync()) {
 				foreach (GBaaSApiHandler handler in _handler) {
-					handler.OnGetScore(MakeScoreList(scores));
+					handler.OnGetRank(MakeScoreList(scores));
 				}
 			} else {
 				return MakeScoreList(scores);

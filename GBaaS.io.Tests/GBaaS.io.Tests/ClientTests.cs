@@ -67,7 +67,7 @@ namespace GBaaS.io.Tests.ClientTests
 
 	public class ScoreTests
 	{
-		GBaaS.io.GBaaSApi aClient = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL2);
+		GBaaS.io.GBaaSApi aClient = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL3);
 
 		[Test]
 		public void AddScoreTest() {
@@ -122,10 +122,10 @@ namespace GBaaS.io.Tests.ClientTests
 			var login = aClient.Login(Defines.TEST_USERNAME, Defines.TEST_PASSWORD);
 			Assert.IsNotNull(login);
 
-			List<Objects.GBScoreObject> result = aClient.GetScoreLog("1st", "point", 0, "");
+			List<Objects.GBScoreObject> result = aClient.GetScoreLog("", "", 10, "");
 
-			Console.Out.WriteLine ("GetScoreLogTest Result Count : " + result.Count.ToString ());
 			Assert.IsNotNull (result);
+			Console.Out.WriteLine ("GetScoreLogTest Result Count : " + result.Count.ToString ());
 		}
 
 		[Test]
@@ -133,15 +133,16 @@ namespace GBaaS.io.Tests.ClientTests
 			var login = aClient.Login("test", Defines.TEST_PASSWORD);
 			Assert.IsNotNull(login);
 
-			List<Objects.GBScoreObject> result = aClient.GetScoreLogMore("", "", 2, false);
+			List<Objects.GBScoreObject> result = aClient.GetScoreLogMore("", "", 10, false);
 
-			Console.Out.WriteLine ("GetScoreLogTest Result Count : " + result.Count.ToString ());
 			Assert.IsNotNull (result);
-
-			result = aClient.GetScoreLogMore("", "", 2, true);
-
 			Console.Out.WriteLine ("GetScoreLogTest Result Count : " + result.Count.ToString ());
+
+			result = aClient.GetScoreLogMore("", "", 10, true);
+
 			Assert.IsNotNull (result);
+			Console.Out.WriteLine ("GetScoreLogTest Result Count : " + result.Count.ToString ());
+
 		}
 
 		[Test]
@@ -169,6 +170,7 @@ namespace GBaaS.io.Tests.ClientTests
 		public void GetScoreDaily() {
 			var login = aClient.Login(Defines.TEST_USERNAME, Defines.TEST_PASSWORD);
 			Assert.IsNotNull(login);
+
 			List<Objects.GBScoreObject> result = aClient.GetScore ("", "", 10, "", GBaaS.io.Period.Daily);
 
 			Console.Out.WriteLine ("GetScoreDaily Result Count : " + result.Count.ToString ());
@@ -177,6 +179,9 @@ namespace GBaaS.io.Tests.ClientTests
 
 		[Test]
 		public void GetScoreUser() {
+			var login = aClient.Login(Defines.TEST_USERNAME, Defines.TEST_PASSWORD);
+			Assert.IsNotNull(login);
+
 			List<Objects.GBScoreObject> result = aClient.GetScoreLog("", "", 10, "", GBaaS.io.Period.Daily);
 
 			Console.Out.WriteLine ("GetScoreUser Result Count : " + result.Count.ToString ());

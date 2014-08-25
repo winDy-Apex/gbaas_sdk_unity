@@ -21,6 +21,12 @@ namespace GBaaS.io.Tests
 		}
 		*/
 
+		public override void OnLoginWithoutID(bool result) {
+			Console.Out.WriteLine("Async On Login : " + result.ToString());
+			AsyncCallChecker.Instance.SetAsyncCalling(false);
+			Assert.IsTrue(result);
+		}
+
 		public override void OnGetAchievement(List<Objects.GBAchievementObject> result) {
 			Console.Out.WriteLine("Async On GetAchievement : " + result.ToString());
 			AsyncCallChecker.Instance.SetAsyncCalling(false);
@@ -139,6 +145,29 @@ namespace GBaaS.io.Tests
 			Assert.IsFalse(aClient2.IsAsync());
 		}
 
+		[Test]
+		public void CallAsyncLoginWithoutID() {
+
+			GBaaS.io.GBaaSApi aClient = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL2);
+			GBaaSApiHandler handler = new UserHandler();
+			aClient.AddHandler(handler);
+
+			AsyncCallChecker.Instance.SetAsyncCalling(true);
+
+			string un = Guid.NewGuid().ToString();
+			var result = aClient.LoginWithoutID(un);
+
+			//바로 리턴되는 결과는 없어야 정상
+			Assert.IsFalse(result);
+
+			//Async 호출이 끝날때까지 대기, For Only Test Code, 실제로는 불필요한 코드
+			while (AsyncCallChecker.Instance.GetAsyncCalling()) {
+				Console.Out.WriteLine ("...AsyncCalling...");
+				System.Threading.Thread.Sleep(100);
+			}
+
+			aClient.AddHandler(null);
+		}
 
 		[Test]
 		public void CallAsyncGetObject()
