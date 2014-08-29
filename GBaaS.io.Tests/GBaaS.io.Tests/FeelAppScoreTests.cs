@@ -23,7 +23,7 @@ namespace GBaaS.io.Tests {
 			// GBaaS 에 스코어를 등록
 			var result = _gbaas.AddScore (new GBScoreObject {
 				stage = "0",
-				score = 100,
+				score = 500,
 				unit = "전사" 
 			});
 			Assert.IsTrue(result);
@@ -84,6 +84,33 @@ namespace GBaaS.io.Tests {
 			List<Objects.GBScoreObject> result = _gbaas.GetScore ("", "울트라맨", 5);
 			Console.Out.WriteLine ("GetScore of 캐릭터 Result Count : " + result.Count.ToString ());
 			Assert.IsNotNull (result);
+		}
+
+		[Test]
+		// 자기등수 구하기
+		public void GetRank() {
+			var login = _gbaas.Login(Defines.TEST_USERNAME1, Defines.TEST_PASSWORD);
+			Assert.IsNotNull(login);
+
+			// 점수 가져오기, 최대 Limit 지정한만큼 가져옴, 스코어 순으로 기본적으로 소팅됨
+			List<Objects.GBScoreObject> result0 = _gbaas.GetRank ("", "", ScoreOrder.DESC, Period.Monthly, 1, 10);
+			Console.Out.WriteLine ("GetRank Result Count : " + result0.Count.ToString ());
+			Assert.IsNotNull (result0);
+
+			// 자기 등수 가져오기
+			List<Objects.GBScoreObject> result = _gbaas.GetRank("", "", ScoreOrder.DESC, Period.Monthly);
+			Assert.IsNotNull (result);
+			Console.Out.WriteLine ("GetRank Result My Rank : " + result[0].rank.ToString());
+
+			// 지정 등수 주변 가져오기
+			List<Objects.GBScoreObject> result1 = _gbaas.GetRank("", "", ScoreOrder.DESC, Period.Monthly, result[0].rank, 3);
+			Assert.IsNotNull (result1);
+			Console.Out.WriteLine ("GetRank Result Count : " + result1.Count.ToString ());
+
+			// 자기 등수 주변 바로 가져오기
+			List<Objects.GBScoreObject> result2 = _gbaas.GetRank("", "", ScoreOrder.DESC, Period.Monthly, 0, 3);
+			Assert.IsNotNull (result2);
+			Console.Out.WriteLine ("GetRank Result Count : " + result2.Count.ToString ());
 		}
 	}
 }

@@ -11,6 +11,7 @@ namespace GBaaS.io.Tests
 		public static string USERGRID_URL3 	= "https://api.gbaas.io/46429fea-a5b2-11e3-a2b5-4526b3bfa68e/078bf560-16fc-11e4-88da-9bef66110dcd/"; // gbaasman3
 
 		public static string TEST_USERNAME 	= "test";
+		public static string TEST_USERNAME1 = "test1";
 		public static string TEST_PASSWORD	= "abc123";
 	}
 }
