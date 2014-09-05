@@ -4,11 +4,10 @@ namespace GBaaS.io.Tests
 {
 	public class Defines
 	{
-		public static string USERGRID_URL 	= "https://api.gbaas.io/46429fea-a5b2-11e3-a2b5-4526b3bfa68e/42285fe0-a5b6-11e3-9f08-b3dc7cf41e7c/"; // sandbox2
-		public static string USERGRID_URL2 	= "https://api.gbaas.io/46429fea-a5b2-11e3-a2b5-4526b3bfa68e/4ddcbe30-a5b6-11e3-bbef-779adace1db9/"; // gbaasman2
-		//public static string USERGRID_URL2 	= "https://api.gbaas.io/46429fea-a5b2-11e3-a2b5-4526b3bfa68e/078bf560-16fc-11e4-88da-9bef66110dcd/"; // gbaasman3
-		//public static string USERGRID_URL3 	= "https://api.gbaas.io/34217d4a-ab20-11e3-aab9-3da55376f90f/f5bbb6f0-ab20-11e3-88df-5958f0eff747/"; // BS Games
-		public static string USERGRID_URL3 	= "https://api.gbaas.io/46429fea-a5b2-11e3-a2b5-4526b3bfa68e/078bf560-16fc-11e4-88da-9bef66110dcd/"; // gbaasman3
+		// dev.gbaas.io 계정 winDy@apexplatform.net/apex1234
+		public static string USERGRID_URL 	= "https://api.gbaas.io/33e8b61a-3340-11e4-ab01-b99509431e86/ea5aeb90-3343-11e4-8cd7-37d5a56061a8/"; // TestApp
+		public static string USERGRID_URL2 	= "https://api.gbaas.io/33e8b61a-3340-11e4-ab01-b99509431e86/2608ef70-3344-11e4-9ca9-15e8a7c9ff3a/"; // gbaasman
+		public static string USERGRID_URL3 	= "https://api.gbaas.io/33e8b61a-3340-11e4-ab01-b99509431e86/3ad33370-3344-11e4-b5d0-418c109495be/"; // gbaasman2
 
 		public static string TEST_USERNAME 	= "test";
 		public static string TEST_USERNAME1 = "test1";

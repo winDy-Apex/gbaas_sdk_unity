@@ -248,6 +248,31 @@ namespace GBaaS.io
 			return default(List<Objects.GBObject>);
 		}
 
+		public List<Objects.GBObject> GetListByKey(string collectionName, string key, string value) {
+			if (IsAsync()) {
+				Thread workerThread = new Thread(() => this.GetListByKeyThread(collectionName, key, value));
+				workerThread.Start();
+				return default(List<Objects.GBObject>);
+			} else {
+				return this.GetListByKeyThread(collectionName, key, value);
+			}
+		}
+
+		private List<Objects.GBObject> GetListByKeyThread(string collectionName, string key, string value) {
+			var rawResults = GBRequestService.Instance.PerformRequest<string>("/" + collectionName + "?ql=select * where " + key + "='" + value + "'");
+			var collection = GBRequestService.Instance.GetEntitiesFromJson(rawResults);
+
+			if (IsAsync()) {
+				foreach (GBaaSApiHandler handler in _handler) {
+					handler.OnGetList(MakeList<Objects.GBObject>(collection));
+				}
+			} else {
+				return MakeList<Objects.GBObject>(collection);
+			}
+
+			return default(List<Objects.GBObject>);
+		}
+
 		public List<Objects.GBObject> GetListInRange(string collectionName, float meters, float latitude, float longitude) {
 			if (IsAsync()) {
 				Thread workerThread = new Thread(() => this.GetListInRangeThread(collectionName, meters, latitude, longitude));
@@ -302,6 +327,57 @@ namespace GBaaS.io
 			}
 
 			var rawResults = GBRequestService.Instance.PerformRequest<string>("/" + GetTypeName(typeof(T)) + "?ql=" + query, HttpHelper.RequestTypes.Get, "");
+			if (rawResults.IndexOf ("error") != -1) {
+				if (IsAsync()) {
+					foreach (GBaaSApiHandler handler in _handler) {
+						handler.OnGetObject(default(List<T>));
+					}
+				} else {
+					return default(List<T>);
+				}
+			}
+
+			var collection = GBRequestService.Instance.GetEntitiesFromJson(rawResults);
+
+			if (IsAsync()) {
+				foreach (GBaaSApiHandler handler in _handler) {
+					handler.OnGetObject<T>(MakeList<T>(collection));
+				}
+			} else {
+				return MakeList<T>(collection);
+			}
+
+			return default(List<T>);
+		}
+
+		public List<T> GetObjectByName<T>(string objectName, string key, string value, int limit = 1) {
+			if (IsAsync()) {
+				Thread workerThread = new Thread(() => this.GetObjectByNameThread<T>(objectName, key, value, limit));
+				workerThread.Start();
+				return default(List<T>);
+			} else {
+				return this.GetObjectByNameThread<T>(objectName, key, value, limit);
+			}
+		}
+
+		private List<T> GetObjectByNameThread<T>(string objectName, string key, string value, int limit) {
+			string query = "select *";
+
+			if ((key.Length + value.Length) > 0) {
+				query += " where";
+			}
+
+			if (key.Length > 0) {
+				query += " " + key + " = '" + value + "'";
+			}
+
+			query += " order by " + key + " desc";
+
+			if (limit > 0) {
+				query += " limit " + limit.ToString ();
+			}
+
+			var rawResults = GBRequestService.Instance.PerformRequest<string>("/" + objectName + "?ql=" + query, HttpHelper.RequestTypes.Get, "");
 			if (rawResults.IndexOf ("error") != -1) {
 				if (IsAsync()) {
 					foreach (GBaaSApiHandler handler in _handler) {

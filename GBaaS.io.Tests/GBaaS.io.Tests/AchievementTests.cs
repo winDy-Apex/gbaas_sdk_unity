@@ -90,7 +90,7 @@ namespace GBaaS.io.Tests
 		}
 
 		[Test]
-		[Ignore] // Achievement 등록은 웹을 통해서 이루어져야한다. 테스트를 위해서 임시로 1회만 등록 확인을 위해 사용하였다.
+		//[Ignore] // Achievement 등록은 웹을 통해서 이루어져야한다. 테스트를 위해서 임시로 1회만 등록 확인을 위해 사용하였다.
 		public void SaveAchievementGBaaSManTest()
 		{
 			GBaaS.io.GBaaSApi aClient2 = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL2);
@@ -238,7 +238,7 @@ namespace GBaaS.io.Tests
 			GBaaS.io.GBaaSApi aClient2 = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL2);
 			aClient2.Login("test", "abc123");
 
-			var result = aClient.UpdateAchievement("GetScore2000Over", 11, true, "ko-KR");
+			var result = aClient.UpdateAchievement("GetScore2000Over", 1, true, "ko-KR");
 			Assert.IsTrue(result.achievementName.Length > 0);
 		}
 

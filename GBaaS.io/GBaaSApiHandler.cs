@@ -37,6 +37,7 @@ namespace GBaaS.io {
 		// For Push Service
 		public virtual void OnSendMessage(bool result) {}
 		public virtual void OnRegisterDevice(bool result) {}
+		public virtual void OnIsRegisteredDevice(bool result) {}
 
 		// For GameData Service
 		public virtual void OnGameDataSave(bool result) {}

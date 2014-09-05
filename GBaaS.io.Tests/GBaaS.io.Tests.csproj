@@ -59,7 +59,7 @@
     <Compile Include="GBaaS.io.Tests\CollectionTests.cs" />
     <Compile Include="GBaaS.io.Tests\NetTests.cs" />
     <Compile Include="GBaaS.io.Tests\CustomApiTests.cs" />
-    <Compile Include="GBaaS.io.Tests\FeelAppScoreTests.cs" />
+    <Compile Include="GBaaS.io.Tests\FeelAppTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

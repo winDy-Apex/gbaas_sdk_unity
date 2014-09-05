@@ -92,6 +92,20 @@ namespace GBaaS.io.Tests
 				Assert.IsTrue(collection[0].mydataOne.CompareTo("One Data") == 0);
 			}
 		}
+
+		public override void OnIsRegisteredDevice(bool result) {
+			Console.Out.WriteLine("Async On IsRegisteredDevice : " + result.ToString());
+			AsyncCallChecker.Instance.SetAsyncCalling(false);
+
+			Assert.IsTrue(result);
+		}
+
+		public override void OnRegisterDevice(bool result) {
+			Console.Out.WriteLine("Async On RegisterDevice : " + result.ToString());
+			AsyncCallChecker.Instance.SetAsyncCalling(false);
+
+			Assert.IsTrue(result);
+		}
 	}
 
 	abstract class Singleton<DerivedType>
@@ -253,6 +267,7 @@ namespace GBaaS.io.Tests
 		}
 
 		[Test]
+		[Ignore]
 		public void CallAsyncGetAchievementByUUIDorName()
 		{
 			GBaaS.io.GBaaSApi aClient2 = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL2);
@@ -279,6 +294,7 @@ namespace GBaaS.io.Tests
 		}
 
 		[Test]
+		[Ignore]
 		public void CallAsyncUpdateAchievement()
 		{
 			GBaaS.io.GBaaSApi aClient2 = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL2);
@@ -403,6 +419,56 @@ namespace GBaaS.io.Tests
 
 			//바로 리턴되는 결과는 없어야 정상
 			Assert.IsTrue(result == null);
+
+			//Async 호출이 끝날때까지 대기
+			while (AsyncCallChecker.Instance.GetAsyncCalling()) {
+				Console.Out.WriteLine("...AsyncCalling...");
+				System.Threading.Thread.Sleep(100);
+			}
+
+			aClient2.AddHandler(null);
+		}
+
+		[Test]
+		public void CallAsyncIsRegisteredDevice() {
+			GBaaS.io.GBaaSApi aClient2 = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL2);
+			var login = aClient2.Login(Defines.TEST_USERNAME, Defines.TEST_PASSWORD);
+			Assert.IsNotNull(login);
+
+			GBaaSApiHandler handler = new UserHandler();
+			aClient2.AddHandler(handler);
+
+			AsyncCallChecker.Instance.SetAsyncCalling(true);
+
+			bool result = aClient2.IsRegisteredDevice("iPhone", "7.1", "iOS", "1234-5678-9000111");
+
+			//바로 리턴되는 결과는 없어야 정상
+			Assert.IsFalse(result);
+
+			//Async 호출이 끝날때까지 대기
+			while (AsyncCallChecker.Instance.GetAsyncCalling()) {
+				Console.Out.WriteLine("...AsyncCalling...");
+				System.Threading.Thread.Sleep(100);
+			}
+
+			aClient2.AddHandler(null);
+		}
+
+		[Test]
+		public void CallAsyncRegisterDevice() {
+			GBaaS.io.GBaaSApi aClient2 = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL2);
+			var login = aClient2.Login(Defines.TEST_USERNAME, Defines.TEST_PASSWORD);
+			Assert.IsNotNull(login);
+
+			GBaaSApiHandler handler = new UserHandler();
+			aClient2.AddHandler(handler);
+
+			AsyncCallChecker.Instance.SetAsyncCalling(true);
+
+			bool result = aClient2.RegisterDevice("iPhone", "7.1", "iOS", "1234-5678-9000111");
+
+			//바로 리턴되는 결과는 없어야 정상
+			Assert.IsFalse(result);
 
 			//Async 호출이 끝날때까지 대기
 			while (AsyncCallChecker.Instance.GetAsyncCalling()) {

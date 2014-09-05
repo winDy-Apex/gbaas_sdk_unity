@@ -261,12 +261,14 @@ namespace GBaaS.io.Services
 			var rawResults = GBRequestService.Instance.PerformRequest<string>("/users/me/?access_token=" + HttpHelper.Instance._accessToken);
 			var user = GBRequestService.Instance.GetEntitiesFromJson(rawResults);
 
-			if (IsAsync()) {
-				foreach (GBaaSApiHandler handler in _handler) {
-					handler.OnGetUserInfo(MakeUserInfo(user));
+			if (user != null) {
+				if (IsAsync()) {
+					foreach (GBaaSApiHandler handler in _handler) {
+						handler.OnGetUserInfo(MakeUserInfo(user));
+					}
+				} else {
+					return MakeUserInfo(user);
 				}
-			} else {
-				return MakeUserInfo(user);
 			}
 
 			return default(Objects.GBUserObject);

@@ -555,6 +555,16 @@ namespace GBaaS.io {
 			}
 		}
 
+		public bool IsRegisteredDevice(
+			string deviceModel, string deviceOSVersion, string devicePlatform, string registration_id) {
+			try {
+				return GBPushService.Instance.IsRegisteredDevice(deviceModel, deviceOSVersion, devicePlatform, registration_id);
+			} catch (Exception e) {
+				e.ToString();
+				return true; // Exception treat as a true.
+			}
+		}
+
 //********** For GameDataService ********** //
 		// Game Data 서비스는 Custom Object 를
 		// Key - Value 형태로 서비스 하며

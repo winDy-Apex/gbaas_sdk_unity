@@ -233,5 +233,61 @@ namespace GBaaS.io.Tests
 			result = aClient.ReceiptSave(receipt);
 			Assert.IsTrue(result);
 		}
+			
+		public class CustomUniqueObject : GBUniqueObject {
+			public string temp { get; set; }
+		}
+
+		[Test]
+		public void UniqueObjectCreate() {
+			GBaaS.io.GBaaSApi aClient2 = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL2);
+			aClient2.Login("test", "abc123");
+
+			CustomUniqueObject uniqueObject = new CustomUniqueObject {
+				temp = "Some5 Value"
+			};
+					
+			bool result = uniqueObject.Save();
+			Assert.IsTrue(result);
+
+			CustomUniqueObject uniqueObject2 = new CustomUniqueObject {
+				temp = "Some7 Value"
+			};
+
+			bool result2 = uniqueObject2.Save();
+			Assert.IsTrue(result2);
+
+			// Unique Object have to same uuid, It is same object on GBaaS, It's Unique.
+			Assert.IsTrue(uniqueObject.uuid == uniqueObject2.uuid);
+
+			// Unique Object must exist 0 or 1.
+			Assert.IsTrue((uniqueObject._count <= 1 && uniqueObject2._count <= 1));
+		}
+
+		[Test]
+		public void UniqueObjectUniquePerUserOnly() {
+			GBaaS.io.GBaaSApi aClient1 = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL2);
+			aClient1.Login(Defines.TEST_USERNAME, Defines.TEST_PASSWORD);
+
+			CustomUniqueObject uniqueObject = new CustomUniqueObject {
+				temp = "Some for test Value"
+			};
+
+			bool result = uniqueObject.Save();
+			Assert.IsTrue(result);
+
+			GBaaS.io.GBaaSApi aClient2 = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL2);
+			aClient2.Login(Defines.TEST_USERNAME1, Defines.TEST_PASSWORD);
+
+			CustomUniqueObject uniqueObject2 = new CustomUniqueObject {
+				temp = "Some for test1 Value"
+			};
+
+			bool result2 = uniqueObject2.Save();
+			Assert.IsTrue(result2);
+
+			// Unique Object have to different uuid per User.
+			Assert.IsTrue(uniqueObject.uuid != uniqueObject2.uuid);
+		}
 	}
 }

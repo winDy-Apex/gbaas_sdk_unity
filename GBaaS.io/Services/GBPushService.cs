@@ -80,71 +80,113 @@ namespace GBaaS.io
 			deviceModel = deviceModel.Replace(" ", "_");
 			deviceOSVersion = deviceOSVersion.Replace(" ", "_");
 
-			// 등록된 디바이스인지 확인
-			var rawResults = GBRequestService.Instance.PerformRequest<string>(
-				"/devices?ql=select%20*%20where%20registration_id='" + registration_id + "'", HttpHelper.RequestTypes.Get, "");
 
-			bool isRegistered = HttpHelper.Instance.CheckSuccess(rawResults);
+			bool isRegistered = IsRegisteredDeviceThread(deviceModel, deviceOSVersion, devicePlatform, registration_id, true);
 
 			if (isRegistered) {
-				var registeredDevices = GBRequestService.Instance.GetEntitiesFromJson(rawResults);
-				foreach (var device in registeredDevices) {
+				try {
 					if (IsAsync()) {
 						foreach (GBaaSApiHandler handler in _handler) {
 							handler.OnRegisterDevice(isRegistered);
 						}
-					} else {
-						return isRegistered;
 					}
+				} catch(Exception e) {
+
 				}
-			}
 
-			// 등록안된 디바이스인경우 등록
-			GBDeviceRegisterObject deviceRegister = new GBDeviceRegisterObject {
-				deviceModel = deviceModel,
-				deviceOSVersion = deviceOSVersion,
-				devicePlatform = devicePlatform,
-				registration_id = registration_id
-			};
+				return isRegistered;
+			} else {
+				// 등록안된 디바이스인경우 등록
+				GBDeviceRegisterObject deviceRegister = new GBDeviceRegisterObject {
+					deviceModel = deviceModel,
+					deviceOSVersion = deviceOSVersion,
+					devicePlatform = devicePlatform,
+					registration_id = registration_id
+				};
 
-			bool result = deviceRegister.Save();
-			if (result == false) {
-				if (IsAsync()) {
-					foreach (GBaaSApiHandler handler in _handler) {
-						handler.OnRegisterDevice(result);
+				bool result = deviceRegister.Save();
+				if (result == false) {
+					if (IsAsync()) {
+						foreach (GBaaSApiHandler handler in _handler) {
+							handler.OnRegisterDevice(result);
+						}
 					}
-				} else {
+
 					return result;
 				}
-			}
 
-			// 등록된 디바이스 UUID 정보 가져오기
-			//rawResults = GBRequestService.Instance.PerformRequest<string>("/devices?registration_id=" + registration_id, HttpHelper.RequestTypes.Get, "");
-			rawResults = GBRequestService.Instance.PerformRequest<string>(
-				"/devices?ql=select%20*%20where%20registration_id='" + registration_id + "'", HttpHelper.RequestTypes.Get, "");
+				// 등록된 디바이스 UUID 정보 가져오기
+				//rawResults = GBRequestService.Instance.PerformRequest<string>("/devices?registration_id=" + registration_id, HttpHelper.RequestTypes.Get, "");
+				var rawResults = GBRequestService.Instance.PerformRequest<string>(
+					"/devices?ql=select%20*%20where%20registration_id='" + registration_id + "'", HttpHelper.RequestTypes.Get, "");
 
-			isRegistered = HttpHelper.Instance.CheckSuccess(rawResults);
+				isRegistered = HttpHelper.Instance.CheckSuccess(rawResults);
 
-			string deviceID = "";
+				string deviceID = "";
 
-			if (isRegistered) {
-				var registeredDevices = GBRequestService.Instance.GetEntitiesFromJson(rawResults);
-				foreach (var device in registeredDevices) {
-					deviceID = (device["uuid"] ?? "").ToString();
-					if (deviceID.Length > 0)
-						break;
+				if (isRegistered) {
+					Newtonsoft.Json.Linq.JToken registeredDevices = GBRequestService.Instance.GetEntitiesFromJson(rawResults);
+					foreach (var device in registeredDevices) {
+						deviceID = (device["uuid"] ?? "").ToString();
+						if (deviceID.Length > 0)
+							break;
+					}
 				}
-			}
 
-			if (IsAsync()) {
-				foreach (GBaaSApiHandler handler in _handler) {
-					handler.OnRegisterDevice(ConnectDeviceToUser(deviceID));
+				if (IsAsync()) {
+					foreach (GBaaSApiHandler handler in _handler) {
+						handler.OnRegisterDevice(ConnectDeviceToUser(deviceID));
+					}
+				} else {
+					return ConnectDeviceToUser(deviceID);
 				}
-			} else {
-				return ConnectDeviceToUser(deviceID);
 			}
 
 			return false;
+		}
+
+		public bool IsRegisteredDevice(
+			string deviceModel, string deviceOSVersion, string devicePlatform, string registration_id) {
+			if (IsAsync()) {
+				Thread workerThread = new Thread(() => this.IsRegisteredDeviceThread(deviceModel, deviceOSVersion, devicePlatform, registration_id));
+				workerThread.Start();
+				return false;
+			} else {
+				return this.IsRegisteredDeviceThread(deviceModel, deviceOSVersion, devicePlatform, registration_id);
+			}
+		}
+
+		private bool IsRegisteredDeviceThread(
+			string deviceModel, string deviceOSVersion, string devicePlatform, string registration_id, bool forceSync = false) {
+
+			deviceModel = deviceModel.Replace(" ", "_");
+			deviceOSVersion = deviceOSVersion.Replace(" ", "_");
+
+			// 등록된 디바이스인지 확인
+			var rawResults = GBRequestService.Instance.PerformRequest<string>(
+				"/devices?ql=select%20*%20where%20registration_id='" + registration_id + "'", HttpHelper.RequestTypes.Get, "");
+
+			bool isRegistered = true;
+			Newtonsoft.Json.Linq.JToken registeredDevices = null;
+
+			if (HttpHelper.Instance.CheckSuccess(rawResults)) {
+				registeredDevices = GBRequestService.Instance.GetEntitiesFromJson(rawResults);
+				if (registeredDevices.HasValues == false) {
+					isRegistered = false;
+				}
+			}
+
+			try {
+				if (IsAsync() && forceSync == false) {
+					foreach (GBaaSApiHandler handler in _handler) {
+						handler.OnIsRegisteredDevice(isRegistered);
+					}
+				}
+			} catch(Exception e) {
+
+			}
+
+			return isRegistered;
 		}
 
 		private bool ConnectDeviceToUser(string deviceID) {

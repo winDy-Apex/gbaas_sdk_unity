@@ -3,8 +3,6 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>12.0.0</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{7AEE96CF-9080-4963-8706-9E2F0753F9C4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>GBaaS.io</RootNamespace>
@@ -84,6 +82,8 @@
     <Compile Include="Objects\GBLobbyObject.cs" />
     <Compile Include="Objects\GBGameDataObject.cs" />
     <Compile Include="Objects\GBReceiptObject.cs" />
+    <Compile Include="Objects\GBUniqueObject.cs" />
+    <Compile Include="Objects\GBPresenceObject.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -187,11 +187,11 @@ namespace GBaaS.io
 					isMoreThanOnce = Convert.ToBoolean( (item["isMoreThanOnce"] ?? "").ToString() ),
 					isHidden = Convert.ToBoolean( (item["isHidden"] ?? "").ToString() ),
 					points = Convert.ToInt32( (item["points"] ?? "").ToString() ),
-					achievementName = (item["achievementName"] ?? "").ToString(),
+					achievementName = (item["name"] ?? "").ToString(),
 					preEarnedDescription = (item["preEarnedDescription"] ?? "").ToString(),
 					earnedDescription = (item["earnedDescription"] ?? "").ToString(),
-					currentStepCount = Convert.ToInt32( (item["currentStepCount"] ?? "").ToString() ),
-					isUnlocked = HttpHelper.Instance.SafeConvertBoolean((item["isUnlocked"] ?? "").ToString() )
+					currentStepCount = Convert.ToInt32( (item["currentStepCount"] ?? "0").ToString() ),
+					isUnlocked = HttpHelper.Instance.SafeConvertBoolean((item["isUnlocked"] ?? "false").ToString() )
 				});
 			}
 

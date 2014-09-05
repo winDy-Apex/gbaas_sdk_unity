@@ -13,8 +13,8 @@ namespace GBaaS.io.Objects
 
 		public GBObject () {}
 
-		public void SetUUID(string uuid) {
-			uuid = uuid;
+		public void SetUUID(string init_uuid) {
+			uuid = init_uuid;
 		}
 
 		public string GetUUID() {
@@ -33,7 +33,7 @@ namespace GBaaS.io.Objects
 			return _jsonToken.ToString();
 		}
 
-		public bool Save() { 
+		public virtual bool Save() { 
 			var rawResults = GBRequestService.Instance.PerformRequest<string>("/" + GetEntityType(), HttpHelper.RequestTypes.Post, this);
 			return HttpHelper.Instance.CheckSuccess(rawResults);
 		}
@@ -48,7 +48,7 @@ namespace GBaaS.io.Objects
 			return HttpHelper.Instance.CheckSuccess(rawResults);
 		}
 
-		public bool Load() { return false; }
+		public virtual bool Load() { return false; }
 
 		public void SetEntityType(string entityType) {
 			_entityType = entityType;
