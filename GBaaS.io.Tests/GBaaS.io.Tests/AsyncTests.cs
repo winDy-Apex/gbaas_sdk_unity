@@ -267,8 +267,7 @@ namespace GBaaS.io.Tests
 		}
 
 		[Test]
-		[Ignore]
-		public void CallAsyncGetAchievementByUUIDorName()
+		public void CallAsyncGetAchievementByUUID()
 		{
 			GBaaS.io.GBaaSApi aClient2 = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL2);
 			aClient2.Login("test", "abc123");
@@ -280,7 +279,7 @@ namespace GBaaS.io.Tests
 
 			AsyncCallChecker.Instance.SetAsyncCalling(true);
 
-			var result = aClient2.GetAchievementByUUIDorName("GetScore2000Over", locale);
+			var result = aClient2.GetAchievementByUUID("4bb28c3a-3345-11e4-9f06-4301e83254dd", locale);
 			//바로 리턴되는 결과는 없어야 정상
 			Assert.IsTrue(result == null);
 
@@ -294,7 +293,6 @@ namespace GBaaS.io.Tests
 		}
 
 		[Test]
-		[Ignore]
 		public void CallAsyncUpdateAchievement()
 		{
 			GBaaS.io.GBaaSApi aClient2 = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL2);
@@ -305,7 +303,7 @@ namespace GBaaS.io.Tests
 
 			AsyncCallChecker.Instance.SetAsyncCalling(true);
 
-			var result = aClient2.UpdateAchievement("GetScore2000Over", 10, true, "ko-KR");
+			var result = aClient2.UpdateAchievement("4bb28c3a-3345-11e4-9f06-4301e83254dd", 10, true, "ko-KR");
 			//바로 리턴되는 결과는 없어야 정상
 			Assert.IsTrue(result == null);
 

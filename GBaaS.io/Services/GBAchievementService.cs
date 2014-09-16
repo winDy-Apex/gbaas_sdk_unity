@@ -86,24 +86,24 @@ namespace GBaaS.io
 			return default(List<Objects.GBAchievementObject>);
 		}
 
-		public Objects.GBAchievementObject GetAchievementByUUIDorName(string uuidOrName, string locale = "") {
+		public Objects.GBAchievementObject GetAchievementByUUID(string uuid, string locale = "") {
 			if (IsAsync()) {
-				Thread workerThread = new Thread(() => this.GetAchievementByUUIDorNameThread(uuidOrName, locale));
+				Thread workerThread = new Thread(() => this.GetAchievementByUUIDThread(uuid, locale));
 				workerThread.Start();
 				return default(Objects.GBAchievementObject);
 			} else {
-				return this.GetAchievementByUUIDorNameThread(uuidOrName, locale);
+				return this.GetAchievementByUUIDThread(uuid, locale);
 			}
 		}
 
-		public Objects.GBAchievementObject GetAchievementByUUIDorNameThread(string uuidOrName, string locale = "") {
+		public Objects.GBAchievementObject GetAchievementByUUIDThread(string uuid, string locale = "") {
 			string query = "";
 
 			if (locale.Length > 0) {
 				query += "locale=" + locale;
 			}
 
-			var rawResults = GBRequestService.Instance.PerformRequest<string>("/achievement/" + uuidOrName + "?" + query, HttpHelper.RequestTypes.Get, "");
+			var rawResults = GBRequestService.Instance.PerformRequest<string>("/achievement/" + uuid + "?" + query, HttpHelper.RequestTypes.Get, "");
 			if (rawResults.IndexOf ("error") != -1) {
 				if (IsAsync()) {
 					foreach (GBaaSApiHandler handler in _handler) {
@@ -149,7 +149,7 @@ namespace GBaaS.io
 				isUnlocked = isUnlocked
 			};
 
-			var rawResults = GBRequestService.Instance.PerformRequest<string>("/achievement/" + uuid + "?locale=" + locale, HttpHelper.RequestTypes.Put, userAchievementObject);
+			var rawResults = GBRequestService.Instance.PerformRequest<string>("/users/" + GBUserService.Instance.GetLoginName() + "/achievements/" + uuid + "?locale=" + locale, HttpHelper.RequestTypes.Put, userAchievementObject);
 			if (rawResults.IndexOf ("error") != -1) {
 				if (IsAsync()) {
 					foreach (GBaaSApiHandler handler in _handler) {

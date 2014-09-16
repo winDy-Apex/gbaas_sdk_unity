@@ -42,19 +42,27 @@ namespace GBaaS.io {
 		//  핸들러를 지정하면 Api 를 Async 로 호출한다.
 		/// </summary>
 		/// <param name="handler">비동기 이벤트를 받을 핸들러</param>
-		public void AddHandler(GBaaSApiHandler handler) {
+		public bool AddHandler(GBaaSApiHandler handler) {
+			bool isAdded = false;
+		
 			if (handler == null) {
 				_handler.Clear();
 			} else {
-				_handler.Add(handler);
+				if (_handler.Contains(handler) == false) {
+					_handler.Add(handler);
+
+					GBAchievementService.Instance.SetHandler(handler);
+					GBScoreService.Instance.SetHandler(handler);
+					GBUserService.Instance.SetHandler(handler);
+					GBPushService.Instance.SetHandler(handler);
+					GBNetService.Instance.SetHandler(handler);
+					GBCollectionService.Instance.SetHandler(handler);
+
+					isAdded = true;
+				}
 			}
 
-			GBAchievementService.Instance.SetHandler(handler);
-			GBScoreService.Instance.SetHandler(handler);
-			GBUserService.Instance.SetHandler(handler);
-			GBPushService.Instance.SetHandler(handler);
-			GBNetService.Instance.SetHandler(handler);
-			GBCollectionService.Instance.SetHandler(handler);
+			return isAdded;
 		}
 
 		/// <summary>
@@ -488,9 +496,9 @@ namespace GBaaS.io {
 		/// <returns>The achievement by UUI dor name.</returns>
 		/// <param name="uuidOrName">UUID or name.</param>
 		/// <param name="locale">Locale.</param>
-		public Objects.GBAchievementObject GetAchievementByUUIDorName(string uuidOrName, string locale = "") {
+		public Objects.GBAchievementObject GetAchievementByUUID(string uuid, string locale = "") {
 			try {
-				return GBAchievementService.Instance.GetAchievementByUUIDorName(uuidOrName, locale);
+				return GBAchievementService.Instance.GetAchievementByUUID(uuid, locale);
 			} catch (Exception e) {
 				e.ToString();
 				return default(Objects.GBAchievementObject);

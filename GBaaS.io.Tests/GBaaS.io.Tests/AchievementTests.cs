@@ -221,14 +221,14 @@ namespace GBaaS.io.Tests
 
 
 		[Test]
-		public void GetAchievementByUUIDorName()
+		public void GetAchievementByUUID()
 		{
 			GBaaS.io.GBaaSApi aClient2 = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL2);
 			aClient2.Login("test", "abc123");
 
 			String locale = "ko-KR";
 
-			var result = aClient.GetAchievementByUUIDorName("GetScore2000Over", locale);
+			var result = aClient.GetAchievementByUUID("4bb28c3a-3345-11e4-9f06-4301e83254dd", locale);
 			Assert.IsTrue(result.achievementName.Length > 0);
 		}
 
@@ -238,7 +238,7 @@ namespace GBaaS.io.Tests
 			GBaaS.io.GBaaSApi aClient2 = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL2);
 			aClient2.Login("test", "abc123");
 
-			var result = aClient.UpdateAchievement("GetScore2000Over", 1, true, "ko-KR");
+			var result = aClient.UpdateAchievement("4bb28c3a-3345-11e4-9f06-4301e83254dd", 1, true, "ko-KR");
 			Assert.IsTrue(result.achievementName.Length > 0);
 		}
 

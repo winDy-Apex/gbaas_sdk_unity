@@ -15,6 +15,30 @@ namespace GBaaS.io.Tests
 			bool result = aClient2.SendMessage("TestMessage", "", "", "", "", PushSendType.alldevices, PushScheduleType.now);
 			Assert.IsTrue(result);
 		}
+			
+		[Test]
+		public void SendBigKoreanMessage()
+		{
+			GBaaS.io.GBaaSApi aClient2 = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL2);
+			aClient2.Login("test", "abc123");
+
+			string testMessage = "한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한한글한글한글한글한글한글한글한글한글한글한글한글한글한글한글한글한글한글한글한글한글한글한글한글한글한글한글한글한글한글한글한글한글한글한글한글한글한글한글한글한글한글한글한글한글";
+			string addWord = "더";
+
+			int limitTestTime = 100;
+			while (--limitTestTime > 0) {
+				bool result = aClient2.SendMessage(testMessage, "", "", "", "", PushSendType.alldevices, PushScheduleType.now);
+
+				Console.Out.WriteLine ("SendBigKoreanMessages Lengh : " + testMessage.Length.ToString() + " result : " + result.ToString());
+
+				if (result == false) {
+					break;
+				}
+				testMessage = addWord + testMessage;
+			}
+
+			Assert.IsTrue(limitTestTime < 99); // At least, It have to success one time more.
+		}
 
 		[Test]
 		public void DeviceRegistration()
