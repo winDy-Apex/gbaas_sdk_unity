@@ -12,12 +12,17 @@ namespace GBaaS.io.Objects
 		public string lastname { get; set; }
 		public string title { get; set; }
 		public string homePage { get; set; }
-		public string Email { get; set; }
+		public string email { get; set; }
 		public string bday { get; set; }
 		public string picture { get; set; }
 		public string tel { get; set; }
 		public string url { get; set; }
 		public int age { get; set; }
 		public string gender { get; set; }
+	}
+
+	public class UserModPW {
+		public string newpassword { get; set; }
+		public string oldpassword { get; set; }
 	}
 }

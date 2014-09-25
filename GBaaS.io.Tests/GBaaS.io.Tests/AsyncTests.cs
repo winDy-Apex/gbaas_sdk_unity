@@ -251,7 +251,7 @@ namespace GBaaS.io.Tests
 			var result = aClient.CreateUser(new GBUserObject {
 				username = un,
 				password = Defines.TEST_PASSWORD,
-				Email = un + "@test.com"
+				email = un + "@test.com"
 			});
 
 			//바로 리턴되는 결과는 없어야 정상

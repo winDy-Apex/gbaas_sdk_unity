@@ -118,6 +118,17 @@ namespace GBaaS.io.Tests.ClientTests
 		}
 
 		[Test]
+		public void GetScoreTest() {
+			var login = aClient.Login(Defines.TEST_USERNAME, Defines.TEST_PASSWORD);
+			Assert.IsNotNull(login);
+
+			List<Objects.GBScoreObject> result = aClient.GetScore("1st", "point", 0, "");
+
+			Assert.IsNotNull (result);
+			Console.Out.WriteLine ("GetScoreTest Result Count : " + result.Count.ToString ());
+		}
+
+		[Test]
 		public void GetScoreLogTest() {
 			var login = aClient.Login(Defines.TEST_USERNAME, Defines.TEST_PASSWORD);
 			Assert.IsNotNull(login);

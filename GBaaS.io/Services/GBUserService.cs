@@ -126,8 +126,8 @@ namespace GBaaS.io.Services
 			if (isLogin == false) {
 				result = CreateUser(new Objects.GBUserObject {
 					username = uniqueUserKey,
-					password = uniqueUserKey,
-					Email = ""
+					password = uniqueUserKey
+					//Email = ""
 				}, true);
 
 				if (result.Length > 0) {
@@ -229,8 +229,49 @@ namespace GBaaS.io.Services
 		}
 
 		private string UpdateUserThread(Objects.GBUserObject userModel) {
+
+			string userKey = userModel.username;
+			if (userModel.uuid != null && userModel.uuid.Length > 0) {
+				userKey = userModel.uuid;
+			}
+
+			if (userModel.name == null || userModel.name.Length == 0) {
+				userModel.name = userModel.username;
+			}
+
 			var rawResults = GBRequestService.Instance.PerformRequest<string>(
-				"/users/" + userModel.username, HttpHelper.RequestTypes.Put, userModel);
+				"/users/" + userKey, HttpHelper.RequestTypes.Put, userModel);
+
+			if (IsAsync()) {
+				foreach (GBaaSApiHandler handler in _handler) {
+					handler.OnUpdateUser(rawResults.ToString());
+				}
+			} else {
+				return rawResults.ToString();
+			}
+
+			return default(string);
+		}
+
+		public string ChangePassword(string oldOne, string newOne) {
+			if (IsAsync()) {
+				Thread workerThread = new Thread(() => this.ChangePasswordThread(oldOne, newOne));
+				workerThread.Start();
+				return ""; //default(string);
+			} else {
+				return this.ChangePasswordThread(oldOne, newOne);
+			}
+		}
+
+		private string ChangePasswordThread(string oldOne, string newOne) {
+
+			Objects.UserModPW passwordObj = new Objects.UserModPW {
+				newpassword = newOne,
+				oldpassword = oldOne
+			};
+
+			var rawResults = GBRequestService.Instance.PerformRequest<string>(
+				"/users/" + GetLoginName() + "/password", HttpHelper.RequestTypes.Put, passwordObj);
 
 			if (IsAsync()) {
 				foreach (GBaaSApiHandler handler in _handler) {
@@ -498,7 +539,7 @@ namespace GBaaS.io.Services
 					lastname = (usr["lastname"] ?? "").ToString(),
 					firstname = (usr["firstname"] ?? "").ToString(),
 					title = (usr["title"] ?? "").ToString(),
-					Email = (usr["Email"] ?? "").ToString(),
+					email = (usr["email"] ?? "").ToString(),
 					tel = (usr["tel"] ?? "").ToString(),
 					homePage = (usr["homepage"] ?? "").ToString(),
 					bday = (usr["bday"] ?? "").ToString(),
@@ -520,7 +561,7 @@ namespace GBaaS.io.Services
 				lastname = (user["lastname"] ?? "").ToString(),
 				firstname = (user["firstname"] ?? "").ToString(),
 				title = (user["title"] ?? "").ToString(),
-				Email = (user["Email"] ?? "").ToString(),
+				email = (user["email"] ?? "").ToString(),
 				tel = (user["tel"] ?? "").ToString(),
 				homePage = (user["homepage"] ?? "").ToString(),
 				bday = (user["bday"] ?? "").ToString(),

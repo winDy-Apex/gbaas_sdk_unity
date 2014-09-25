@@ -18,7 +18,18 @@ namespace GBaaS.io.Tests
 		[Test]
 		public void LoginTest()
 		{
-			var results = aClient.Login(Defines.TEST_USERNAME, Defines.TEST_PASSWORD);
+			string loginUser = Defines.TEST_USERNAME;
+			//string loginUser = "gbaas_d85f7a6c-c04f-4a38-bd80-6a3e74b2dc23"; //037281ae-2fa3-48d3-875a-2ac3d99416c1";
+			var results = aClient.Login(loginUser, Defines.TEST_PASSWORD);
+			Assert.IsTrue(results);
+		}		
+
+		[Ignore]
+		[Test]
+		public void LoginUsingNoID()
+		{
+			string loginUser = "gbaas_9e5424e3-95f1-429a-b576-d62bc5e49880";
+			var results = aClient.Login(loginUser, loginUser);
 			Assert.IsTrue(results);
 		}
 
@@ -54,19 +65,25 @@ namespace GBaaS.io.Tests
 			Assert.IsNotNull(results);
 
 			var resultss = aClient.UpdateUser(new GBUserObject {
+				uuid = results.uuid,
 				username = "ChangeID" + un,
 				password = Defines.TEST_PASSWORD,
-				Email = un + "@test.com",
+				email = un + "@test.com",
 				age = 19,
 				gender = "Female"
 			});
 			Assert.IsNotNull (resultss);
+
+			// Notice! Password Unchanged. It needs another API for changing password. UpdateUser call Can't do that.
+			var result2 = aClient.Login("ChangeID" + un, "gbaas_" + un); //Defines.TEST_PASSWORD);
+			Assert.IsTrue(result2);
 		}
 
 		[Test]
 		public void UpdateUserName()
 		{
 			string un = "gbaas_" + Guid.NewGuid();
+			//string un = "gbaas_1234567";
 			var result = aClient.LoginWithoutID(un);
 			Assert.IsTrue(result);
 
@@ -87,12 +104,12 @@ namespace GBaaS.io.Tests
 		{
 			//string un = Defines.TEST_USERNAME;
 			string un = "gbaas_" + Guid.NewGuid();
-			//string un = "test1";
+			//string un = "ChangeID";
 
 			var result = aClient.CreateUser(new GBUserObject {
 				username = un,
 				password = Defines.TEST_PASSWORD,
-				Email = un + "@test.com"
+				email = un + "@test.com"
 			});
 
 			Console.WriteLine(result);
@@ -102,15 +119,43 @@ namespace GBaaS.io.Tests
 		[Test]
 		public void UpdateUserTest()
 		{
-			string un = "bobby";
+			string un = "test1";
+			var result2 = aClient.Login(un, Defines.TEST_PASSWORD);
+			Assert.IsTrue(result2);
+
 			var result = aClient.UpdateUser(new GBUserObject {
 				username = un,
-				password = Defines.TEST_PASSWORD,
-				Email = un + "@test.com",
+				password = Defines.TEST_PASSWORD + "1",
+				email = un + "@test1112.com",
 				age = 19,
 				gender = "Female"
 			});
 			Assert.IsNotNull (result);
+
+			// Can't change the password. It needs special api.
+			var result3 = aClient.Login(un, Defines.TEST_PASSWORD);
+			Assert.IsTrue(result3);
+
+			var result4 = aClient.UpdateUser(new GBUserObject {
+				username = un,
+				password = Defines.TEST_PASSWORD,
+				email = un + "@test123.com",
+				age = 25,
+				gender = "Male"
+			});
+			Assert.IsNotNull (result4);
+		}
+
+		[Test]
+		public void ChangePassword() {
+			var result = aClient.Login(Defines.TEST_USERNAME, Defines.TEST_PASSWORD);
+			Assert.IsTrue(result);
+
+			var result2 = aClient.ChangePassword(Defines.TEST_PASSWORD, Defines.TEST_PASSWORD_CHANGE);
+			Assert.IsNotNull (result2);
+
+			var result3 = aClient.ChangePassword(Defines.TEST_PASSWORD_CHANGE, Defines.TEST_PASSWORD);
+			Assert.IsNotNull (result3);
 		}
 
 		[Test]

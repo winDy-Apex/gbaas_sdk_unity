@@ -47,6 +47,12 @@ namespace GBaaS.io {
 		
 			if (handler == null) {
 				_handler.Clear();
+				GBAchievementService.Instance.SetHandler(null);
+				GBScoreService.Instance.SetHandler(null);
+				GBUserService.Instance.SetHandler(null);
+				GBPushService.Instance.SetHandler(null);
+				GBNetService.Instance.SetHandler(null);
+				GBCollectionService.Instance.SetHandler(null);
 			} else {
 				if (_handler.Contains(handler) == false) {
 					_handler.Add(handler);
@@ -187,6 +193,20 @@ namespace GBaaS.io {
 			} catch (Exception e) {
 				e.ToString();
 				return "";
+			}
+		}
+
+		/// <summary>
+		/// Changes the password.
+		/// </summary>
+		/// <returns>The password.</returns>
+		/// <param name="oldOne">Old one.</param>
+		/// <param name="newOne">New one.</param>
+		public string ChangePassword(string oldOne, string newOne) {
+			try {
+				return GBUserService.Instance.ChangePassword (oldOne, newOne);
+			} catch (Exception e) {
+				return e.ToString();
 			}
 		}
 
