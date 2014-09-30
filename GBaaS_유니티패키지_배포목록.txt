@@ -16,6 +16,7 @@ Plugins
 		Plugins/GCM/MinijSON.cs
 	
 Standard Assets/GBaaSObjects.cs
+Standard Assets/GBaaSUserObject.cs
 	GBaaS/
 	GBaaS/fastjSON.dll
 	GBaaS/GBaaS.io.dll
