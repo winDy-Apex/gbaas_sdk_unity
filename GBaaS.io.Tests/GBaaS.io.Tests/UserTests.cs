@@ -12,7 +12,7 @@ namespace GBaaS.io.Tests
 {
 	public class UserTests
 	{
-		GBaaS.io.GBaaSApi aClient = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL);
+		GBaaS.io.GBaaSApi aClient = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL2);
 		//string _token = "";
 
 		[Test]
@@ -50,6 +50,12 @@ namespace GBaaS.io.Tests
 			//비동기 호출은 내부적으로 새 아이디 생성을 완료 후 리턴하므로 중간 과정의 False 리턴이 없다.
 			//See. AsyncTests.cs::CallAsyncLoginWithoutID
 			var result = aClient.LoginWithoutID(un);
+			Assert.IsTrue(result);
+		}
+
+		[Test]
+		public void LoginWithoutID_FixedString() {
+			var result = aClient.LoginWithoutID("ABABABABABCCCCCCCCDDDD12345");
 			Assert.IsTrue(result);
 		}
 

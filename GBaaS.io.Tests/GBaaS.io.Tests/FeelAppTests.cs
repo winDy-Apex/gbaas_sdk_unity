@@ -89,7 +89,7 @@ namespace GBaaS.io.Tests {
 		[Test]
 		// 자기등수 구하기
 		public void GetRank() {
-			var login = _gbaas.Login(Defines.TEST_USERNAME1, Defines.TEST_PASSWORD);
+			var login = _gbaas.Login(Defines.TEST_USERNAME, Defines.TEST_PASSWORD);
 			Assert.IsNotNull(login);
 
 			// 점수 가져오기, 최대 Limit 지정한만큼 가져옴, 스코어 순으로 기본적으로 소팅됨
