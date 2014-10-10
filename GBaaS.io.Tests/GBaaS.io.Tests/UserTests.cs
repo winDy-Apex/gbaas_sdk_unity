@@ -12,7 +12,7 @@ namespace GBaaS.io.Tests
 {
 	public class UserTests
 	{
-		GBaaS.io.GBaaSApi aClient = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL2);
+		GBaaS.io.GBaaSApi aClient = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL3);
 		//string _token = "";
 
 		[Test]
@@ -130,7 +130,7 @@ namespace GBaaS.io.Tests
 			Assert.IsTrue(result2);
 
 			var result = aClient.UpdateUser(new GBUserObject {
-				username = un,
+				username = "bobby",
 				password = Defines.TEST_PASSWORD + "1",
 				email = un + "@test1112.com",
 				age = 19,
