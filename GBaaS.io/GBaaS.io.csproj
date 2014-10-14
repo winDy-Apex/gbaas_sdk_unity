@@ -20,7 +20,7 @@
     <ConsolePause>false</ConsolePause>
     <CustomCommands>
       <CustomCommands>
-        <Command type="AfterBuild" command="../deploydll.sh" />
+        <Command type="AfterBuild" command="python ${ProjectDir}/../deploydll.py Debug" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -32,7 +32,7 @@
     <ConsolePause>false</ConsolePause>
     <CustomCommands>
       <CustomCommands>
-        <Command type="AfterBuild" command="../deploydll_release.sh" />
+        <Command type="AfterBuild" command="python ${ProjectDir}/../deploydll.py Release" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
