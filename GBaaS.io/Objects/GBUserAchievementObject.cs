@@ -9,6 +9,6 @@ namespace GBaaS.io.Objects
 		public string userName { get; set; }
 		public string achievementId { get; set; }
 		public int currentStepCount { get; set; }
-		public bool isUnlocked { get; set; }
+		public bool isUnLocked { get; set; }
 	}
 }

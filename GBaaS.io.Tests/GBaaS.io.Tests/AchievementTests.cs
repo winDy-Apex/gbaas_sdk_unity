@@ -6,7 +6,7 @@ namespace GBaaS.io.Tests
 {
 	public class AchievementTests
 	{
-		GBaaS.io.GBaaSApi aClient = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL);
+		GBaaS.io.GBaaSApi aClient = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL2);
 		//string _token = "";
 
 		[Test]
@@ -170,7 +170,7 @@ namespace GBaaS.io.Tests
 				userName = username,
 				achievementId = "e0aa623a-6df3-11e3-9e30-37800d66ccba",
 				currentStepCount = 1,
-				isUnlocked = true
+				isUnLocked = true
 			};
 
 			var result = userAchievementObject.Save();
@@ -188,7 +188,7 @@ namespace GBaaS.io.Tests
 				userName = username,
 				achievementId = "e0aa623a-6df3-11e3-9e30-37800d66ccba",
 				currentStepCount = 1,
-				isUnlocked = true
+				isUnLocked = true
 			};
 
 			var result = aClient.AddUserAchievement(userAchievementObject);
@@ -228,7 +228,7 @@ namespace GBaaS.io.Tests
 
 			String locale = "ko-KR";
 
-			var result = aClient.GetAchievementByUUID("4bb28c3a-3345-11e4-9f06-4301e83254dd", locale);
+			var result = aClient.GetAchievementByUUID("d0b24e5a-54f3-11e4-b688-3199c630a20e", locale);
 			Assert.IsTrue(result.achievementName.Length > 0);
 		}
 
@@ -238,7 +238,7 @@ namespace GBaaS.io.Tests
 			GBaaS.io.GBaaSApi aClient2 = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL2);
 			aClient2.Login("test", "abc123");
 
-			var result = aClient.UpdateAchievement("4bb28c3a-3345-11e4-9f06-4301e83254dd", 1, true, "ko-KR");
+			var result = aClient.UpdateAchievement("d0b24e5a-54f3-11e4-b688-3199c630a20e", 1, true, "ko-KR");
 			Assert.IsTrue(result.achievementName.Length > 0);
 		}
 

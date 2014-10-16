@@ -146,7 +146,7 @@ namespace GBaaS.io
 		public Objects.GBAchievementObject UpdateAchievementThread(string uuid, int currentStepCount, bool isUnlocked, string locale) {
 			Objects.GBUserAchievementObject userAchievementObject = new Objects.GBUserAchievementObject {
 				currentStepCount = currentStepCount,
-				isUnlocked = isUnlocked
+				isUnLocked = isUnlocked
 			};
 
 			var rawResults = GBRequestService.Instance.PerformRequest<string>("/users/" + GBUserService.Instance.GetLoginName() + "/achievements/" + uuid + "?locale=" + locale, HttpHelper.RequestTypes.Put, userAchievementObject);
@@ -191,7 +191,7 @@ namespace GBaaS.io
 					preEarnedDescription = (item["preEarnedDescription"] ?? "").ToString(),
 					earnedDescription = (item["earnedDescription"] ?? "").ToString(),
 					currentStepCount = Convert.ToInt32( (item["currentStepCount"] ?? "0").ToString() ),
-					isUnlocked = HttpHelper.Instance.SafeConvertBoolean((item["isUnlocked"] ?? "false").ToString() )
+					isUnLocked = HttpHelper.Instance.SafeConvertBoolean((item["isUnLocked"] ?? "false").ToString() )
 				});
 			}
 

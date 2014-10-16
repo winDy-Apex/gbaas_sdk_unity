@@ -18,6 +18,6 @@ namespace GBaaS.io.Objects
 
 		// parts from UserAchievementObject
 		public int currentStepCount { get; set; }
-		public bool isUnlocked { get; set; }
+		public bool isUnLocked { get; set; }
 	}
 }
