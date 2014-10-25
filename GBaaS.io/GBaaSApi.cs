@@ -429,12 +429,14 @@ namespace GBaaS.io {
 		/// 사용자 점수가 기록된 이력을 조회한다. (같은 Stage, 같은 Unit 의 정보를 이력으로 조회한다.)
 		/// </summary>
 		/// <returns>The score log.</returns>
-		/// <param name="stage">Stage.</param>
-		/// <param name="unit">Unit.</param>
-		/// <param name="limit">Limit.</param>
-		/// <param name="isMore">If set to <c>true</c> is more. for Continuos Query</param>
+		/// <param name="stage">기록된 게임의 판.</param>
+		/// <param name="unit">기록된 점수 유형, 같은 판에 여러 점수 유형을 기록할 수 있다. 득점, 실점, 킬수 등등.</param>
+		/// <param name="limit">한번에 가져올 정보의 최대 숫자 한번에 10개씩 또는 100개씩 등으로 지정할 수 있다.</param>
+		/// <param name="isMore">true 로 설정하면 limit 로 설정한 다음 페이지에 해당하는 정보를 가져온다. (이때 다른 파라미터는 전과 동일하게 보내야한다.)</param>
 		/// <param name="period">점수를 구하는 기간을 지정한다. 주간, 일간 지원</param>
 		/// <param name="weekstart">주간 단위로 점수를 구할 경우 시작하는 주의 첫 요일 지정</param>
+		/// 
+		/// 상위 등수의 사용자 정보를 가져올때 사용한다.
 		public List<Objects.GBScoreObject> GetScoreLogMore(string stage = "", string unit = "", int limit = 0, bool isMore = false, Period period = Period.Alltime, DayOfWeek weekstart = DayOfWeek.Sunday) {
 			try {
 				return GBScoreService.Instance.GetScoreLogMore(stage, unit, limit, isMore, period, weekstart);

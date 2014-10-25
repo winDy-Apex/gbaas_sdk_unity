@@ -10,6 +10,15 @@ Plugins
 		Plugins/Android/AndroidManifest.xml
 		Plugins/Android/gcm.jar
 		Plugins/Android/unitygcmplugin.jar
+		
+		Plugins/Android/AndroidManifest_GCM.xml
+		Plugins/Android/android-async-http-1.4.4-fix.jar
+		Plugins/Android/avoscloud-v2.6.5.jar
+		Plugins/Android/avospush-v2.6.5.jar
+		Plugins/Android/customplayer.jar
+		Plugins/Android/fastjson.jar
+		Plugins/Android/httpmime-4.2.4.jar	
+		
 	Plugins/GCM
 		Plugins/GCM/GCM.cs
 		Plugins/GCM/GCMReceiver.cs
