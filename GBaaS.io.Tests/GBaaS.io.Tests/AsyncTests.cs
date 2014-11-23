@@ -453,6 +453,37 @@ namespace GBaaS.io.Tests
 		}
 
 		[Test]
+		public void CallAsyncIsRegisteredDevice2() {
+			GBaaS.io.GBaaSApi aClient2 = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL2);
+			var login = aClient2.Login(Defines.TEST_USERNAME, Defines.TEST_PASSWORD);
+			Assert.IsNotNull(login);
+
+			GBaaSApiHandler handler = new UserHandler();
+			aClient2.AddHandler(handler);
+
+			AsyncCallChecker.Instance.SetAsyncCalling(true);
+
+			//11-10 17:45:50.126: I/Unity(29254): [GBaaS] Registered!!! 
+
+			string registrationId = "APA91bGQxrGBLda4bgPy15qTex-7m9SaxFv8rCO2u2-4lTZNZp4zvGLE8Rz5ZroA9xN3Z2FcMaSbQ4u5KzJdaxm6HV1i3Cyf_hZXoXsXSB0q4aCXvVNkOYAnoJLrfwxPYKr14BDNFT6iVXhPUzvP7mfY_hTVEpPlPSMEe21oG9MNRsCehaXvzFc";
+			string deviceModel = "samsung SHV-E250K";
+			string operatingSystem = "Android OS 4.4.2 / API-19 (KOT49H/E250KKTUKNI1)";
+
+			bool result = aClient2.IsRegisteredDevice(deviceModel, operatingSystem, "andriod", registrationId);
+
+			//바로 리턴되는 결과는 없어야 정상
+			Assert.IsFalse(result);
+
+			//Async 호출이 끝날때까지 대기
+			while (AsyncCallChecker.Instance.GetAsyncCalling()) {
+				Console.Out.WriteLine("...AsyncCalling...");
+				System.Threading.Thread.Sleep(100);
+			}
+
+			aClient2.AddHandler(null);
+		}
+
+		[Test]
 		public void CallAsyncRegisterDevice() {
 			GBaaS.io.GBaaSApi aClient2 = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL2);
 			var login = aClient2.Login(Defines.TEST_USERNAME, Defines.TEST_PASSWORD);

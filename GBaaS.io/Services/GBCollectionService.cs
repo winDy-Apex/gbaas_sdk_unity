@@ -29,6 +29,197 @@ namespace GBaaS.io
 			return (_handler.Count > 0);
 		}
 
+		public List<GBAsset> GetFileList() {
+			if (IsAsync()) {
+				Thread workerThread = new Thread(() => this.GetFileListThread());
+				workerThread.Start();
+				return null;
+			} else {
+				return this.GetFileListThread();
+			}
+		}
+
+		public List<GBAsset> GetFileListThread() {
+			var rawResults = GBRequestService.Instance.PerformRequest<string>("/assets", HttpHelper.RequestTypes.Get, "");
+			if (rawResults.IndexOf ("error") != -1) {
+				if (IsAsync()) {
+					foreach (GBaaSApiHandler handler in _handler) {
+						handler.OnGetFileList(default(List<GBAsset>));
+					}
+				} else {
+					return default(List<GBAsset>);
+				}
+			}
+
+			var assets = GBRequestService.Instance.GetEntitiesFromJson(rawResults);
+
+			if (IsAsync()) {
+				foreach (GBaaSApiHandler handler in _handler) {
+					handler.OnGetFileList(MakeList<GBAsset>(assets));
+				}
+			} else {
+				return MakeList<GBAsset>(assets);
+			}
+
+			return default(List<GBAsset>);
+		}
+
+		public bool FileDownload(string fileName, FileStream fileStream) {
+			/*
+			var fileStream = new FileStream(inputPath, FileMode.Open, FileAccess.Read,
+				FileShare.ReadWrite | FileShare.Delete);
+			*/
+
+			if (IsAsync()) {
+				Thread workerThread = new Thread(() => this.FileDownloadThread(fileName, fileStream));
+				workerThread.Start();
+				return false;
+			} else {
+				return this.FileDownloadThread(fileName, fileStream);
+			}
+		}
+
+		public bool FileDownloadThread(string fileName, FileStream fileStream) {
+			// Check Asset Exist
+			GBAsset asset = FindAsset(fileName);
+
+			// Add New Asset
+			if(asset == null) {
+				return false;
+			}
+
+			// Download Asset Data
+			if (IsAsync()) {
+				foreach (GBaaSApiHandler handler in _handler) {
+					handler.OnFileDownload(DownloadAsset(asset.GetUUID(), fileStream));
+				}
+			} else {
+				return DownloadAsset(asset.GetUUID(), fileStream);
+			}
+
+			return false;
+		}
+
+		private bool DownloadAsset(string assetUUID, FileStream fileStream) {
+			return GBRequestService.Instance.GetDownloadFile("/assets/" + assetUUID + "/data", fileStream);
+		}
+
+		public bool FileUpload(string fileName, FileStream fileStream) {
+
+			/*
+			var fileStream = new FileStream(inputPath, FileMode.Open, FileAccess.Read,
+				FileShare.ReadWrite | FileShare.Delete);
+			*/
+
+			if (IsAsync()) {
+				Thread workerThread = new Thread(() => this.FileUploadThread(fileName, fileStream));
+				workerThread.Start();
+				return false;
+			} else {
+				return this.FileUploadThread(fileName, fileStream);
+			}
+		}
+
+		public bool FileUploadThread(string fileName, FileStream fileStream) {
+			bool result = false;
+
+			// Check Asset Exist
+			GBAsset asset = FindAsset(fileName);
+
+			// Add New Asset
+			if(asset == null) {
+				GBAsset addAsset = new GBAsset {
+					owner = GBUserService.Instance.GetUserUUID(),
+					path = fileName,
+					name = fileName
+				};
+
+				result = addAsset.Save();
+
+				if (result == true) {
+					// Re Find Asset
+					asset = FindAsset(fileName);
+				}
+
+				if (asset == null) {
+					result = false;
+				}
+
+				if (result == false) {
+					if (IsAsync()) {
+						foreach (GBaaSApiHandler handler in _handler) {
+							handler.OnFileUpload(result);
+						}
+					} else {
+						return result;
+					}
+				}
+			}
+
+			// Upload Asset Data
+			if (IsAsync()) {
+				foreach (GBaaSApiHandler handler in _handler) {
+					handler.OnGameDataSave(UploadAsset(asset.GetUUID(), fileStream));
+				}
+			} else {
+				return UploadAsset(asset.GetUUID(), fileStream);
+			}
+
+			return false;
+		}
+
+		private bool UploadAsset(string assetUUID, FileStream fileStream) {
+			return GBRequestService.Instance.PostUploadFile("/assets/" + assetUUID + "/data" , fileStream);
+		}
+
+		private GBAsset FindAsset(string key) {
+			string query = "select *";
+			query += " where";
+			//query += " name = '" + "space-ship-373387_640.jpg" + "'";
+			query += " name = '" + key + "'";
+
+			var rawResults = GBRequestService.Instance.PerformRequest<string>("/assets?ql=" + query, HttpHelper.RequestTypes.Get, "");
+			if (rawResults.IndexOf ("error") != -1) {
+				return null;
+			}
+
+			var assetData = GBRequestService.Instance.GetEntitiesFromJson(rawResults);
+
+			/* Return Data Format
+			[0]	{{   
+					"uuid": "1e5fa6ea-6a5f-11e4-bfb3-49225183f47c",   
+					"type": "asset",   
+					"name": "space-ship-373387_640.jpg",   
+					"created": 1415791749198,   
+					"modified": 1415791750901,   
+					"owner": "30e7d22a-3340-11e4-8952-792cb7addaa7",   
+					"path": "icon_1415791749139",  
+					"content-length": 166623,   
+					"content-type": "image/jpeg",   
+					"etag": "b3db9978afa2c4ffcfb813bd969d1839",  
+					"metadata": 
+						{     "path": "/assets/1e5fa6ea-6a5f-11e4-bfb3-49225183f47c"   } 
+				}}	Newtonsoft.Json.Linq.JObject
+			*/
+
+			foreach (var item in assetData)
+			{
+				GBAsset obj = new GBAsset {
+					owner = (item["owner"] ?? "").ToString(),
+					path = (item["metadata"]["path"] ?? "").ToString()
+				};
+
+				obj.SetUUID((item["uuid"] ?? "").ToString());
+			
+				if (obj.path.Length > 0) {
+					return obj;
+				}
+			}
+
+			return null;
+		}
+
+
 		public bool GameDataSave(string key, string value) {
 
 			value = AESEncrypt128(value, key);

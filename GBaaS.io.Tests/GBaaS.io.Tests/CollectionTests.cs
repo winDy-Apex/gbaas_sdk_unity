@@ -17,7 +17,7 @@ namespace GBaaS.io.Tests
 		[Test]
 		public void GameDataSave()
 		{
-			GBaaS.io.GBaaSApi gbaasApi = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL);
+			GBaaS.io.GBaaSApi gbaasApi = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL2);
 			gbaasApi.Login("test", "abc123");
 
 			bool result = gbaasApi.GameDataSave("key111", "GameSaveData----111");

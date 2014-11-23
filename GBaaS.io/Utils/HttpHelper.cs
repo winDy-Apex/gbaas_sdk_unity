@@ -21,6 +21,11 @@ namespace GBaaS.io.Utils
 		{
 			try {
 				WebRequest req = WebRequest.Create(url);
+
+				if (_accessToken != null && _accessToken.Length > 0) {
+					req.Headers.Add ("Authorization: Bearer " + _accessToken);
+				}
+
 				req.Timeout=TIMEOUT;
 				using(WebResponse resp = req.GetResponse()) {
 					StreamReader sr = new StreamReader(resp.GetResponseStream());
@@ -189,6 +194,65 @@ namespace GBaaS.io.Utils
 			}
 
 			return fastJSON.JSON.Instance.ToObject<ReturnT>(responseJson);
+		}
+
+		public bool GetDownloadFile(string url, FileStream fileStream) {
+			WebClient webClient = new WebClient();
+			byte[] result = webClient.DownloadData(url);
+
+			fileStream.Write(result, 0, result.Length);
+
+			return true;
+		}
+
+		public bool PostUploadFile(string url, FileStream fileStream) {
+			if (fileStream == null) {
+				return false;
+			}
+
+			HttpWebRequest httpWebRequest 	= (HttpWebRequest)WebRequest.Create(url);
+			httpWebRequest.ContentType 		= "application/octet-stream";
+			httpWebRequest.Method 			= "POST";
+			httpWebRequest.KeepAlive 		= true;
+			httpWebRequest.Credentials 		= System.Net.CredentialCache.DefaultCredentials;
+
+			if (_accessToken != null && _accessToken.Length > 0) {
+				httpWebRequest.Headers.Add ("Authorization: Bearer " + _accessToken);
+			}
+
+			Stream 	memStream 	= new System.IO.MemoryStream();
+			byte[] 	buffer 		= new byte[1024];
+			int 	bytesRead 	= 0;
+			while ((bytesRead = fileStream.Read(buffer, 0, buffer.Length)) != 0) {
+				memStream.Write(buffer, 0, bytesRead);
+			}
+
+			fileStream.Close();
+
+			httpWebRequest.ContentLength = memStream.Length;
+			Stream requestStream = httpWebRequest.GetRequestStream();
+			memStream.Position = 0;
+			byte[] tempBuffer = new byte[memStream.Length];
+			memStream.Read(tempBuffer, 0, tempBuffer.Length);
+			memStream.Close();
+			requestStream.Write(tempBuffer, 0, tempBuffer.Length);
+			requestStream.Close();
+			try
+			{
+				WebResponse webResponse = httpWebRequest.GetResponse();
+				Stream stream = webResponse.GetResponseStream();
+				StreamReader reader = new StreamReader(stream);
+				string var = reader.ReadToEnd();
+
+			}
+
+			catch (Exception ex)
+			{
+				//response.InnerHtml = ex.Message;
+				return false;
+			}
+			httpWebRequest = null;
+			return true;
 		}
 
 		//Approved Types for serialization

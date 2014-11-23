@@ -9,6 +9,8 @@ namespace GBaaS.io.Tests
 		public static string USERGRID_URL2 	= "https://api.gbaas.io/33e8b61a-3340-11e4-ab01-b99509431e86/2608ef70-3344-11e4-9ca9-15e8a7c9ff3a/"; // gbaasman
 		public static string USERGRID_URL3 	= "https://api.gbaas.io/33e8b61a-3340-11e4-ab01-b99509431e86/3ad33370-3344-11e4-b5d0-418c109495be/"; // gbaasman2
 
+		public static string USERGRID_TEST_URL 		= "http://test-api.gbaas.io:9090/300a24ba-aa7a-11e3-b1a9-2b4a0efc56d3/8bb30760-6e37-11e4-b6af-eff65e46a844";
+
 		public static string TEST_USERNAME 			= "test";
 		public static string TEST_USERNAME1 		= "test1";
 		public static string TEST_PASSWORD			= "abc123";

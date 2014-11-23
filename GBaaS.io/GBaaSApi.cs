@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using GBaaS.io.Objects;
 using GBaaS.io.Services;
 using GBaaS.io.Utils;
+using System.IO;
 
 namespace GBaaS.io {
 	public enum Period { Alltime, Daily, Weekly, Monthly };
@@ -625,6 +626,34 @@ namespace GBaaS.io {
 			} catch (Exception e) {
 				e.ToString();
 				return false;
+			}
+		}
+
+//********** For FileStoreService ********** //
+		public bool FileUpload(string fileName, FileStream fileStream) {
+			try {
+				return GBCollectionService.Instance.FileUpload(fileName, fileStream);
+			} catch (Exception e) {
+				e.ToString();
+				return false;
+			}
+		}
+
+		public bool FileDownload(string fileName, FileStream fileStream) {
+			try {
+				return GBCollectionService.Instance.FileDownload(fileName, fileStream);
+			} catch (Exception e) {
+				e.ToString();
+				return false;
+			}
+		}
+
+		public List<Objects.GBAsset> GetFileList() {
+			try {
+				return GBCollectionService.Instance.GetFileList();
+			} catch (Exception e) {
+				e.ToString();
+				return null;
 			}
 		}
 

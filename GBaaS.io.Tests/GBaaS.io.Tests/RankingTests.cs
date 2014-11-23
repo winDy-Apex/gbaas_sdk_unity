@@ -10,7 +10,7 @@ using NUnit.Framework;
 namespace GBaaS.io.Tests
 {
 	public class RankingTests {
-		GBaaS.io.GBaaSApi gbaasApi = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL3);
+		GBaaS.io.GBaaSApi gbaasApi = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL2);
 
 		[Test]
 		public void AddScoreTest() {
@@ -19,8 +19,8 @@ namespace GBaaS.io.Tests
 
 			// Name must be unique.
 			var result = gbaasApi.AddScore (new GBScoreObject {
-				stage = "1st",
-				score = 1201,
+				stage = "3rd",
+				score = 9999,
 				unit = "point" 
 			});
 

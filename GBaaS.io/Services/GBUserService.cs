@@ -8,6 +8,7 @@ namespace GBaaS.io.Services
 	class GBUserService : GBService<GBUserService>
 	{
 		private string _userNmae = "";
+		private string _userUUID = "";
 
 		public GBUserService() {}
 
@@ -27,6 +28,14 @@ namespace GBaaS.io.Services
 
 		public string GetLoginName() {
 			return _userNmae;
+		}
+
+		public string GetUserUUID() {
+			return _userUUID;
+		}
+
+		public void SetUserUUID(string uuid) {
+			_userUUID = uuid;
 		}
 
 		public bool Login(string userName, string password, bool forceSync = false) {

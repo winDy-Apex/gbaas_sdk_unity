@@ -12,6 +12,7 @@ Plugins
 		Plugins/Android/unitygcmplugin.jar
 		
 		Plugins/Android/AndroidManifest_GCM.xml
+		Plugins/Android/AndroidManifest_CHINA.xml
 		Plugins/Android/android-async-http-1.4.4-fix.jar
 		Plugins/Android/avoscloud-v2.6.5.jar
 		Plugins/Android/avospush-v2.6.5.jar
@@ -25,6 +26,7 @@ Plugins
 		Plugins/GCM/MinijSON.cs
 	
 Standard Assets/GBaaSObjects.cs
+Standard Assets/GBaaSSettings.cs
 Standard Assets/GBaaSUserObject.cs
 	GBaaS/
 	GBaaS/fastjSON.dll

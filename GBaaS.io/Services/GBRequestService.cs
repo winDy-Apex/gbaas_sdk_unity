@@ -26,6 +26,9 @@ namespace GBaaS.io.Services
 
 			if (rawResults.Length > 0) {
 				var results = JObject.Parse (rawResults);
+
+				GBUserService.Instance.SetUserUUID(results["user"]["uuid"].ToString());
+
 				return results ["access_token"].ToString ();
 			} else {
 				return "";
@@ -61,6 +64,16 @@ namespace GBaaS.io.Services
 		{
 			string requestPath = BuildPath(path);
 			return HttpHelper.Instance.PerformJsonRequest<retrunT>(requestPath, method, data, jsonParent);
+		}
+
+		public bool PostUploadFile(string path, FileStream fileStream) {
+			string requestPath = BuildPath(path);
+			return HttpHelper.Instance.PostUploadFile(requestPath, fileStream);
+		}
+
+		public bool GetDownloadFile(string path, FileStream fileStream) {
+			string requestPath = BuildPath(path);
+			return HttpHelper.Instance.GetDownloadFile(requestPath, fileStream);
 		}
 
 		public JToken GetEntitiesFromJson(string rawJson) {

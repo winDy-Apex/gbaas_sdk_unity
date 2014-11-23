@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using GBaaS.io.Objects;
+using System.IO;
 
 namespace GBaaS.io {
 	public abstract class GBaaSApiHandler {
@@ -48,6 +49,11 @@ namespace GBaaS.io {
 		public virtual void OnGetListInRange(List<GBObject> result) {}
 		public virtual void OnGetObject<T>(List<T> result) {}
 		public virtual void OnCreateList(bool result) {}
+
+		// For FileStore Service
+		public virtual void OnFileUpload(bool result) {}
+		public virtual void OnFileDownload(bool result) {} 
+		public virtual void OnGetFileList(List<GBAsset> result) {}
 
 		// For Net Service
 		public virtual void OnReceiveData(string recvPacket) {}
