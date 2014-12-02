@@ -1,6 +1,6 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Release" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="GBaaS.io/GBaaSApiHandler.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="GBaaS.io.Tests/GBaaS.io.Tests/FileStoreTests.cs">
     <Files>
       <File FileName="GBaaS.io.Tests/GBaaS.io.Tests/ClientTests.cs" Line="1" Column="1" />
       <File FileName="GBaaS.io/Services/GBAchievementService.cs" Line="1" Column="1" />
@@ -42,7 +42,7 @@
       <File FileName="GBaaS.io/Services/GBUserService.cs" Line="1" Column="1" />
       <File FileName="GBaaS.io/Services/GBRequestService.cs" Line="1" Column="1" />
       <File FileName="GBaaS.io/Utils/HttpHelper.cs" Line="1" Column="1" />
-      <File FileName="GBaaS.io.Tests/GBaaS.io.Tests/FileStoreTests.cs" Line="1" Column="1" />
+      <File FileName="GBaaS.io.Tests/GBaaS.io.Tests/FileStoreTests.cs" Line="4" Column="4" />
       <File FileName="GBaaS.io/Objects/GBObject.cs" Line="1" Column="1" />
       <File FileName="GBaaS.io/Objects/GBGroupObject.cs" Line="1" Column="1" />
       <File FileName="GBaaS.io/Objects/GBLocationObject.cs" Line="1" Column="1" />
@@ -56,7 +56,8 @@
               <Node name="io" expanded="True">
                 <Node name="Tests" expanded="True">
                   <Node name="AchievementTests" expanded="True" />
-                  <Node name="UserTests" selected="True" />
+                  <Node name="RankingTests" expanded="True" />
+                  <Node name="UserTests" expanded="True" selected="True" />
                 </Node>
               </Node>
             </Node>

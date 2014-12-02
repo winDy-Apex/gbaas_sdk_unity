@@ -21,7 +21,9 @@ namespace GBaaS.io
 			}
 		}
 
-		private bool IsAsync() {
+		private bool IsAsync(bool forceSync = false) {
+			if (forceSync)
+				return false;
 			return (_handler.Count > 0);
 		}
 
@@ -64,18 +66,18 @@ namespace GBaaS.io
 		}
 
 		public bool RegisterDevice(
-			string deviceModel, string deviceOSVersion, string devicePlatform, string registration_id) {
-			if (IsAsync()) {
-				Thread workerThread = new Thread(() => this.RegisterDeviceThread(deviceModel, deviceOSVersion, devicePlatform, registration_id));
+			string deviceModel, string deviceOSVersion, string devicePlatform, string registration_id, bool forceSync) {
+			if (IsAsync(forceSync)) {
+				Thread workerThread = new Thread(() => this.RegisterDeviceThread(deviceModel, deviceOSVersion, devicePlatform, registration_id, forceSync));
 				workerThread.Start();
 				return false;
 			} else {
-				return this.RegisterDeviceThread(deviceModel, deviceOSVersion, devicePlatform, registration_id);
+				return this.RegisterDeviceThread(deviceModel, deviceOSVersion, devicePlatform, registration_id, forceSync);
 			}
 		}
 
 		private bool RegisterDeviceThread(
-			string deviceModel, string deviceOSVersion, string devicePlatform, string registration_id) {
+			string deviceModel, string deviceOSVersion, string devicePlatform, string registration_id, bool forceSync) {
 
 			deviceModel = deviceModel.Replace(" ", "_");
 			deviceOSVersion = deviceOSVersion.Replace(" ", "_");
@@ -85,7 +87,7 @@ namespace GBaaS.io
 
 			if (isRegistered) {
 				try {
-					if (IsAsync()) {
+					if (IsAsync(forceSync)) {
 						foreach (GBaaSApiHandler handler in _handler) {
 							handler.OnRegisterDevice(isRegistered);
 						}
@@ -106,7 +108,7 @@ namespace GBaaS.io
 
 				bool result = deviceRegister.Save();
 				if (result == false) {
-					if (IsAsync()) {
+					if (IsAsync(forceSync)) {
 						foreach (GBaaSApiHandler handler in _handler) {
 							handler.OnRegisterDevice(result);
 						}
@@ -133,7 +135,7 @@ namespace GBaaS.io
 					}
 				}
 
-				if (IsAsync()) {
+				if (IsAsync(forceSync)) {
 					foreach (GBaaSApiHandler handler in _handler) {
 						handler.OnRegisterDevice(ConnectDeviceToUser(deviceID));
 					}

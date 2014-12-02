@@ -579,7 +579,17 @@ namespace GBaaS.io {
 		public bool RegisterDevice(
 			string deviceModel, string deviceOSVersion, string devicePlatform, string registration_id) {
 			try {
-				return GBPushService.Instance.RegisterDevice(deviceModel, deviceOSVersion, devicePlatform, registration_id);
+				return GBPushService.Instance.RegisterDevice(deviceModel, deviceOSVersion, devicePlatform, registration_id, false);
+			} catch (Exception e) {
+				e.ToString();
+				return false;
+			}
+		}
+
+		public bool RegisterDevice(
+			string deviceModel, string deviceOSVersion, string devicePlatform, string registration_id, bool forceSync) {
+			try {
+				return GBPushService.Instance.RegisterDevice(deviceModel, deviceOSVersion, devicePlatform, registration_id, forceSync);
 			} catch (Exception e) {
 				e.ToString();
 				return false;
