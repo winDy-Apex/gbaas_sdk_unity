@@ -1,3 +1,7 @@
+배포전 윈도우OS 작업 내용
+1. Unity Project Window 에서 로드 확인
+2. 패키지는 윈도우에서 작업해서 올리기
+
 GCM-Sample
 	GCM-Sample/MainScene.cs
 	GCM-Sample/MainScene.unity
@@ -6,27 +10,25 @@ GCM-Sample
 	
 Plugins
 	Plugins/Android
-		Plugins/Android/android-support-v4.jar
-		Plugins/Android/AndroidManifest.xml
-		Plugins/Android/gcm.jar
-		Plugins/Android/unitygcmplugin.jar
+		android-support-v4.jar
+		AndroidManifest.xml
+		gcm.jar
+		unitygcmplugin.jar
 		
-		Plugins/Android/AndroidManifest_GCM.xml
-		Plugins/Android/AndroidManifest_CHINA.xml
-		Plugins/Android/android-async-http-1.4.4-fix.jar
-		Plugins/Android/avoscloud-v2.6.5.jar
-		Plugins/Android/avospush-v2.6.5.jar
-		Plugins/Android/customunityplayeractivity.jar
-		Plugins/Android/fastjson.jar
-		Plugins/Android/httpmime-4.2.4.jar	
+		AndroidManifest_GCM.xml
+		AndroidManifest_CHINA.xml
+		android-async-http-1.4.4-fix.jar
+		avoscloud-v2.6.5.jar
+		avospush-v2.6.5.jar
+		customunityplayeractivity.jar
+		fastjson.jar
+		httpmime-4.2.4.jar	
+		GBaaSAndroid.cs
 		
 	Plugins/GCM
 		GCM.cs
 		GCMReceiver.cs
 		MinijSON.cs
-		
-	Plugins/IAP
-		IAP_Xiaomi.cs
 	
 Standard Assets/GBaaSObjects.cs
 Standard Assets/GBaaSSettings.cs

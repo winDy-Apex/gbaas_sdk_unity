@@ -53,10 +53,35 @@ namespace GBaaS.io.Tests
 			Assert.IsTrue(result);
 		}
 
+
 		[Test]
 		public void LoginWithoutID_FixedString() {
 			var result = aClient.LoginWithoutID("ABABABABABCCCCCCCCDDDD12345");
 			Assert.IsTrue(result);
+		}
+
+		[Ignore]
+		[Test]
+		public void LoginWithoutIDUpdate() {
+			var result = aClient.LoginWithoutIDUpdate("ABABABABABCCCCCCCCDDDD12345", new GBUserObject {
+				username = "ChangeIDABABABABABCCCCCCCCDDDD12345",
+				password = Defines.TEST_PASSWORD_CHANGE,
+				email = "changetest@test.com",
+				age = 19,
+				gender = "Female"
+			});
+
+			Assert.IsTrue(result);
+
+			var results = aClient.Login("ChangeIDABABABABABCCCCCCCCDDDD12345", Defines.TEST_PASSWORD_CHANGE);
+			Assert.IsTrue(results);
+		}
+
+		[Ignore]
+		[Test]
+		public void LoginWithoutIDUpdateAfter() {
+			var results = aClient.Login("ChangeIDABABABABABCCCCCCCCDDDD12345", Defines.TEST_PASSWORD_CHANGE);
+			Assert.IsTrue(results);
 		}
 
 		[Test]

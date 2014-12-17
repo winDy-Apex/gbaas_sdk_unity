@@ -129,7 +129,7 @@ namespace GBaaS.io {
 				return false;
 			}
 		}
-
+			
 		/// <summary>
 		/// LoginWithoutID 와 쌍으로 사용한다.
 		/// 임의로 로그인한 사용자에게 표시이름을 부여한다.
@@ -139,6 +139,40 @@ namespace GBaaS.io {
 		public bool UpdateUserName(string userName) {
 			try {
 				return GBUserService.Instance.UpdateUserName(userName);
+			} catch (Exception e) {
+				e.ToString();
+				return false;
+			}
+		}
+
+		/// <summary>
+		/// LoginWithoutID 로 생성한 계정을 사용자 정보(ID/PW) 로 수정한다.
+		/// 이 함수를 호출하면 로그인까지 완료된다.
+		/// 단! 이후에는 해당 DeviceID 가 아닌 ID/PW 로 로그인 하여야한다.
+		/// </summary>
+		/// <returns><c>true</c>, if without identifier update was logined, <c>false</c> otherwise.</returns>
+		/// <param name="uniqueUseKey">Unique use key.</param>
+		/// <param name="userInfo">User info.</param>
+		public bool LoginWithoutIDUpdate(string uniqueUseKey, GBUserObject userInfo) {
+			try {
+				var loginResult = LoginWithoutID(uniqueUseKey);
+				if(loginResult == false) return false;
+
+				var userInfoResult = GetUserInfo();
+				if(userInfoResult == null) return false;
+
+				userInfo.uuid = userInfoResult.uuid;
+
+				var updateUserResult = UpdateUser(userInfo);
+				if(updateUserResult == null) return false;
+
+				// Login With New User Info.
+				var loginAgainResult = Login(userInfo.username, "gbaas_" + uniqueUseKey);
+				if(loginAgainResult == false) return false;
+
+				// Change Password
+				var changePasswordResult = ChangePassword("gbaas_" + uniqueUseKey, userInfo.password);
+				return true;
 			} catch (Exception e) {
 				e.ToString();
 				return false;
