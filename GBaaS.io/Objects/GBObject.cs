@@ -2,10 +2,8 @@ using System;
 using GBaaS.io.Services;
 using GBaaS.io.Utils;
 
-namespace GBaaS.io.Objects
-{
-	public class GBObject
-	{
+namespace GBaaS.io.Objects {
+	public class GBObject : GBResult {
 		public string uuid { get; set; }
 
 		private 	string _entityType 	= "";

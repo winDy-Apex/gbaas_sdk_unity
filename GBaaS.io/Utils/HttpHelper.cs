@@ -120,8 +120,7 @@ namespace GBaaS.io.Utils
 
 		#region JSON Request
 
-		public ReturnT PerformJsonRequest<ReturnT>(string url, RequestTypes method, object postData, string jsonParent = "")
-		{
+		public ReturnT PerformJsonRequest<ReturnT>(string url, RequestTypes method, object postData, string jsonParent = "") {
 			//Initilize the http request
 			HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
 			req.Timeout=TIMEOUT;
@@ -132,14 +131,11 @@ namespace GBaaS.io.Utils
 			}
 
 			//If posting data - serialize it to a json object
-			if (method != RequestTypes.Get && postData != null)
-			{
+			if (method != RequestTypes.Get && postData != null) {
 				StringBuilder sbJsonRequest = new StringBuilder();
 				var T = postData.GetType();
-				foreach (var prop in T.GetProperties())
-				{
-					if (NativeTypes.Contains(prop.PropertyType) && prop.GetValue(postData, null) != null)
-					{
+				foreach (var prop in T.GetProperties()) {
+					if (NativeTypes.Contains(prop.PropertyType) && prop.GetValue(postData, null) != null) {
 						//Console.Out.WriteLine(prop.PropertyType.ToString());
 						if (prop.PropertyType.ToString().CompareTo("System.Boolean") == 0) {
 							object value = prop.GetValue(postData, null);
@@ -159,8 +155,7 @@ namespace GBaaS.io.Utils
 					}
 				}
 
-				using (var sWriter = new StreamWriter(req.GetRequestStream()))
-				{
+				using (var sWriter = new StreamWriter(req.GetRequestStream())) {
 					if (jsonParent.Length > 0) {
 						sWriter.Write("{\"" + jsonParent + "\": {" + sbJsonRequest.ToString().TrimEnd(',') + "} }");
 					} else {
@@ -171,25 +166,23 @@ namespace GBaaS.io.Utils
 
 			//Submit the Http Request
 			string responseJson = "";
-			try
-			{
-				using (var wResponse = req.GetResponse())
-				{
+			try {
+				using (var wResponse = req.GetResponse()) {
 					StreamReader sReader = new StreamReader(wResponse.GetResponseStream());
 					responseJson = sReader.ReadToEnd();
 				}
-			}
-			catch (WebException ex)
-			{
-				using (WebResponse response = ex.Response)
-				{
-					StreamReader sReader = new StreamReader(response.GetResponseStream());
-					responseJson = sReader.ReadToEnd();
+			} catch (WebException ex) {
+				using (WebResponse response = ex.Response) {
+					if (response != null) {
+						StreamReader sReader = new StreamReader(response.GetResponseStream());
+						responseJson = sReader.ReadToEnd();
+					} else {
+						return default(ReturnT);
+					}
 				}
 			}
 
-			if (typeof(ReturnT) == typeof(string))
-			{
+			if (typeof(ReturnT) == typeof(string)) {
 				return (ReturnT)Convert.ChangeType(responseJson, typeof(ReturnT));
 			}
 

@@ -21,10 +21,10 @@ namespace GBaaS.io.Tests
 		}
 		*/
 
-		public override void OnLoginWithoutID(bool result) {
-			Console.Out.WriteLine("Async On Login : " + result.ToString());
+		public override void OnLoginWithoutID(GBResult result) {
+			Console.Out.WriteLine("Async On Login : " + result.reason);
 			AsyncCallChecker.Instance.SetAsyncCalling(false);
-			Assert.IsTrue(result);
+			Assert.IsTrue(result.isSuccess);
 		}
 
 		public override void OnGetAchievement(List<Objects.GBAchievementObject> result) {
@@ -172,7 +172,7 @@ namespace GBaaS.io.Tests
 			var result = aClient.LoginWithoutID(un);
 
 			//바로 리턴되는 결과는 없어야 정상
-			Assert.IsFalse(result);
+			Assert.IsFalse(result.isSuccess);
 
 			//Async 호출이 끝날때까지 대기, For Only Test Code, 실제로는 불필요한 코드
 			while (AsyncCallChecker.Instance.GetAsyncCalling()) {

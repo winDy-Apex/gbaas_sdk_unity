@@ -21,7 +21,7 @@ namespace GBaaS.io.Tests
 			string loginUser = Defines.TEST_USERNAME;
 			//string loginUser = "gbaas_d85f7a6c-c04f-4a38-bd80-6a3e74b2dc23"; //037281ae-2fa3-48d3-875a-2ac3d99416c1";
 			var results = aClient.Login(loginUser, Defines.TEST_PASSWORD);
-			Assert.IsTrue(results);
+			Assert.IsTrue(results.isSuccess);
 		}		
 
 		[Ignore]
@@ -30,14 +30,14 @@ namespace GBaaS.io.Tests
 		{
 			string loginUser = "gbaas_9e5424e3-95f1-429a-b576-d62bc5e49880";
 			var results = aClient.Login(loginUser, loginUser);
-			Assert.IsTrue(results);
+			Assert.IsTrue(results.isSuccess);
 		}
 
 		[Test]
 		public void LoginWithFaceBook()
 		{
 			var results = aClient.LoginWithFaceBook("CAADqYZChB3jUBAPJzFU1NNZAZADBmmiNyFvUsWnPqtyCr2btdxUtmH2GtYJmjULpN86EALZAL9TdIYpm2Q1xllRQdLmuWLIyU0I0ByZBqiNdoMqsFYF5ZCoLYxC8aN8UjeZAkfppiUfHFbto2bfXYI1xR34fecDJQ7IlTfAm1AG6Xp2m95wJXAycgtQt6PCIJkZD");
-			Assert.IsTrue(results);
+			Assert.IsTrue(results.isSuccess);
 		}
 
 		[Test]
@@ -50,14 +50,14 @@ namespace GBaaS.io.Tests
 			//비동기 호출은 내부적으로 새 아이디 생성을 완료 후 리턴하므로 중간 과정의 False 리턴이 없다.
 			//See. AsyncTests.cs::CallAsyncLoginWithoutID
 			var result = aClient.LoginWithoutID(un);
-			Assert.IsTrue(result);
+			Assert.IsTrue(result.isSuccess);
 		}
 
 
 		[Test]
 		public void LoginWithoutID_FixedString() {
 			var result = aClient.LoginWithoutID("ABABABABABCCCCCCCCDDDD12345");
-			Assert.IsTrue(result);
+			Assert.IsTrue(result.isSuccess);
 		}
 
 		[Ignore]
@@ -74,14 +74,14 @@ namespace GBaaS.io.Tests
 			Assert.IsTrue(result);
 
 			var results = aClient.Login("ChangeIDABABABABABCCCCCCCCDDDD12345", Defines.TEST_PASSWORD_CHANGE);
-			Assert.IsTrue(results);
+			Assert.IsTrue(results.isSuccess);
 		}
 
 		[Ignore]
 		[Test]
 		public void LoginWithoutIDUpdateAfter() {
 			var results = aClient.Login("ChangeIDABABABABABCCCCCCCCDDDD12345", Defines.TEST_PASSWORD_CHANGE);
-			Assert.IsTrue(results);
+			Assert.IsTrue(results.isSuccess);
 		}
 
 		[Test]
@@ -90,7 +90,7 @@ namespace GBaaS.io.Tests
 			string un = Guid.NewGuid().ToString();
 			//string un = "TTOOMM";
 			var result = aClient.LoginWithoutID(un);
-			Assert.IsTrue(result);
+			Assert.IsTrue(result.isSuccess);
 
 			var results = aClient.GetUserInfo();
 			Assert.IsNotNull(results);
@@ -107,7 +107,7 @@ namespace GBaaS.io.Tests
 
 			// Notice! Password Unchanged. It needs another API for changing password. UpdateUser call Can't do that.
 			var result2 = aClient.Login("ChangeID" + un, "gbaas_" + un); //Defines.TEST_PASSWORD);
-			Assert.IsTrue(result2);
+			Assert.IsTrue(result2.isSuccess);
 		}
 
 		[Test]
@@ -116,18 +116,18 @@ namespace GBaaS.io.Tests
 			string un = "gbaas_" + Guid.NewGuid();
 			//string un = "gbaas_1234567";
 			var result = aClient.LoginWithoutID(un);
-			Assert.IsTrue(result);
+			Assert.IsTrue(result.isSuccess);
 
 			string name = "John Smith";
-			result = aClient.UpdateUserName(name);
-			Assert.IsTrue(result);
+			var updateresult = aClient.UpdateUserName(name);
+			Assert.IsTrue(updateresult);
 		}
 
 		[Test]
 		public void LoginFailTest()
 		{
 			var results = aClient.Login(Defines.TEST_USERNAME, "");
-			Assert.IsFalse(results);
+			Assert.IsFalse(results.isSuccess);
 		}
 		
 		[Test]
@@ -152,7 +152,7 @@ namespace GBaaS.io.Tests
 		{
 			string un = "test1";
 			var result2 = aClient.Login(un, Defines.TEST_PASSWORD);
-			Assert.IsTrue(result2);
+			Assert.IsTrue(result2.isSuccess);
 
 			var result = aClient.UpdateUser(new GBUserObject {
 				username = "bobby",
@@ -165,7 +165,7 @@ namespace GBaaS.io.Tests
 
 			// Can't change the password. It needs special api.
 			var result3 = aClient.Login(un, Defines.TEST_PASSWORD);
-			Assert.IsTrue(result3);
+			Assert.IsTrue(result3.isSuccess);
 
 			var result4 = aClient.UpdateUser(new GBUserObject {
 				username = un,
@@ -180,7 +180,7 @@ namespace GBaaS.io.Tests
 		[Test]
 		public void ChangePassword() {
 			var result = aClient.Login(Defines.TEST_USERNAME, Defines.TEST_PASSWORD);
-			Assert.IsTrue(result);
+			Assert.IsTrue(result.isSuccess);
 
 			var result2 = aClient.ChangePassword(Defines.TEST_PASSWORD, Defines.TEST_PASSWORD_CHANGE);
 			Assert.IsNotNull (result2);
@@ -193,7 +193,7 @@ namespace GBaaS.io.Tests
 		public void GetUserInfoTest()
 		{
 			var result = aClient.Login(Defines.TEST_USERNAME, Defines.TEST_PASSWORD);
-			Assert.IsTrue(result);
+			Assert.IsTrue(result.isSuccess);
 
 			var results = aClient.GetUserInfo();
 			Assert.IsNotNull(results);
@@ -234,7 +234,7 @@ namespace GBaaS.io.Tests
 		public void CreateGroupTest()
 		{
 			var results = aClient.Login(Defines.TEST_USERNAME, Defines.TEST_PASSWORD);
-			Assert.IsTrue(results);
+			Assert.IsTrue(results.isSuccess);
 			var result = aClient.CreateGroup (new GBGroupObject {
 				path = "groupPath" + Guid.NewGuid(),
 				title = "test group"
@@ -246,7 +246,7 @@ namespace GBaaS.io.Tests
 		public void AddUserToGroupTest()
 		{
 			var results = aClient.Login(Defines.TEST_USERNAME, Defines.TEST_PASSWORD);
-			Assert.IsTrue(results);
+			Assert.IsTrue(results.isSuccess);
 			var result = aClient.AddUserToGroup ("bobby", "groupPath");
 			Assert.IsTrue (result);
 		}
@@ -255,7 +255,7 @@ namespace GBaaS.io.Tests
 		public void RemoveUserFromGroupTest()
 		{
 			var results = aClient.Login(Defines.TEST_USERNAME, Defines.TEST_PASSWORD);
-			Assert.IsTrue(results);
+			Assert.IsTrue(results.isSuccess);
 			var result = aClient.RemoveUserFromGroup ("bobby", "groupPath");
 			Assert.IsTrue (result);
 		}

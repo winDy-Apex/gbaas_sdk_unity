@@ -85,6 +85,7 @@
     <Compile Include="Objects\GBUniqueObject.cs" />
     <Compile Include="Objects\GBPresenceObject.cs" />
     <Compile Include="Objects\GBAsset.cs" />
+    <Compile Include="Objects\GBResult.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -38,76 +38,106 @@ namespace GBaaS.io.Services
 			_userUUID = uuid;
 		}
 
-		public bool Login(string userName, string password, bool forceSync = false) {
+		public GBResult Login(string userName, string password, bool forceSync = false) {
 			if (IsAsync() && forceSync == false) {
 				Thread workerThread = new Thread(() => this.LoginThread(userName, password));
 				workerThread.Start();
-				return false;
+				GBResult result = new GBResult {
+					isSuccess = false,
+					returnCode = ReturnCode.WaitAsync,
+					reason = "Wait Acync Request"
+				};
+
+				return result;
 			} else {
 				return this.LoginThread(userName, password, forceSync);
 			}
 		}
 
-		private bool LoginThread(string userName, string password, bool forceSync = false) {
-			var result = GBRequestService.Instance.GetToken(userName, password);
-			if (result.Length > 0) {
-				HttpHelper.Instance._accessToken = result;
+		private GBResult LoginThread(string userName, string password, bool forceSync = false) {
+			var accessToken = GBRequestService.Instance.GetToken(userName, password);
+
+			GBResult result = new GBResult();
+
+			if (accessToken.Length > 0) {
+				HttpHelper.Instance._accessToken = accessToken;
 				_userNmae = userName;
+
+				result.MakeResult(true, ReturnCode.Success, accessToken);
+
 				if (IsAsync() && forceSync == false) {
 					foreach (GBaaSApiHandler handler in _handler) {
-						handler.OnLogin(true);
+						handler.OnLogin(result);
 					}
 				} else {
-					return true;
+					return result;
 				}
 			} else {
+				result.MakeResult(false, ReturnCode.FailWithReason, "Access Token is Null");
+
 				if (IsAsync() && forceSync == false) {
 					foreach (GBaaSApiHandler handler in _handler) {
-						handler.OnLogin(false);
+						handler.OnLogin(result);
 					}
 				} else {
-					return false;
+					return result;
 				}
 			}
 
-			return false;
+			return result;
 		}
 
-		public bool LoginWithFaceBook(string facebookToken) {
+		public GBResult LoginWithFaceBook(string facebookToken) {
 			if (IsAsync()) {
 				Thread workerThread = new Thread(() => this.LoginWithFaceBookThread(facebookToken));
 				workerThread.Start();
-				return false;
+				GBResult result = new GBResult {
+					isSuccess = false,
+					returnCode = ReturnCode.WaitAsync,
+					reason = "Wait Acync Request"
+				};
+
+				return result;
 			} else {
 				return this.LoginWithFaceBookThread(facebookToken);
 			}
 		}
 
-		private bool LoginWithFaceBookThread(string facebookToken) {
+		private GBResult LoginWithFaceBookThread(string facebookToken) {
 			var rawResults = GBRequestService.Instance.PerformRequest<string>("/auth/facebook?fb_access_token=" + facebookToken);
 
+			GBResult result = new GBResult();
+
 			if (rawResults.Length > 0) {
-				string result = GBRequestService.Instance.GetValueFromJson("access_token", rawResults);
-				HttpHelper.Instance._accessToken = result;
+				string accessToken = GBRequestService.Instance.GetValueFromJson("access_token", rawResults);
+
+				if (accessToken.Length > 0) {
+					HttpHelper.Instance._accessToken = accessToken;
+					result.MakeResult(true, ReturnCode.Success, accessToken);
+				} else {
+					result.MakeResult(false, ReturnCode.FailWithReason, "Access Token is Null");
+				}
 
 				if (IsAsync()) {
 					foreach (GBaaSApiHandler handler in _handler) {
-						handler.OnLoginWithFaceBook(true);
+						handler.OnLoginWithFaceBook(result);
 					}
 				} else {
-					return true;
+					return result;
 				}
 			} else {
+				result.MakeResult(false, ReturnCode.FailWithReason, "Raw Result is Null");
+
 				if (IsAsync()) {
 					foreach (GBaaSApiHandler handler in _handler) {
-						handler.OnLoginWithFaceBook(false);
+						handler.OnLoginWithFaceBook(result);
 					}
 				} else {
-					return false;
+					return result;
 				}
 			}
 
-			return false;
+			return result;
 		}
 
 		// GBaaS 에 CreateUser 과정을 거치지 않고
@@ -117,42 +147,48 @@ namespace GBaaS.io.Services
 		// 단말에 설치된 앱 단위로 유니크한 유저키를 생성하는 방법은 아래의 링크를 참고로 한다.
 		// DeviceID 를 사용하여도 무방하다.
 		// http://blog.naver.com/PostView.nhn?blogId=huewu&logNo=110107222113
-		public bool LoginWithoutID(string uniqueUserKey) {
+		public GBResult LoginWithoutID(string uniqueUserKey) {
 			uniqueUserKey = "gbaas_" + uniqueUserKey;
 			if (IsAsync()) {
 				Thread workerThread = new Thread(() => this.LoginWithoutIDThread(uniqueUserKey));
 				workerThread.Start();
-				return false;
+				GBResult result = new GBResult {
+					isSuccess = false,
+					returnCode = ReturnCode.WaitAsync,
+					reason = "Wait Acync Request"
+				};
+
+				return result;
 			} else {
 				return this.LoginWithoutIDThread(uniqueUserKey);
 			}
 		}
 
-		private bool LoginWithoutIDThread(string uniqueUserKey) {
-			bool isLogin = Login(uniqueUserKey, uniqueUserKey, true);
-			string result = "";
+		private GBResult LoginWithoutIDThread(string uniqueUserKey) {
+			GBResult result = Login(uniqueUserKey, uniqueUserKey, true);
+			string user = "";
 
-			if (isLogin == false) {
-				result = CreateUser(new Objects.GBUserObject {
+			if (result.isSuccess == false) {
+				user = CreateUser(new Objects.GBUserObject {
 					username = uniqueUserKey,
 					password = uniqueUserKey
 					//Email = ""
 				}, true);
 
-				if (result.Length > 0) {
-					isLogin = Login(uniqueUserKey, uniqueUserKey, true);
+				if (user.Length > 0) {
+					result = Login(uniqueUserKey, uniqueUserKey, true);
 				}
 			}
 
 			if (IsAsync()) {
 				foreach (GBaaSApiHandler handler in _handler) {
-					handler.OnLoginWithoutID(isLogin);
+					handler.OnLoginWithoutID(result);
 				}
 			} else {
-				return isLogin;
+				return result;
 			}
 
-			return false;
+			return result;
 		}
 
 		public bool UpdateUserName(string userName) {

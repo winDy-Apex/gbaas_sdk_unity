@@ -23,7 +23,7 @@ namespace GBaaS.io.Objects
 
 			if (lastDT.Date != nowDT.Date) {
 
-				if (lastDT.Month != nowDT.Month) {
+				if ((lastDT.Month != nowDT.Month) || (lastDT.Year != nowDT.Year)) {
 					lastMonthlyPresence = monthlyPresence;
 					monthlyPresence = 0;
 				}

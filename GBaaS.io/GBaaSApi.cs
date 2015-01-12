@@ -87,12 +87,17 @@ namespace GBaaS.io {
 		/// </summary>
 		/// <param name="userName">사용자 아이디</param>
 		/// <param name="password">사용자 암호</param>
-		public bool Login(string userName, string password) {
+		public GBResult Login(string userName, string password) {
 			try {
 				return GBUserService.Instance.Login (userName, password);
 			} catch (Exception e) {
-				e.ToString();
-				return false;
+				GBResult result = new GBResult {
+					isSuccess = false,
+					returnCode = ReturnCode.Exception,
+					reason = e.ToString()
+				};
+
+				return result;
 			}
 		}
 
@@ -101,12 +106,17 @@ namespace GBaaS.io {
 		/// </summary>
 		/// <returns><c>true</c>, if with face book was logined, <c>false</c> otherwise.</returns>
 		/// <param name="facebookToken">Facebook token.</param>
-		public bool LoginWithFaceBook(string facebookToken) {
+		public GBResult LoginWithFaceBook(string facebookToken) {
 			try {
 				return GBUserService.Instance.LoginWithFaceBook(facebookToken);
 			} catch (Exception e) {
-				e.ToString();
-				return false;
+				GBResult result = new GBResult {
+					isSuccess = false,
+					returnCode = ReturnCode.Exception,
+					reason = e.ToString()
+				};
+
+				return result;
 			}
 		}
 
@@ -121,12 +131,17 @@ namespace GBaaS.io {
 		/// </summary>
 		/// <returns><c>true</c>, if without I was logined, <c>false</c> otherwise.</returns>
 		/// <param name="uniqueUserKey">Unique user key.</param>
-		public bool LoginWithoutID(string uniqueUserKey) {
+		public GBResult LoginWithoutID(string uniqueUserKey) {
 			try {
 				return GBUserService.Instance.LoginWithoutID(uniqueUserKey);
 			} catch (Exception e) {
-				e.ToString();
-				return false;
+				GBResult result = new GBResult {
+					isSuccess = false,
+					returnCode = ReturnCode.Exception,
+					reason = e.ToString()
+				};
+
+				return result;
 			}
 		}
 			
@@ -156,7 +171,7 @@ namespace GBaaS.io {
 		public bool LoginWithoutIDUpdate(string uniqueUseKey, GBUserObject userInfo) {
 			try {
 				var loginResult = LoginWithoutID(uniqueUseKey);
-				if(loginResult == false) return false;
+				if(loginResult.isSuccess == false) return false;
 
 				var userInfoResult = GetUserInfo();
 				if(userInfoResult == null) return false;
@@ -168,7 +183,7 @@ namespace GBaaS.io {
 
 				// Login With New User Info.
 				var loginAgainResult = Login(userInfo.username, "gbaas_" + uniqueUseKey);
-				if(loginAgainResult == false) return false;
+				if(loginAgainResult.isSuccess == false) return false;
 
 				// Change Password
 				var changePasswordResult = ChangePassword("gbaas_" + uniqueUseKey, userInfo.password);

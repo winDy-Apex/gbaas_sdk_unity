@@ -257,8 +257,9 @@ namespace GBaaS.io.Services
 
 			string requestUrl = "/" + entity_type + "?" + query;
 
+			// If PerformRequest failure, It returns null
 			var rawResults = GBRequestService.Instance.PerformRequest<string>(requestUrl, HttpHelper.RequestTypes.Get, "");
-			if (rawResults.IndexOf ("error") != -1) {
+			if (rawResults != null && rawResults.IndexOf ("error") != -1) {
 				if (IsAsync()) {
 					foreach (GBaaSApiHandler handler in _handler) {
 						handler.OnGetRank(default(List<Objects.GBScoreObject>));
