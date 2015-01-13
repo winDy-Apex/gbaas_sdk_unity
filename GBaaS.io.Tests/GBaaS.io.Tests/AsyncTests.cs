@@ -21,8 +21,14 @@ namespace GBaaS.io.Tests
 		}
 		*/
 
+		public override void OnLogin(GBResult result) {
+			Console.Out.WriteLine("Async On Login : returnCode(" + result.returnCode + ") reason(" + result.reason + ")");
+			AsyncCallChecker.Instance.SetAsyncCalling(false);
+			Assert.IsTrue(result.isSuccess);
+		}
+
 		public override void OnLoginWithoutID(GBResult result) {
-			Console.Out.WriteLine("Async On Login : " + result.reason);
+			Console.Out.WriteLine("Async On OnLoginWithoutID : returnCode(" + result.returnCode + ") reason(" + result.reason + ")");
 			AsyncCallChecker.Instance.SetAsyncCalling(false);
 			Assert.IsTrue(result.isSuccess);
 		}
@@ -51,10 +57,10 @@ namespace GBaaS.io.Tests
 			Assert.IsTrue(result);
 		}
 
-		public override void OnCreateUser(string result) {
-			Console.Out.WriteLine("Async On CreateUser : " + result);
+		public override void OnCreateUser(GBResult result) {
+			Console.Out.WriteLine("Async On CreateUser : " + result.reason);
 			AsyncCallChecker.Instance.SetAsyncCalling(false);
-			Assert.IsTrue(result.Length > 0);
+			Assert.IsTrue(result.isSuccess);
 		}
 
 		public override void OnGetScoreByUuidOrName(List<Objects.GBScoreObject> result) {
@@ -184,6 +190,29 @@ namespace GBaaS.io.Tests
 		}
 
 		[Test]
+		public void CallAsyncLogin() {
+
+			GBaaS.io.GBaaSApi aClient = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL2);
+			GBaaSApiHandler handler = new UserHandler();
+			aClient.AddHandler(handler);
+
+			AsyncCallChecker.Instance.SetAsyncCalling(true);
+
+			var result = aClient.Login(Defines.TEST_USERNAME, Defines.TEST_PASSWORD);
+
+			//바로 리턴되는 결과는 없어야 정상
+			Assert.IsTrue(result.returnCode == ReturnCode.WaitAsync);
+
+			//Async 호출이 끝날때까지 대기, For Only Test Code, 실제로는 불필요한 코드
+			while (AsyncCallChecker.Instance.GetAsyncCalling()) {
+				Console.Out.WriteLine ("...AsyncCalling...");
+				System.Threading.Thread.Sleep(100);
+			}
+
+			aClient.AddHandler(null);
+		}
+
+		[Test]
 		public void CallAsyncGetObject()
 		{
 			GBaaS.io.GBaaSApi aClient = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL2);
@@ -255,7 +284,7 @@ namespace GBaaS.io.Tests
 			});
 
 			//바로 리턴되는 결과는 없어야 정상
-			Assert.IsTrue(result == null);
+			Assert.IsTrue(result.returnCode == ReturnCode.WaitAsync);
 
 			//Async 호출이 끝날때까지 대기
 			while (AsyncCallChecker.Instance.GetAsyncCalling()) {

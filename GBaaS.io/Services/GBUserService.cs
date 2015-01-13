@@ -55,15 +55,28 @@ namespace GBaaS.io.Services
 		}
 
 		private GBResult LoginThread(string userName, string password, bool forceSync = false) {
-			var accessToken = GBRequestService.Instance.GetToken(userName, password);
-
+			string accessToken = "";
 			GBResult result = new GBResult();
+
+			try {
+				accessToken = GBRequestService.Instance.GetToken(userName, password);
+			} catch (Exception ex) {
+				result.MakeResult(false, ReturnCode.Exception, ex.ToString());
+
+				if (IsAsync() && forceSync == false) {
+					foreach (GBaaSApiHandler handler in _handler) {
+						handler.OnLogin(result);
+					}
+				}
+
+				return result;
+			}
 
 			if (accessToken.Length > 0) {
 				HttpHelper.Instance._accessToken = accessToken;
 				_userNmae = userName;
 
-				result.MakeResult(true, ReturnCode.Success, accessToken);
+				result.MakeResult(true, ReturnCode.SuccessWithReasonAsResult, accessToken);
 
 				if (IsAsync() && forceSync == false) {
 					foreach (GBaaSApiHandler handler in _handler) {
@@ -166,16 +179,15 @@ namespace GBaaS.io.Services
 
 		private GBResult LoginWithoutIDThread(string uniqueUserKey) {
 			GBResult result = Login(uniqueUserKey, uniqueUserKey, true);
-			string user = "";
 
 			if (result.isSuccess == false) {
-				user = CreateUser(new Objects.GBUserObject {
+				result = CreateUser(new Objects.GBUserObject {
 					username = uniqueUserKey,
 					password = uniqueUserKey
-					//Email = ""
+						//Email = ""
 				}, true);
 
-				if (user.Length > 0) {
+				if (result.isSuccess == true) {
 					result = Login(uniqueUserKey, uniqueUserKey, true);
 				}
 			}
@@ -229,42 +241,69 @@ namespace GBaaS.io.Services
 			return (HttpHelper.Instance._accessToken.Length > 0);
 		}
 
-		public string CreateUser(Objects.GBUserObject userModel, bool forceSync = false) {
+		public GBResult CreateUser(Objects.GBUserObject userModel, bool forceSync = false) {
 			if (IsAsync() && forceSync == false) {
 				Thread workerThread = new Thread(() => this.CreateUserThread(userModel));
 				workerThread.Start();
-				return default(string);
+				GBResult result = new GBResult {
+					isSuccess = false,
+					returnCode = ReturnCode.WaitAsync,
+					reason = "Wait Acync Request"
+				};
+
+				return result;
 			} else {
 				return this.CreateUserThread(userModel, forceSync);
 			}
 		}
 
-		private string CreateUserThread(Objects.GBUserObject userModel, bool forceSync = false) {
-			var rawResults = GBRequestService.Instance.PerformRequest<string>("/users", HttpHelper.RequestTypes.Post, userModel);
+		private GBResult CreateUserThread(Objects.GBUserObject userModel, bool forceSync = false) {
+			string rawResults = "";
+			GBResult result = new GBResult();
+
+			try {
+				rawResults = GBRequestService.Instance.PerformRequest<string>("/users", HttpHelper.RequestTypes.Post, userModel);
+			} catch (Exception ex) {
+				result.MakeResult(false, ReturnCode.Exception, ex.ToString());
+
+				if (IsAsync() && forceSync == false) {
+					foreach (GBaaSApiHandler handler in _handler) {
+						handler.OnCreateUser(result);
+					}
+				}
+
+				return result;
+			}
+
 			var entitiesResult = GBRequestService.Instance.GetEntitiesFromJson(rawResults);
 			if (entitiesResult != null) {
+
+				result.MakeResult(true, ReturnCode.SuccessWithReasonAsResult, entitiesResult[0]["uuid"].ToString());
+
 				if (IsAsync() && forceSync == false) {
 					foreach (GBaaSApiHandler handler in _handler) {
-						handler.OnCreateUser(entitiesResult[0]["uuid"].ToString());
+						handler.OnCreateUser(result);
 					}
 				} else {
-					return entitiesResult[0]["uuid"].ToString();
+					return result;
 				}
 			} else {
+				result.MakeResult(true, ReturnCode.SuccessButAlt, UpdateUser(userModel, true));
+
 				if (IsAsync() && forceSync == false) {
 					foreach (GBaaSApiHandler handler in _handler) {
-						handler.OnCreateUser(UpdateUser(userModel));
+						handler.OnCreateUser(result);
 					}
 				} else {
-					return UpdateUser(userModel);
+					return result;
 				}
 			}
 
-			return default(string);
+			return result;
 		}
 
-		public string UpdateUser(Objects.GBUserObject userModel) {
-			if (IsAsync()) {
+		public string UpdateUser(Objects.GBUserObject userModel, bool forceSync = false) {
+			if (IsAsync() && forceSync == false) {
 				Thread workerThread = new Thread(() => this.UpdateUserThread(userModel));
 				workerThread.Start();
 				return ""; //default(string);
@@ -273,7 +312,7 @@ namespace GBaaS.io.Services
 			}
 		}
 
-		private string UpdateUserThread(Objects.GBUserObject userModel) {
+		private string UpdateUserThread(Objects.GBUserObject userModel, bool forceSync = false) {
 
 			string userKey = userModel.username;
 			if (userModel.uuid != null && userModel.uuid.Length > 0) {
@@ -287,7 +326,7 @@ namespace GBaaS.io.Services
 			var rawResults = GBRequestService.Instance.PerformRequest<string>(
 				"/users/" + userKey, HttpHelper.RequestTypes.Put, userModel);
 
-			if (IsAsync()) {
+			if (IsAsync() && forceSync == false) {
 				foreach (GBaaSApiHandler handler in _handler) {
 					handler.OnUpdateUser(rawResults.ToString());
 				}

@@ -33,10 +33,13 @@ namespace GBaaS.io.Tests
 			Assert.IsTrue(results.isSuccess);
 		}
 
+		[Ignore]
 		[Test]
 		public void LoginWithFaceBook()
 		{
-			var results = aClient.LoginWithFaceBook("CAADqYZChB3jUBAPJzFU1NNZAZADBmmiNyFvUsWnPqtyCr2btdxUtmH2GtYJmjULpN86EALZAL9TdIYpm2Q1xllRQdLmuWLIyU0I0ByZBqiNdoMqsFYF5ZCoLYxC8aN8UjeZAkfppiUfHFbto2bfXYI1xR34fecDJQ7IlTfAm1AG6Xp2m95wJXAycgtQt6PCIJkZD");
+			string userToken = "CAADqYZChB3jUBAEU2gUrNrrCrgUy6jXFZAJyjWiN8ArO0kBLtf6WuNsg6CVZB61XWQfZAJZB71gvHJld7jTy3lpoZAI3FmxlFZC9DArJGkPLs3wTwPhr9PAJ5HHQGr4CPoTco9GLsLL6VxuTNYzporjg9r6vlaVX5lC74ffD4y1dlc1pkPSIOMzhbKUhw6xf83XaDuJ4oe9dH93rEOp5TJY";
+
+			var results = aClient.LoginWithFaceBook(userToken);
 			Assert.IsTrue(results.isSuccess);
 		}
 
@@ -144,7 +147,7 @@ namespace GBaaS.io.Tests
 			});
 
 			Console.WriteLine(result);
-			Assert.IsNotEmpty (result); // by winDy // .Uuid);
+			Assert.IsNotEmpty (result.reason); // by winDy // .Uuid);
 		}
 
 		[Test]

@@ -223,12 +223,11 @@ namespace GBaaS.io {
 		/// </summary>
 		/// <returns>생성된 사용자 정보에 대한 UUID</returns>
 		/// <param name="userModel">User model.</param>
-		public string CreateUser(Objects.GBUserObject userModel) {
+		public GBResult CreateUser(Objects.GBUserObject userModel) {
 			try {
 				return GBUserService.Instance.CreateUser (userModel);
 			} catch (Exception e) {
-				e.ToString();
-				return "";
+				return new GBResult { isSuccess = false, returnCode = ReturnCode.Exception, reason = e.ToString() };
 			}
 		}
 

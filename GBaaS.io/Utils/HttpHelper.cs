@@ -32,10 +32,8 @@ namespace GBaaS.io.Utils
 					return sr.ReadToEnd().Trim();
 				}
 			} catch (WebException e) { // HTTP Call Fail or No Result Set
-				e.ToString();
+				throw e;
 			}
-
-			return "";
 		}
 		#endregion
 
@@ -155,12 +153,16 @@ namespace GBaaS.io.Utils
 					}
 				}
 
-				using (var sWriter = new StreamWriter(req.GetRequestStream())) {
-					if (jsonParent.Length > 0) {
-						sWriter.Write("{\"" + jsonParent + "\": {" + sbJsonRequest.ToString().TrimEnd(',') + "} }");
-					} else {
-						sWriter.Write("{" + sbJsonRequest.ToString().TrimEnd(',') + "}");
+				try {
+					using (var sWriter = new StreamWriter(req.GetRequestStream())) {
+						if (jsonParent.Length > 0) {
+							sWriter.Write("{\"" + jsonParent + "\": {" + sbJsonRequest.ToString().TrimEnd(',') + "} }");
+						} else {
+							sWriter.Write("{" + sbJsonRequest.ToString().TrimEnd(',') + "}");
+						}
 					}
+				} catch (WebException ex) {
+					throw ex;
 				}
 			}
 

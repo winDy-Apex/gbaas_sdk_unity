@@ -22,7 +22,13 @@ namespace GBaaS.io.Services
 
 		public string GetToken(string username, string password) {
 			var reqString = string.Format("/token/?grant_type=password&username={0}&password={1}", username, password);
-			var rawResults = HttpHelper.Instance.PerformGet(GBRequestService.Instance.BuildPath(reqString));
+			string rawResults;
+
+			try {
+				rawResults = HttpHelper.Instance.PerformGet(GBRequestService.Instance.BuildPath(reqString));
+			} catch (Exception ex) {
+				throw ex;
+			}
 
 			if (rawResults.Length > 0) {
 				var results = JObject.Parse (rawResults);
@@ -63,7 +69,11 @@ namespace GBaaS.io.Services
 		public retrunT PerformRequest<retrunT>(string path, HttpHelper.RequestTypes method, object data, string jsonParent = "")
 		{
 			string requestPath = BuildPath(path);
-			return HttpHelper.Instance.PerformJsonRequest<retrunT>(requestPath, method, data, jsonParent);
+			try {
+				return HttpHelper.Instance.PerformJsonRequest<retrunT>(requestPath, method, data, jsonParent);
+			} catch (Exception ex) {
+				throw ex;
+			}
 		}
 
 		public bool PostUploadFile(string path, FileStream fileStream) {

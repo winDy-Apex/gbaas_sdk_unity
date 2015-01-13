@@ -1,6 +1,6 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="GBaaS.io/Services/GBUserService.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="GBaaS.io/GBaaSApi.cs">
     <Files>
       <File FileName="GBaaS.io.Tests/GBaaS.io.Tests/ClientTests.cs" Line="1" Column="1" />
       <File FileName="GBaaS.io/Services/GBAchievementService.cs" Line="1" Column="1" />
@@ -21,63 +21,37 @@
       <File FileName="GBaaS.io/Objects/GBRoom.cs" Line="1" Column="1" />
       <File FileName="GBaaS.io/Objects/GBAchievementLocaleObject.cs" Line="1" Column="1" />
       <File FileName="GBaaS.io/Objects/GBUserAchievementObject.cs" Line="1" Column="1" />
-      <File FileName="GBaaS.io/GBaaSApi.cs" Line="29" Column="29" />
+      <File FileName="GBaaS.io/GBaaSApi.cs" Line="16" Column="16" />
       <File FileName="GBaaS.io/Services/GBNetService.cs" Line="1" Column="1" />
       <File FileName="../unity2d_testgame/Assets/Scripts/MVC/ViewInterface.cs" Line="1" Column="1" />
       <File FileName="../unity2d_testgame/Assets/Scripts/LayBombs.cs" Line="1" Column="1" />
       <File FileName="../unity2d_testgame/Assets/Scripts/StartMenu/RegistrationService.cs" Line="1" Column="1" />
-      <File FileName="GBaaS.io.Tests/GBaaS.io.Tests/AsyncTests.cs" Line="4" Column="4" />
-      <File FileName="GBaaS.io/Services/GBScoreService.cs" Line="6" Column="6" />
+      <File FileName="GBaaS.io.Tests/GBaaS.io.Tests/AsyncTests.cs" Line="1" Column="1" />
+      <File FileName="GBaaS.io/Services/GBScoreService.cs" Line="1" Column="1" />
       <File FileName="GBaaS.io.Tests/GBaaS.io.Tests/CustomApiTests.cs" Line="1" Column="1" />
       <File FileName="../unity2d_testgame/Assets/Standard Assets/GBaaSObject.cs" Line="1" Column="1" />
       <File FileName="../unity2d_testgame/Assets/Scripts/ScoreList/ScoreView.cs" Line="1" Column="1" />
-      <File FileName="GBaaS.io/Services/GBCollectionService.cs" Line="42" Column="42" />
+      <File FileName="GBaaS.io/Services/GBCollectionService.cs" Line="1" Column="1" />
       <File FileName="GBaaS.io.Tests/GBaaS.io.Tests/FeelAppTests.cs" Line="1" Column="1" />
-      <File FileName="GBaaS.io.Tests/GBaaS.io.Tests/UserTests.cs" Line="30" Column="30" />
+      <File FileName="GBaaS.io.Tests/GBaaS.io.Tests/UserTests.cs" Line="1" Column="1" />
       <File FileName="../unity2d_testgame/Assets/Plugins/GCM/GCM.cs" Line="1" Column="1" />
       <File FileName="../unity2d_testgame/Assets/Standard Assets/GBaaSUserObject.cs" Line="1" Column="1" />
       <File FileName="../unity2d_testgame/Assets/Facebook/Editor/FacebookSettingsEditor.cs" Line="1" Column="1" />
-      <File FileName="GBaaS.io/Objects/GBPresenceObject.cs" Line="17" Column="17" />
-      <File FileName="GBaaS.io/Services/GBRequestService.cs" Line="39" Column="39" />
+      <File FileName="GBaaS.io/Objects/GBPresenceObject.cs" Line="1" Column="1" />
+      <File FileName="GBaaS.io/Services/GBRequestService.cs" Line="1" Column="1" />
       <File FileName="GBaaS.io/Utils/HttpHelper.cs" Line="1" Column="1" />
-      <File FileName="GBaaS.io.Tests/GBaaS.io.Tests/FileStoreTests.cs" Line="27" Column="27" />
-      <File FileName="GBaaS.io/Objects/GBObject.cs" Line="71" Column="71" />
+      <File FileName="GBaaS.io.Tests/GBaaS.io.Tests/FileStoreTests.cs" Line="1" Column="1" />
+      <File FileName="GBaaS.io/Objects/GBObject.cs" Line="1" Column="1" />
       <File FileName="GBaaS.io/Objects/GBGroupObject.cs" Line="1" Column="1" />
       <File FileName="GBaaS.io/Objects/GBLocationObject.cs" Line="1" Column="1" />
       <File FileName="GBaaS.io/Objects/GBGameDataObject.cs" Line="1" Column="1" />
       <File FileName="GBaaS.io/Objects/GBScoreObject.cs" Line="1" Column="1" />
-      <File FileName="GBaaS.io/Objects/GBResult.cs" Line="3" Column="3" />
+      <File FileName="GBaaS.io/Objects/GBResult.cs" Line="1" Column="1" />
       <File FileName="GBaaS.io.Tests/GBaaS.io.Tests/Defines.cs" Line="1" Column="1" />
       <File FileName="GBaaS.io.Tests/GBaaS.io.Tests/RankingTests.cs" Line="1" Column="1" />
       <File FileName="GBaaS.io/Services/GBUserService.cs" Line="21" Column="21" />
       <File FileName="GBaaS.io/Objects/GBUniqueObject.cs" Line="1" Column="1" />
     </Files>
-    <Pads>
-      <Pad Id="MonoDevelop.NUnit.TestPad">
-        <State expanded="True">
-          <Node name="GBaaS.io.Tests" expanded="True">
-            <Node name="GBaaS" expanded="True">
-              <Node name="io" expanded="True">
-                <Node name="Tests" expanded="True">
-                  <Node name="AchievementTests" expanded="True" />
-                  <Node name="CollectionTests" expanded="True">
-                    <Node name="ModifyObject" selected="True" />
-                  </Node>
-                  <Node name="CustomApiTests" expanded="True" />
-                  <Node name="FeelAppTests" expanded="True" />
-                  <Node name="FileStoreTests" expanded="True" />
-                  <Node name="Net" expanded="True">
-                    <Node name="NetTests" expanded="True" />
-                  </Node>
-                  <Node name="RankingTests" expanded="True" />
-                  <Node name="UserTests" expanded="True" />
-                </Node>
-              </Node>
-            </Node>
-          </Node>
-        </State>
-      </Pad>
-    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>

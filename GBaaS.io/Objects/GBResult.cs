@@ -4,6 +4,8 @@ namespace GBaaS.io {
 
 	public enum ReturnCode : int {
 		Success = 0,
+		SuccessWithReasonAsResult = 1,
+		SuccessButAlt = 2,
 		BeforeTry = -1,
 		WaitAsync = -2,
 		FailWithReason = -3,
