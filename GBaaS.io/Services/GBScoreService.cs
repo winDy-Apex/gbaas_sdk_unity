@@ -123,7 +123,7 @@ namespace GBaaS.io.Services
 			if (IsAsync()) {
 				Thread workerThread = new Thread(() => this.GetScoreThread(stage, unit, limit, cursor, period, weekstart));
 				workerThread.Start();
-				return default(List<Objects.GBScoreObject>);
+				return MakeErrorList(false, ReturnCode.WaitAsync, "Wait Async Request");
 			} else {
 				return this.GetScoreThread(stage, unit, limit, cursor, period, weekstart);
 			}
@@ -172,7 +172,19 @@ namespace GBaaS.io.Services
 				query += "cursor=" + cursor;
 			}
 
-			var rawResults = GBRequestService.Instance.PerformRequest<string>("/" + entity_type + "?" + query, HttpHelper.RequestTypes.Get, "");
+			string rawResults = "";
+			try {
+				rawResults = GBRequestService.Instance.PerformRequest<string>("/" + entity_type + "?" + query, HttpHelper.RequestTypes.Get, "");
+			} catch (Exception ex) {
+				if (IsAsync()) {
+					foreach (GBaaSApiHandler handler in _handler) {
+						handler.OnGetScore(MakeErrorList(false, ReturnCode.Exception, ex.ToString()));
+					}
+				}
+
+				return MakeErrorList(false, ReturnCode.Exception, ex.ToString());
+			}
+
 			if (rawResults.IndexOf ("error") != -1) {
 				if (IsAsync()) {
 					foreach (GBaaSApiHandler handler in _handler) {
@@ -414,8 +426,20 @@ namespace GBaaS.io.Services
 					scoreObject.displayName = scoreObject.username;
 				}
 
+				scoreObject.MakeResult(true, ReturnCode.Success, "");
 				results.Add(scoreObject);
 			}
+
+			return results;
+		}
+			
+		private List<Objects.GBScoreObject> MakeErrorList(bool isSuccess, ReturnCode returnCode, string reason) {
+			List<Objects.GBScoreObject> results = new List<Objects.GBScoreObject>();
+
+			Objects.GBScoreObject scoreObject = new Objects.GBScoreObject();
+			scoreObject.MakeResult(isSuccess, returnCode, reason);
+
+			results.Add(scoreObject);
 
 			return results;
 		}

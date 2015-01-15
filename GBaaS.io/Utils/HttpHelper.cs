@@ -179,7 +179,7 @@ namespace GBaaS.io.Utils
 						StreamReader sReader = new StreamReader(response.GetResponseStream());
 						responseJson = sReader.ReadToEnd();
 					} else {
-						return default(ReturnT);
+						throw ex;
 					}
 				}
 			}
@@ -286,6 +286,7 @@ namespace GBaaS.io.Utils
 		#endregion
 
 		public bool CheckSuccess(string result) {
+			// TODO Need more check for HTTP Error Condition
 			return (result.IndexOf ("error") == -1);
 		}
 

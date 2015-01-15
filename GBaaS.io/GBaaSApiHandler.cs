@@ -23,8 +23,8 @@ namespace GBaaS.io {
 		public virtual void OnLoginWithFaceBook(GBResult result) {}
 		public virtual void OnLoginWithoutID(GBResult result) {}
 		public virtual void OnCreateUser(GBResult result) {}
-		public virtual void OnUpdateUser(string result) {}
-		public virtual void OnUpdateUserName(bool result) {}
+		public virtual void OnUpdateUser(GBResult result) {}
+		public virtual void OnUpdateUserName(GBResult result) {}
 		public virtual void OnGetUserInfo(GBUserObject result) {}
 		public virtual void OnGetUserList(List<GBUserObject> result) {}
 		public virtual void OnGetFollowers(List<GBUserObject> result) {}

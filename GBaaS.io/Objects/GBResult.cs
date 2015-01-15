@@ -9,6 +9,7 @@ namespace GBaaS.io {
 		BeforeTry = -1,
 		WaitAsync = -2,
 		FailWithReason = -3,
+		CheckPreCondition = -4,
 		Exception = -900
 	}
 
@@ -17,8 +18,8 @@ namespace GBaaS.io {
 			isSuccess 	= false;
 			returnCode 	= ReturnCode.BeforeTry;
 			reason 		= "Before Try";
-		}
-
+		}		
+			
 		public void MakeResult(bool isSuccess, ReturnCode returnCode, string reason) {
 			this.isSuccess = isSuccess;
 			this.returnCode = returnCode;

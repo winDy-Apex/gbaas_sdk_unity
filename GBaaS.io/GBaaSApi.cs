@@ -12,6 +12,7 @@ using GBaaS.io.Objects;
 using GBaaS.io.Services;
 using GBaaS.io.Utils;
 using System.IO;
+using System.Reflection;
 
 namespace GBaaS.io {
 	public enum Period { Alltime, Daily, Weekly, Monthly };
@@ -88,17 +89,7 @@ namespace GBaaS.io {
 		/// <param name="userName">사용자 아이디</param>
 		/// <param name="password">사용자 암호</param>
 		public GBResult Login(string userName, string password) {
-			try {
-				return GBUserService.Instance.Login (userName, password);
-			} catch (Exception e) {
-				GBResult result = new GBResult {
-					isSuccess = false,
-					returnCode = ReturnCode.Exception,
-					reason = e.ToString()
-				};
-
-				return result;
-			}
+			return GBUserService.Instance.Login (userName, password);
 		}
 
 		/// <summary>
@@ -132,17 +123,7 @@ namespace GBaaS.io {
 		/// <returns><c>true</c>, if without I was logined, <c>false</c> otherwise.</returns>
 		/// <param name="uniqueUserKey">Unique user key.</param>
 		public GBResult LoginWithoutID(string uniqueUserKey) {
-			try {
-				return GBUserService.Instance.LoginWithoutID(uniqueUserKey);
-			} catch (Exception e) {
-				GBResult result = new GBResult {
-					isSuccess = false,
-					returnCode = ReturnCode.Exception,
-					reason = e.ToString()
-				};
-
-				return result;
-			}
+			return GBUserService.Instance.LoginWithoutID(uniqueUserKey);
 		}
 			
 		/// <summary>
@@ -151,13 +132,8 @@ namespace GBaaS.io {
 		/// </summary>
 		/// <returns><c>true</c>, if user name was updated, <c>false</c> otherwise.</returns>
 		/// <param name="userName">User name.</param>
-		public bool UpdateUserName(string userName) {
-			try {
-				return GBUserService.Instance.UpdateUserName(userName);
-			} catch (Exception e) {
-				e.ToString();
-				return false;
-			}
+		public GBResult UpdateUserName(string userName) {
+			return GBUserService.Instance.UpdateUserName(userName);
 		}
 
 		/// <summary>
@@ -169,6 +145,7 @@ namespace GBaaS.io {
 		/// <param name="uniqueUseKey">Unique use key.</param>
 		/// <param name="userInfo">User info.</param>
 		public bool LoginWithoutIDUpdate(string uniqueUseKey, GBUserObject userInfo) {
+			// TODO Rest Code is not Asyncalbe, Make Check right away.
 			try {
 				var loginResult = LoginWithoutID(uniqueUseKey);
 				if(loginResult.isSuccess == false) return false;
@@ -236,13 +213,8 @@ namespace GBaaS.io {
 		/// </summary>
 		/// <returns>수정된 사용자 정보에 대한 Json String, 수정 확인용도로만 사용한다.</returns>
 		/// <param name="userModel">User model.</param>
-		public string UpdateUser(Objects.GBUserObject userModel) {
-			try {
-				return GBUserService.Instance.UpdateUser (userModel);
-			} catch (Exception e) {
-				e.ToString();
-				return "";
-			}
+		public GBResult UpdateUser(Objects.GBUserObject userModel) {
+			return GBUserService.Instance.UpdateUser (userModel);
 		}
 
 		/// <summary>
@@ -251,12 +223,8 @@ namespace GBaaS.io {
 		/// <returns>The password.</returns>
 		/// <param name="oldOne">Old one.</param>
 		/// <param name="newOne">New one.</param>
-		public string ChangePassword(string oldOne, string newOne) {
-			try {
-				return GBUserService.Instance.ChangePassword (oldOne, newOne);
-			} catch (Exception e) {
-				return e.ToString();
-			}
+		public GBResult ChangePassword(string oldOne, string newOne) {
+			return GBUserService.Instance.ChangePassword (oldOne, newOne);
 		}
 
 		/// <summary>
@@ -446,12 +414,7 @@ namespace GBaaS.io {
 		/// <param name="period">점수를 구하는 기간을 지정한다. 주간, 일간 지원</param>
 		/// <param name="weekstart">주간 단위로 점수를 구할 경우 시작하는 주의 첫 요일 지정</param>
 		public List<Objects.GBScoreObject> GetScore(string stage = "", string unit = "", int limit = 0, string cursor = "", Period period = Period.Alltime, DayOfWeek weekstart = DayOfWeek.Sunday) {
-			try {
-				return GBScoreService.Instance.GetScore(stage, unit, limit, cursor, period, weekstart);
-			} catch (Exception e) {
-				e.ToString();
-				return default(List<Objects.GBScoreObject>);
-			}
+			return GBScoreService.Instance.GetScore(stage, unit, limit, cursor, period, weekstart);
 		}
 
 		/// <summary>

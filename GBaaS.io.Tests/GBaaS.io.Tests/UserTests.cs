@@ -123,7 +123,7 @@ namespace GBaaS.io.Tests
 
 			string name = "John Smith";
 			var updateresult = aClient.UpdateUserName(name);
-			Assert.IsTrue(updateresult);
+			Assert.IsTrue(updateresult.isSuccess);
 		}
 
 		[Test]

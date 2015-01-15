@@ -42,13 +42,7 @@ namespace GBaaS.io.Services
 			if (IsAsync() && forceSync == false) {
 				Thread workerThread = new Thread(() => this.LoginThread(userName, password));
 				workerThread.Start();
-				GBResult result = new GBResult {
-					isSuccess = false,
-					returnCode = ReturnCode.WaitAsync,
-					reason = "Wait Acync Request"
-				};
-
-				return result;
+				return new GBResult { isSuccess = false, returnCode = ReturnCode.WaitAsync, reason = "Wait Async Request" };
 			} else {
 				return this.LoginThread(userName, password, forceSync);
 			}
@@ -104,13 +98,7 @@ namespace GBaaS.io.Services
 			if (IsAsync()) {
 				Thread workerThread = new Thread(() => this.LoginWithFaceBookThread(facebookToken));
 				workerThread.Start();
-				GBResult result = new GBResult {
-					isSuccess = false,
-					returnCode = ReturnCode.WaitAsync,
-					reason = "Wait Acync Request"
-				};
-
-				return result;
+				return new GBResult { isSuccess = false, returnCode = ReturnCode.WaitAsync, reason = "Wait Async Request" };
 			} else {
 				return this.LoginWithFaceBookThread(facebookToken);
 			}
@@ -165,13 +153,7 @@ namespace GBaaS.io.Services
 			if (IsAsync()) {
 				Thread workerThread = new Thread(() => this.LoginWithoutIDThread(uniqueUserKey));
 				workerThread.Start();
-				GBResult result = new GBResult {
-					isSuccess = false,
-					returnCode = ReturnCode.WaitAsync,
-					reason = "Wait Acync Request"
-				};
-
-				return result;
+				return new GBResult { isSuccess = false, returnCode = ReturnCode.WaitAsync, reason = "Wait Async Request" };
 			} else {
 				return this.LoginWithoutIDThread(uniqueUserKey);
 			}
@@ -203,34 +185,32 @@ namespace GBaaS.io.Services
 			return result;
 		}
 
-		public bool UpdateUserName(string userName) {
+		public GBResult UpdateUserName(string userName) {
 			if (IsAsync()) {
 				Thread workerThread = new Thread(() => this.UpdateUserNameThread(userName));
 				workerThread.Start();
-				return false;
+				return new GBResult { isSuccess = false, returnCode = ReturnCode.WaitAsync, reason = "Wait Async Request" };
 			} else {
 				return this.UpdateUserNameThread(userName);
 			}
 		}
 
-		private bool UpdateUserNameThread(string userName) {
+		private GBResult UpdateUserNameThread(string userName) {
 			if (IsLogin() == false)
-				return false;
+				return new GBResult { isSuccess = false, returnCode = ReturnCode.CheckPreCondition, reason = "Login First" };
 
-			var result = UpdateUser(new Objects.GBUserObject {
+			GBResult result = UpdateUser(new Objects.GBUserObject {
 				username = GetLoginName(),
 				name = userName
 			});
 
 			if (IsAsync()) {
 				foreach (GBaaSApiHandler handler in _handler) {
-					handler.OnUpdateUserName(HttpHelper.Instance.CheckSuccess(result));
+					handler.OnUpdateUserName(result);
 				}
-			} else {
-				return HttpHelper.Instance.CheckSuccess(result);
-			}
+			} 
 
-			return false;
+			return result;
 		}
 
 		public void Logout() {
@@ -245,13 +225,7 @@ namespace GBaaS.io.Services
 			if (IsAsync() && forceSync == false) {
 				Thread workerThread = new Thread(() => this.CreateUserThread(userModel));
 				workerThread.Start();
-				GBResult result = new GBResult {
-					isSuccess = false,
-					returnCode = ReturnCode.WaitAsync,
-					reason = "Wait Acync Request"
-				};
-
-				return result;
+				return new GBResult { isSuccess = false, returnCode = ReturnCode.WaitAsync, reason = "Wait Async Request" };
 			} else {
 				return this.CreateUserThread(userModel, forceSync);
 			}
@@ -288,7 +262,8 @@ namespace GBaaS.io.Services
 					return result;
 				}
 			} else {
-				result.MakeResult(true, ReturnCode.SuccessButAlt, UpdateUser(userModel, true));
+				result = UpdateUser(userModel, true);
+				result.returnCode = ReturnCode.SuccessButAlt;
 
 				if (IsAsync() && forceSync == false) {
 					foreach (GBaaSApiHandler handler in _handler) {
@@ -302,18 +277,17 @@ namespace GBaaS.io.Services
 			return result;
 		}
 
-		public string UpdateUser(Objects.GBUserObject userModel, bool forceSync = false) {
+		public GBResult UpdateUser(Objects.GBUserObject userModel, bool forceSync = false) {
 			if (IsAsync() && forceSync == false) {
 				Thread workerThread = new Thread(() => this.UpdateUserThread(userModel));
 				workerThread.Start();
-				return ""; //default(string);
+				return new GBResult { isSuccess = false, returnCode = ReturnCode.WaitAsync, reason = "Wait Async Request" };
 			} else {
 				return this.UpdateUserThread(userModel);
 			}
 		}
 
-		private string UpdateUserThread(Objects.GBUserObject userModel, bool forceSync = false) {
-
+		private GBResult UpdateUserThread(Objects.GBUserObject userModel, bool forceSync = false) {
 			string userKey = userModel.username;
 			if (userModel.uuid != null && userModel.uuid.Length > 0) {
 				userKey = userModel.uuid;
@@ -323,49 +297,79 @@ namespace GBaaS.io.Services
 				userModel.name = userModel.username;
 			}
 
-			var rawResults = GBRequestService.Instance.PerformRequest<string>(
-				"/users/" + userKey, HttpHelper.RequestTypes.Put, userModel);
+			GBResult result = new GBResult();
+
+			string rawResults = "";
+			try {
+				rawResults = GBRequestService.Instance.PerformRequest<string>(
+					"/users/" + userKey, HttpHelper.RequestTypes.Put, userModel);
+			} catch (Exception ex) {
+				result.MakeResult(false, ReturnCode.Exception, ex.ToString());
+				if (IsAsync() && forceSync == false) {
+					foreach (GBaaSApiHandler handler in _handler) {
+						handler.OnUpdateUser(result);
+					}
+				}
+				return result;
+			}
+
+			if (HttpHelper.Instance.CheckSuccess(rawResults)) {
+				result.MakeResult(true, ReturnCode.SuccessWithReasonAsResult, rawResults.ToString());
+			} else {
+				result.MakeResult(false, ReturnCode.FailWithReason, rawResults.ToString());
+			}
 
 			if (IsAsync() && forceSync == false) {
 				foreach (GBaaSApiHandler handler in _handler) {
-					handler.OnUpdateUser(rawResults.ToString());
+					handler.OnUpdateUser(result);
 				}
-			} else {
-				return rawResults.ToString();
-			}
+			} 
 
-			return default(string);
+			return result;
 		}
 
-		public string ChangePassword(string oldOne, string newOne) {
+		public GBResult ChangePassword(string oldOne, string newOne) {
 			if (IsAsync()) {
 				Thread workerThread = new Thread(() => this.ChangePasswordThread(oldOne, newOne));
 				workerThread.Start();
-				return ""; //default(string);
+				return new GBResult { isSuccess = false, returnCode = ReturnCode.WaitAsync, reason = "Wait Async Request" };
 			} else {
 				return this.ChangePasswordThread(oldOne, newOne);
 			}
 		}
 
-		private string ChangePasswordThread(string oldOne, string newOne) {
+		private GBResult ChangePasswordThread(string oldOne, string newOne) {
 
 			Objects.UserModPW passwordObj = new Objects.UserModPW {
 				newpassword = newOne,
 				oldpassword = oldOne
 			};
 
-			var rawResults = GBRequestService.Instance.PerformRequest<string>(
-				"/users/" + GetLoginName() + "/password", HttpHelper.RequestTypes.Put, passwordObj);
+			GBResult result = new GBResult();
+			string rawResults = "";
 
-			if (IsAsync()) {
-				foreach (GBaaSApiHandler handler in _handler) {
-					handler.OnUpdateUser(rawResults.ToString());
+			try {
+				rawResults = GBRequestService.Instance.PerformRequest<string>(
+					"/users/" + GetLoginName() + "/password", HttpHelper.RequestTypes.Put, passwordObj);
+			} catch (Exception ex) {
+				result.MakeResult(false, ReturnCode.Exception, ex.ToString());
+				if (IsAsync()) {
+					foreach (GBaaSApiHandler handler in _handler) {
+						// TODO Why Handler Name is not OnChangePassword?
+						handler.OnUpdateUser(result);
+					}
 				}
-			} else {
-				return rawResults.ToString();
+				return result;
 			}
 
-			return default(string);
+			result.MakeResult(true, ReturnCode.SuccessWithReasonAsResult, rawResults.ToString());
+			if (IsAsync()) {
+				foreach (GBaaSApiHandler handler in _handler) {
+					handler.OnUpdateUser(result);
+				}
+			}
+
+			return result;
 		}
 
 		public Objects.GBUserObject GetUserInfo() {

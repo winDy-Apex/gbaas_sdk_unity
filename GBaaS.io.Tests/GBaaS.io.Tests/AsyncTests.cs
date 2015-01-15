@@ -420,7 +420,7 @@ namespace GBaaS.io.Tests
 			List<Objects.GBScoreObject> result = aClient2.GetScore("1st", "point", 0, "");
 
 			//바로 리턴되는 결과는 없어야 정상
-			Assert.IsTrue(result == null);
+			Assert.IsTrue(result[0].returnCode == ReturnCode.WaitAsync);
 
 			//Async 호출이 끝날때까지 대기
 			while (AsyncCallChecker.Instance.GetAsyncCalling()) {
