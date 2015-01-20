@@ -44,7 +44,7 @@ namespace GBaaS.io.Tests
 				processStatus = 2
 			};
 
-			Assert.IsTrue(achievement.Save());
+			Assert.IsTrue(achievement.Save().isSuccess);
 
 			Objects.GBAchievementInfoObject achievement2 = new Objects.GBAchievementInfoObject {
 				name = "Strike Down Red Building First",
@@ -56,7 +56,7 @@ namespace GBaaS.io.Tests
 				processStatus = 2
 			};
 
-			Assert.IsTrue(achievement2.Save());
+			Assert.IsTrue(achievement2.Save().isSuccess);
 		}
 
 		[Test]
@@ -74,7 +74,7 @@ namespace GBaaS.io.Tests
 				isDefaultLanguage = true
 			};
 
-			Assert.IsTrue(achievementObject.Save());
+			Assert.IsTrue(achievementObject.Save().isSuccess);
 
 			Objects.GBAchievementLocaleObject achievementObject2 = new Objects.GBAchievementLocaleObject {
 				name = "08e3862a-8ef4-11e3-af28-c92aeafdcd01-ko-KR", // AchievementName + "-" + LocaleId
@@ -86,7 +86,7 @@ namespace GBaaS.io.Tests
 				isDefaultLanguage = true
 			};
 
-			Assert.IsTrue(achievementObject2.Save());
+			Assert.IsTrue(achievementObject2.Save().isSuccess);
 		}
 
 		[Test]
@@ -106,7 +106,7 @@ namespace GBaaS.io.Tests
 				processStatus = 2
 			};
 
-			Assert.IsTrue(achievement.Save());
+			Assert.IsTrue(achievement.Save().isSuccess);
 
 			Objects.GBAchievementInfoObject achievement2 = new Objects.GBAchievementInfoObject {
 				name = "UseBombMoreThanOnce",
@@ -118,7 +118,7 @@ namespace GBaaS.io.Tests
 				processStatus = 2
 			};
 
-			Assert.IsTrue(achievement2.Save());
+			Assert.IsTrue(achievement2.Save().isSuccess);
 
 			aClient2 = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL);
 		}
@@ -174,7 +174,7 @@ namespace GBaaS.io.Tests
 			};
 
 			var result = userAchievementObject.Save();
-			Assert.IsTrue(result);
+			Assert.IsTrue(result.isSuccess);
 		}
 
 		[Test]
@@ -192,7 +192,7 @@ namespace GBaaS.io.Tests
 			};
 
 			var result = aClient.AddUserAchievement(userAchievementObject);
-			Assert.IsTrue(result);
+			Assert.IsTrue(result.isSuccess);
 		}
 
 		[Test]

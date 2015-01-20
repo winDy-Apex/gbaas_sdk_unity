@@ -12,7 +12,7 @@ namespace GBaaS.io {
 		public virtual void OnUpdateAchievement(GBAchievementObject result) {}
 
 		// For Score(Leaderboard) Service
-		public virtual void OnAddScore(bool result) {}
+		public virtual void OnAddScore(GBResult result) {}
 		public virtual void OnGetScoreByUuidOrName(List<GBScoreObject> result) {}
 		public virtual void OnGetScore(List<GBScoreObject> result) {}
 		public virtual void OnGetRank(List<GBScoreObject> result) {}
@@ -22,9 +22,11 @@ namespace GBaaS.io {
 		public virtual void OnLogin(GBResult result) {}
 		public virtual void OnLoginWithFaceBook(GBResult result) {}
 		public virtual void OnLoginWithoutID(GBResult result) {}
+		public virtual void OnLoginWithoutIDUpdate(GBResult result) {}
 		public virtual void OnCreateUser(GBResult result) {}
 		public virtual void OnUpdateUser(GBResult result) {}
 		public virtual void OnUpdateUserName(GBResult result) {}
+		public virtual void OnChangePassword(GBResult result) {}
 		public virtual void OnGetUserInfo(GBUserObject result) {}
 		public virtual void OnGetUserList(List<GBUserObject> result) {}
 		public virtual void OnGetFollowers(List<GBUserObject> result) {}
@@ -36,7 +38,7 @@ namespace GBaaS.io {
 		public virtual void OnGetUsersForGroup(List<GBUserObject> result) {}
 
 		// For Push Service
-		public virtual void OnSendMessage(bool result) {}
+		public virtual void OnSendMessage(GBResult result) {}
 		public virtual void OnRegisterDevice(bool result) {}
 		public virtual void OnIsRegisteredDevice(bool result) {}
 

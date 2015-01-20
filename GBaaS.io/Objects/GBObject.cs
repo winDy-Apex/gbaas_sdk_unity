@@ -31,14 +31,26 @@ namespace GBaaS.io.Objects {
 			return _jsonToken.ToString();
 		}
 
-		public virtual bool Save() { 
-			var rawResults = GBRequestService.Instance.PerformRequest<string>("/" + GetEntityType(), HttpHelper.RequestTypes.Post, this);
-			return HttpHelper.Instance.CheckSuccess(rawResults);
+		public virtual GBResult Save() { 
+			string rawResults = GBRequestService.Instance.PerformRequest<string>("/" + GetEntityType(), HttpHelper.RequestTypes.Post, this);
+			bool success = HttpHelper.Instance.CheckSuccess(rawResults);
+			if (isSuccess) {
+				return new GBResult { isSuccess = success, returnCode = ReturnCode.Success, reason = rawResults };
+			}
+			return new GBResult { isSuccess = success, returnCode = ReturnCode.FailWithReason, reason = rawResults };
 		}
 
-		public bool Update() { 
+		public GBResult Update() { 
+			if (uuid == null) {
+				return Save();
+			}
 			var rawResults = GBRequestService.Instance.PerformRequest<string>("/" + GetEntityType() + "/" + uuid, HttpHelper.RequestTypes.Put, this);
-			return HttpHelper.Instance.CheckSuccess(rawResults);
+
+			bool success = HttpHelper.Instance.CheckSuccess(rawResults);
+			if (isSuccess) {
+				return new GBResult { isSuccess = success, returnCode = ReturnCode.Success, reason = rawResults };
+			}
+			return new GBResult { isSuccess = success, returnCode = ReturnCode.FailWithReason, reason = rawResults };
 		}
 
 		public bool Delete() { 

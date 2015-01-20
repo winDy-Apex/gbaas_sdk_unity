@@ -49,26 +49,19 @@ namespace GBaaS.io {
 		
 			if (handler == null) {
 				_handler.Clear();
-				GBAchievementService.Instance.SetHandler(null);
-				GBScoreService.Instance.SetHandler(null);
-				GBUserService.Instance.SetHandler(null);
-				GBPushService.Instance.SetHandler(null);
-				GBNetService.Instance.SetHandler(null);
-				GBCollectionService.Instance.SetHandler(null);
 			} else {
 				if (_handler.Contains(handler) == false) {
 					_handler.Add(handler);
-
-					GBAchievementService.Instance.SetHandler(handler);
-					GBScoreService.Instance.SetHandler(handler);
-					GBUserService.Instance.SetHandler(handler);
-					GBPushService.Instance.SetHandler(handler);
-					GBNetService.Instance.SetHandler(handler);
-					GBCollectionService.Instance.SetHandler(handler);
-
 					isAdded = true;
 				}
 			}
+
+			GBAchievementService.Instance.SetHandler(handler);
+			GBScoreService.Instance.SetHandler(handler);
+			GBUserService.Instance.SetHandler(handler);
+			GBPushService.Instance.SetHandler(handler);
+			GBNetService.Instance.SetHandler(handler);
+			GBCollectionService.Instance.SetHandler(handler);
 
 			return isAdded;
 		}
@@ -144,31 +137,8 @@ namespace GBaaS.io {
 		/// <returns><c>true</c>, if without identifier update was logined, <c>false</c> otherwise.</returns>
 		/// <param name="uniqueUseKey">Unique use key.</param>
 		/// <param name="userInfo">User info.</param>
-		public bool LoginWithoutIDUpdate(string uniqueUseKey, GBUserObject userInfo) {
-			// TODO Rest Code is not Asyncalbe, Make Check right away.
-			try {
-				var loginResult = LoginWithoutID(uniqueUseKey);
-				if(loginResult.isSuccess == false) return false;
-
-				var userInfoResult = GetUserInfo();
-				if(userInfoResult == null) return false;
-
-				userInfo.uuid = userInfoResult.uuid;
-
-				var updateUserResult = UpdateUser(userInfo);
-				if(updateUserResult == null) return false;
-
-				// Login With New User Info.
-				var loginAgainResult = Login(userInfo.username, "gbaas_" + uniqueUseKey);
-				if(loginAgainResult.isSuccess == false) return false;
-
-				// Change Password
-				var changePasswordResult = ChangePassword("gbaas_" + uniqueUseKey, userInfo.password);
-				return true;
-			} catch (Exception e) {
-				e.ToString();
-				return false;
-			}
+		public GBResult LoginWithoutIDUpdate(string uniqueUseKey, GBUserObject userInfo) {
+			return GBUserService.Instance.LoginWithoutIDUpdate(uniqueUseKey, userInfo);
 		}
 
 		/// <summary>
@@ -359,13 +329,8 @@ namespace GBaaS.io {
 		/// </summary>
 		/// <returns><c>true</c>, if score was added, <c>false</c> otherwise.</returns>
 		/// <param name="score">Score.</param>
-		public bool AddScore(Objects.GBScoreObject score) {
-			try {
-				return GBScoreService.Instance.AddScore(score);
-			} catch (Exception e) {
-				e.ToString();
-				return false;
-			}
+		public GBResult AddScore(Objects.GBScoreObject score) {
+			return GBScoreService.Instance.AddScore(score);
 		}
 
 		/// <summary>
@@ -499,13 +464,8 @@ namespace GBaaS.io {
 		/// </summary>
 		/// <returns><c>true</c>, if user achievement was added, <c>false</c> otherwise.</returns>
 		/// <param name="achievement">Achievement.</param>
-		public bool AddUserAchievement(GBObject achievement) {
-			try {
-				return GBAchievementService.Instance.AddUserAchievement(achievement);
-			} catch (Exception e) {
-				e.ToString();
-				return false;
-			}
+		public GBResult AddUserAchievement(GBObject achievement) {
+			return GBAchievementService.Instance.AddUserAchievement(achievement);
 		}
 
 		/// <summary>
@@ -641,13 +601,8 @@ namespace GBaaS.io {
 			}
 		}
 
-		public bool ReceiptSave(GBReceiptObject receipt) {
-			try {
-				return receipt.Save();
-			} catch (Exception e) {
-				e.ToString();
-				return false;
-			}
+		public GBResult ReceiptSave(GBReceiptObject receipt) {
+			return receipt.Save();
 		}
 
 //********** For FileStoreService ********** //
@@ -753,7 +708,6 @@ namespace GBaaS.io {
 			try {
 				return GBRequestService.Instance.GetToken (username, password);
 			} catch (Exception e) {
-				e.ToString();
 				return default(string);
 			}
 		}
@@ -767,7 +721,6 @@ namespace GBaaS.io {
 			try {
 				return GBRequestService.Instance.LookUpToken (token);
 			} catch (Exception e) {
-				e.ToString();
 				return default(string);
 			}
 		}

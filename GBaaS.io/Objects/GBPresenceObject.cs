@@ -31,7 +31,7 @@ namespace GBaaS.io.Objects
 				lastPresenceDate = nowDT.ToString();
 				monthlyPresence += 1;
 
-				return Save();
+				return Save().isSuccess;
 			}
 
 			return false;

@@ -24,7 +24,7 @@ namespace GBaaS.io.Tests
 				unit = "point" 
 			});
 
-			Assert.IsTrue(result);
+			Assert.IsTrue(result.isSuccess);
 		}
 
 		[Test]
@@ -53,7 +53,7 @@ namespace GBaaS.io.Tests
 
 			var result3 = gbaasApi.AddScore (scoreObject);
 
-			Assert.IsTrue(result3);
+			Assert.IsTrue(result3.isSuccess);
 
 			var result4 = scoreObject.SetLocation(1.33f, 2.1f);
 
@@ -165,7 +165,7 @@ namespace GBaaS.io.Tests
 				unit = "point" 
 			});
 
-			Assert.IsTrue(result);
+			Assert.IsTrue(result.isSuccess);
 		}
 
 		[Test]
@@ -189,7 +189,7 @@ namespace GBaaS.io.Tests
 				score = 500,
 				unit = "전사" 
 			});
-			Assert.IsTrue(result);
+			Assert.IsTrue(result.isSuccess);
 
 			// GBaaS 에 스코어를 등록
 			result = gbaasApi.AddScore (new GBScoreObject {
@@ -197,7 +197,7 @@ namespace GBaaS.io.Tests
 				score = 200,
 				unit = "내복맨" 
 			});
-			Assert.IsTrue(result);
+			Assert.IsTrue(result.isSuccess);
 
 			// GBaaS 에 스코어를 등록
 			result = gbaasApi.AddScore (new GBScoreObject {
@@ -205,7 +205,7 @@ namespace GBaaS.io.Tests
 				score = 300,
 				unit = "울트라맨" 
 			});
-			Assert.IsTrue(result);
+			Assert.IsTrue(result.isSuccess);
 		}
 
 		[Test]

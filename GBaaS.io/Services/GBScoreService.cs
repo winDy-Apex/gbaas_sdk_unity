@@ -28,36 +28,31 @@ namespace GBaaS.io.Services
 			return (_handler.Count > 0);
 		}
 
-		public bool AddScore(Objects.GBScoreObject score) {
+		public GBResult AddScore(Objects.GBScoreObject score) {
 			if (IsAsync()) {
-				Thread workerThread = new Thread(() => this.AddScoreThread(score));
-				workerThread.Start();
-				return false;
+				(new Thread(() => this.AddScoreThread(score))).Start();
+				return new GBResult { isSuccess = false, returnCode = ReturnCode.WaitAsync, reason = "Wait Async Request" };
 			} else {
 				return this.AddScoreThread(score);
 			}
 		}
 
-		private bool AddScoreThread(Objects.GBScoreObject score) {
-			if (score.GetUUID() != null) {
-				if (IsAsync()) {
-					foreach (GBaaSApiHandler handler in _handler) {
-						handler.OnAddScore(score.Update());
-					}
-				} else {
-					return score.Update();
-				}
-			} else {
-				if (IsAsync()) {
-					foreach (GBaaSApiHandler handler in _handler) {
-						handler.OnAddScore(score.Save());
-					}
-				} else {
-					return score.Save();
+		private GBResult AddScoreThread(Objects.GBScoreObject score) {
+			GBResult result = new GBResult();
+
+			try {
+				result = score.Update();
+			} catch (Exception ex) {
+				result.MakeResult(false, ReturnCode.Exception, ex.ToString());
+			}
+
+			if (IsAsync()) {
+				foreach (GBaaSApiHandler handler in _handler) {
+					handler.OnAddScore(result);
 				}
 			}
 
-			return false;
+			return result;
 		}
 
 		public List<Objects.GBScoreObject> GetScoreByUuidOrName(string uuidOrName = "") {

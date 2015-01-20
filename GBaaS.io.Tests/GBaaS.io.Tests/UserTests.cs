@@ -74,7 +74,7 @@ namespace GBaaS.io.Tests
 				gender = "Female"
 			});
 
-			Assert.IsTrue(result);
+			Assert.IsTrue(result.isSuccess);
 
 			var results = aClient.Login("ChangeIDABABABABABCCCCCCCCDDDD12345", Defines.TEST_PASSWORD_CHANGE);
 			Assert.IsTrue(results.isSuccess);

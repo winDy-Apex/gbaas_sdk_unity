@@ -18,7 +18,7 @@ namespace GBaaS.io.Objects {
 			username = GBUserService.Instance.GetLoginName();
 		}
 
-		public override bool Save() {
+		public override GBResult Save() {
 			if (Load() == false) {
 				return base.Save();
 			}

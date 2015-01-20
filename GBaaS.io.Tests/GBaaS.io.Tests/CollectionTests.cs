@@ -57,7 +57,7 @@ namespace GBaaS.io.Tests
 				mydataThree = "Three Data"
 			};
 
-			bool result = oneObject.Save();
+			bool result = oneObject.Save().isSuccess;
 			Assert.IsTrue(result);
 		}
 
@@ -148,7 +148,7 @@ namespace GBaaS.io.Tests
 
 			CustomOneObject customObject = collection[0];
 			customObject.mydataThree = "Modify Three Data 12345777";
-			bool result = customObject.Update();
+			bool result = customObject.Update().isSuccess;
 
 			Assert.IsTrue(result);
 		}
@@ -227,10 +227,10 @@ namespace GBaaS.io.Tests
 				dayToUse = "2014-04-16 15:28:32.0"
 			};
 
-			bool result = receipt.Save();
+			bool result = receipt.Save().isSuccess;
 			Assert.IsTrue(result);
 
-			result = gbaasApi.ReceiptSave(receipt);
+			result = gbaasApi.ReceiptSave(receipt).isSuccess;
 			Assert.IsTrue(result);
 		}
 			
@@ -247,14 +247,14 @@ namespace GBaaS.io.Tests
 				temp = "Some5 Value"
 			};
 					
-			bool result = uniqueObject.Save();
+			bool result = uniqueObject.Save().isSuccess;
 			Assert.IsTrue(result);
 
 			CustomUniqueObject uniqueObject2 = new CustomUniqueObject {
 				temp = "Some7 Value"
 			};
 
-			bool result2 = uniqueObject2.Save();
+			bool result2 = uniqueObject2.Save().isSuccess;
 			Assert.IsTrue(result2);
 
 			// Unique Object have to same uuid, It is same object on GBaaS, It's Unique.
@@ -273,7 +273,7 @@ namespace GBaaS.io.Tests
 				temp = "Some for test Value"
 			};
 
-			bool result = uniqueObject.Save();
+			bool result = uniqueObject.Save().isSuccess;
 			Assert.IsTrue(result);
 
 			GBaaS.io.GBaaSApi gbaasApi2 = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL2);
@@ -283,7 +283,7 @@ namespace GBaaS.io.Tests
 				temp = "Some for test1 Value"
 			};
 
-			bool result2 = uniqueObject2.Save();
+			bool result2 = uniqueObject2.Save().isSuccess;
 			Assert.IsTrue(result2);
 
 			// Unique Object have to different uuid per User.

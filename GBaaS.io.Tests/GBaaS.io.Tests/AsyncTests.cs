@@ -51,10 +51,10 @@ namespace GBaaS.io.Tests
 			Assert.IsTrue(result.achievementName.Length > 0);
 		}
 
-		public override void OnAddScore(bool result) {
+		public override void OnAddScore(GBResult result) {
 			Console.Out.WriteLine("Async On AddScore : " + result.ToString());
 			AsyncCallChecker.Instance.SetAsyncCalling(false);
-			Assert.IsTrue(result);
+			Assert.IsTrue(result.isSuccess);
 		}
 
 		public override void OnCreateUser(GBResult result) {
@@ -364,7 +364,7 @@ namespace GBaaS.io.Tests
 				unit = "point" 
 			});
 			//바로 리턴되는 결과는 없어야 정상
-			Assert.IsTrue(result == false);
+			Assert.IsTrue(result.returnCode == ReturnCode.WaitAsync);
 
 			//Async 호출이 끝날때까지 대기
 			while (AsyncCallChecker.Instance.GetAsyncCalling()) {

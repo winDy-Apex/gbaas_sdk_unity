@@ -59,7 +59,7 @@ namespace GBaaS.io
 					handler.OnSendMessage(pushMessage.Save());
 				}
 			} else {
-				result = pushMessage.Save();
+				result = pushMessage.Save().isSuccess;
 			}
 
 			return result;
@@ -106,7 +106,7 @@ namespace GBaaS.io
 					registration_id = registration_id
 				};
 
-				bool result = deviceRegister.Save();
+				bool result = deviceRegister.Save().isSuccess;
 				if (result == false) {
 					if (IsAsync(forceSync)) {
 						foreach (GBaaSApiHandler handler in _handler) {

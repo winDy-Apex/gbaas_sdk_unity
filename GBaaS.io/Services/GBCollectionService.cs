@@ -134,7 +134,7 @@ namespace GBaaS.io
 					name = fileName
 				};
 
-				result = addAsset.Save();
+				result = addAsset.Save().isSuccess;
 
 				if (result == true) {
 					// Re Find Asset
@@ -247,19 +247,19 @@ namespace GBaaS.io
 
 				if (IsAsync()) {
 					foreach (GBaaSApiHandler handler in _handler) {
-						handler.OnGameDataSave(gameData.Save());
+						handler.OnGameDataSave(gameData.Save().isSuccess);
 					}
 				} else {
-					return gameData.Save();
+					return gameData.Save().isSuccess;
 				}
 			} else {
 				gameData.value = value;
 				if (IsAsync()) {
 					foreach (GBaaSApiHandler handler in _handler) {
-						handler.OnGameDataSave(gameData.Update());
+						handler.OnGameDataSave(gameData.Update().isSuccess);
 					}
 				} else {
-					return gameData.Update();
+					return gameData.Update().isSuccess;
 				}
 			}
 
@@ -398,7 +398,7 @@ namespace GBaaS.io
 		public bool CreateListThread(string collectionName, List<Objects.GBObject> list) {
 			bool result = false;		
 			foreach (var item in list) {
-				result = item.Save();
+				result = item.Save().isSuccess;
 				if (result == false)
 					break;
 			}

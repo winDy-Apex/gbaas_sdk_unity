@@ -27,7 +27,7 @@ namespace GBaaS.io
 			return (_handler.Count > 0);
 		}
 
-		public bool AddUserAchievement(GBObject achievement) {
+		public GBResult AddUserAchievement(GBObject achievement) {
 			return achievement.Save();
 		}
 
