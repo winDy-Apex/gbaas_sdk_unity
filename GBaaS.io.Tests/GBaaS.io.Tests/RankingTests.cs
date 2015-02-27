@@ -11,6 +11,7 @@ namespace GBaaS.io.Tests
 {
 	public class RankingTests {
 		GBaaS.io.GBaaSApi gbaasApi = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL2);
+		//GBaaS.io.GBaaSApi gbaasApi = new GBaaS.io.GBaaSApi("https://api.gbaas.io/33e8b61a-3340-11e4-ab01-b99509431e86/276299a0-bd89-11e4-a6dd-17a3f8a216c3");
 
 		[Test]
 		public void AddScoreTest() {

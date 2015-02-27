@@ -210,7 +210,7 @@ namespace GBaaS.io
 				};
 
 				obj.SetUUID((item["uuid"] ?? "").ToString());
-			
+
 				if (obj.path.Length > 0) {
 					return obj;
 				}
@@ -501,23 +501,36 @@ namespace GBaaS.io
 		}
 
 		private List<T> GetObjectThread<T>(string key, string value, int limit) {
-			string query = "select *";
+			string query = "";
 
-			if ((key.Length + value.Length) > 0) {
-				query += " where";
+			string baseTypeName = typeof(T).BaseType.Name;
+			string basequery = "";
+
+			if (baseTypeName.CompareTo("GBUniqueObject") == 0) {
+				basequery = " username = '" + GBUserService.Instance.GetLoginName() + "'";
 			}
 
-			if (key.Length > 0) {
-				query += " " + key + " = '" + value + "'";
-			}
-		
-			query += " order by " + key + " desc";
+			if ((basequery.Length + key.Length + value.Length) > 0) {
+				query = "?ql=select * where";
 
-			if (limit > 0) {
-				query += " limit " + limit.ToString ();
+				if (basequery.Length > 0) {
+					query += basequery;
+				}
+
+				if(basequery.Length > 0 && key.Length > 0) {
+					query += " and";
+				}
+
+				if (key.Length > 0) {
+					query += " " + key + " = '" + value + "' order by " + key + " desc";
+				}
+
+				if (limit > 0) {
+					query += " limit " + limit.ToString();
+				}
 			}
 
-			var rawResults = GBRequestService.Instance.PerformRequest<string>("/" + GetTypeName(typeof(T)) + "?ql=" + query, HttpHelper.RequestTypes.Get, "");
+			var rawResults = GBRequestService.Instance.PerformRequest<string>("/" + GetTypeName(typeof(T)) + query, HttpHelper.RequestTypes.Get, "");
 			if (rawResults.IndexOf ("error") != -1) {
 				if (IsAsync()) {
 					foreach (GBaaSApiHandler handler in _handler) {
@@ -541,6 +554,7 @@ namespace GBaaS.io
 			return default(List<T>);
 		}
 
+
 		public List<T> GetObjectByName<T>(string objectName, string key, string value, int limit = 1) {
 			if (IsAsync()) {
 				Thread workerThread = new Thread(() => this.GetObjectByNameThread<T>(objectName, key, value, limit));
@@ -552,23 +566,27 @@ namespace GBaaS.io
 		}
 
 		private List<T> GetObjectByNameThread<T>(string objectName, string key, string value, int limit) {
-			string query = "select *";
-
-			if ((key.Length + value.Length) > 0) {
-				query += " where";
-			}
+			string query = "";
 
 			if (key.Length > 0) {
-				query += " " + key + " = '" + value + "'";
+				query = "?ql=select *";
+
+				if ((key.Length + value.Length) > 0) {
+					query += " where";
+				}
+
+				if (key.Length > 0) {
+					query += " " + key + " = '" + value + "'";
+				}
+
+				query += " order by " + key + " desc";
+
+				if (limit > 0) {
+					query += " limit " + limit.ToString();
+				}
 			}
 
-			query += " order by " + key + " desc";
-
-			if (limit > 0) {
-				query += " limit " + limit.ToString ();
-			}
-
-			var rawResults = GBRequestService.Instance.PerformRequest<string>("/" + objectName + "?ql=" + query, HttpHelper.RequestTypes.Get, "");
+			var rawResults = GBRequestService.Instance.PerformRequest<string>("/" + objectName + query, HttpHelper.RequestTypes.Get, "");
 			if (rawResults.IndexOf ("error") != -1) {
 				if (IsAsync()) {
 					foreach (GBaaSApiHandler handler in _handler) {

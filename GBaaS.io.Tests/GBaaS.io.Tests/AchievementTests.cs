@@ -228,7 +228,7 @@ namespace GBaaS.io.Tests
 
 			String locale = "ko-KR";
 
-			var result = aClient.GetAchievementByUUID("d0b24e5a-54f3-11e4-b688-3199c630a20e", locale);
+			var result = aClient.GetAchievementByUUID(Defines.TEST_ACHIEVEMENT_UUID, locale);
 			Assert.IsTrue(result.achievementName.Length > 0);
 		}
 
@@ -238,7 +238,7 @@ namespace GBaaS.io.Tests
 			GBaaS.io.GBaaSApi aClient2 = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL2);
 			aClient2.Login("test", "abc123");
 
-			var result = aClient.UpdateAchievement("6fc2135a-54f8-11e4-ba58-3bba8e7daf56", 1, true, "ko-KR");
+			var result = aClient.UpdateAchievement(Defines.TEST_ACHIEVEMENT_UUID, 1, true, "ko-KR");
 			Assert.IsTrue(result.achievementName.Length > 0);
 		}
 

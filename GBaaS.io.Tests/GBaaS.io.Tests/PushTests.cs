@@ -80,6 +80,32 @@ namespace GBaaS.io.Tests
 			Assert.IsTrue(result);
 		}
 
+		[Ignore]
+		[Test]
+		public void MakeDummyDeviceRegistration()
+		{
+			string registrationId = "bGQxrGBLda4bgPy15qTex-7m9SaxFv8rCO2u2-4lTZNZp4zvGLE8Rz5ZroA9xN3Z2FcMaSbQ4u5KzJdaxm6HV1i3Cyf_hZXoXsXSB0q4aCXvVNkOYAnoJLrfwxPYKr14BDNFT6iVXhPUzvP7mfY_hTVEpPlPSMEe21oG9MNRsCehaXvzFc";
+			string deviceModel = "dummy SHV-E250K";
+			string operatingSystem = "Android OS 4.4.2 / API-19 (KOT49H/E250KKTUKNI1)";
+
+			GBaaS.io.GBaaSApi aClient2 = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL2);
+			aClient2.Login("test", "abc123");
+
+			string dummyId = "";
+			int dummyCount = 0;
+			bool result = false;
+
+			for (int i = 0; i <= 1100; i++) {
+				dummyId = i.ToString("D5");
+				result = aClient2.RegisterDevice(deviceModel, operatingSystem, "andriod", dummyId + registrationId);
+				if (!result)
+					break;
+				dummyCount = i;
+			}
+
+			Assert.IsTrue(dummyCount == 1100);
+		}
+
 		[Test]
 		public void IsRegisteredDevice()
 		{

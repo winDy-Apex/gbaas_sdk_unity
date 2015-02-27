@@ -673,7 +673,7 @@ namespace GBaaS.io {
 		/// <param name="key">Key.</param>
 		/// <param name="value">Value.</param>
 		/// <param name="limit">Limit.</param>
-		public List<T> GetObject<T>(string key, string value, int limit = 1) {
+		public List<T> GetObject<T>(string key = "", string value = "", int limit = 1) {
 			try {
 				return GBCollectionService.Instance.GetObject<T>(key, value, limit);
 			} catch (Exception e) {

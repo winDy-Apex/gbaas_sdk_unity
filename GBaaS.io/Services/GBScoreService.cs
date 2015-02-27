@@ -356,14 +356,14 @@ namespace GBaaS.io.Services
 			}
 
 			var rawResults = GBRequestService.Instance.PerformRequest<string>("/" + entity_type + "?" + query, HttpHelper.RequestTypes.Get, "");
-			if (rawResults.IndexOf ("error") != -1) {
+			if (rawResults == null || rawResults.IndexOf ("error") != -1) {
 				if (IsAsync()) {
 					foreach (GBaaSApiHandler handler in _handler) {
 						handler.OnGetScoreLog(default(List<Objects.GBScoreObject>));
 					}
-				} else {
-					return default(List<Objects.GBScoreObject>);
 				}
+
+				return default(List<Objects.GBScoreObject>);
 			}
 
 			var scores			= GBRequestService.Instance.GetEntitiesFromJson(rawResults);

@@ -81,6 +81,7 @@ namespace GBaaS.io.Tests
 			gbaasApi2.Login("test", "abc123");
 
 			List<CustomOneObject> collection = gbaasApi2.GetObject<CustomOneObject>("mydataOne", "One Data", 1);
+			//List<CustomOneObject> collection = gbaasApi2.GetObject<CustomOneObject>("", "", 1); //<- This Query has No Result
 			Console.Out.WriteLine ("In GetObject Count : " + collection.Count.ToString());
 			//Assert.IsTrue(collection.Count > 0);
 
@@ -88,6 +89,17 @@ namespace GBaaS.io.Tests
 			//CustomOneObject customObject = JsonConvert.DeserializeObject<CustomOneObject>(collection[0].GetSerializedString());
 
 			Assert.IsTrue(collection[0].mydataOne.CompareTo("One Data") == 0);
+		}
+
+		[Test]
+		public void GetAllObject()
+		{
+			GBaaS.io.GBaaSApi gbaasApi2 = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL2);
+			gbaasApi2.Login("test", "abc123");
+
+			List<CustomOneObject> collection = gbaasApi2.GetObject<CustomOneObject>();
+			Console.Out.WriteLine ("In GetObject Count : " + collection.Count.ToString());
+			Assert.IsTrue(collection.Count > 0);
 		}
 
 		[Test]
@@ -288,6 +300,17 @@ namespace GBaaS.io.Tests
 
 			// Unique Object have to different uuid per User.
 			Assert.IsTrue(uniqueObject.uuid != uniqueObject2.uuid);
+		}
+
+		[Test]
+		public void GetUniqueObject() {
+			GBaaS.io.GBaaSApi gbaasApi = new GBaaS.io.GBaaSApi(Defines.USERGRID_URL2);
+			gbaasApi.Login(Defines.TEST_USERNAME, Defines.TEST_PASSWORD);
+
+
+			List<CustomUniqueObject> uniqueObject = gbaasApi.GetObject<CustomUniqueObject>();
+
+			Assert.IsTrue(uniqueObject.Count > 0);
 		}
 	}
 }

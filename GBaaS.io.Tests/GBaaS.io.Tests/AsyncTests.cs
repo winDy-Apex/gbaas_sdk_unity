@@ -71,17 +71,19 @@ namespace GBaaS.io.Tests
 		}
 
 		public override void OnGetScore(List<Objects.GBScoreObject> result) {
-			Console.Out.WriteLine("Async On GetScore : " + result.ToString());
 			AsyncCallChecker.Instance.SetAsyncCalling(false);
-
+			if (result != null) {
+				Console.Out.WriteLine("Async On GetScore : " + result.ToString());
+			}
 			Assert.IsNotNull(result);
 		}
 
 		public override void OnGetScoreLog(List<Objects.GBScoreObject> result) {
-			Console.Out.WriteLine("Async On GetScoreLog : " + result.ToString());
+			if (result != null) {
+				Console.Out.WriteLine("Async On GetScoreLog : " + result.ToString());
+			}
 			AsyncCallChecker.Instance.SetAsyncCalling(false);
-
-			Assert.IsNotNull(result);
+			AsyncCallChecker.Instance._resultGBScore = result;
 		}
 
 		public override void OnGetObject<T>(List<T> result) {
@@ -143,6 +145,8 @@ namespace GBaaS.io.Tests
 		public bool GetAsyncCalling() {
 			return _isAsyncCalling;
 		}
+
+		public List<Objects.GBScoreObject> _resultGBScore;
 	}
 
 	public class AsyncTests
@@ -308,7 +312,7 @@ namespace GBaaS.io.Tests
 
 			AsyncCallChecker.Instance.SetAsyncCalling(true);
 
-			var result = aClient2.GetAchievementByUUID("d0b24e5a-54f3-11e4-b688-3199c630a20e", locale);
+			var result = aClient2.GetAchievementByUUID(Defines.TEST_ACHIEVEMENT_UUID, locale);
 			//바로 리턴되는 결과는 없어야 정상
 			Assert.IsTrue(result == null);
 
@@ -332,7 +336,7 @@ namespace GBaaS.io.Tests
 
 			AsyncCallChecker.Instance.SetAsyncCalling(true);
 
-			var result = aClient2.UpdateAchievement("d0b24e5a-54f3-11e4-b688-3199c630a20e", 10, true, "ko-KR");
+			var result = aClient2.UpdateAchievement(Defines.TEST_ACHIEVEMENT_UUID, 10, true, "ko-KR");
 			//바로 리턴되는 결과는 없어야 정상
 			Assert.IsTrue(result == null);
 
@@ -445,13 +449,15 @@ namespace GBaaS.io.Tests
 			List<Objects.GBScoreObject> result = aClient2.GetScoreLog("1st", "point", 0, "");
 
 			//바로 리턴되는 결과는 없어야 정상
-			Assert.IsTrue(result == null);
+			Assert.IsNull(result);
 
 			//Async 호출이 끝날때까지 대기
 			while (AsyncCallChecker.Instance.GetAsyncCalling()) {
 				Console.Out.WriteLine("...AsyncCalling...");
 				System.Threading.Thread.Sleep(100);
 			}
+
+			Assert.IsNotNull(AsyncCallChecker.Instance._resultGBScore);
 
 			aClient2.AddHandler(null);
 		}
